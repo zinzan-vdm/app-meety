@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { useSidebarCollapsed } from "./use-sidebar-collapsed";
 
-const STORAGE_KEY = "folio.sidebar.collapsed";
+const STORAGE_KEY = "meety.sidebar.collapsed";
 
 function setViewportWidth(width: number) {
   Object.defineProperty(window, "innerWidth", {

@@ -7,9 +7,9 @@ import {
 } from "./use-reading-controls";
 
 const KEYS = {
-  font: "folio.reading.font",
-  size: "folio.reading.size",
-  spacing: "folio.reading.spacing",
+  font: "meety.reading.font",
+  size: "meety.reading.size",
+  spacing: "meety.reading.spacing",
 };
 
 beforeEach(() => {

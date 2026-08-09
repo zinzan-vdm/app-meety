@@ -35,7 +35,7 @@ function defaultSnapshotName(): string {
   const stamp =
     `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}-` +
     `${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
-  return `folio-snapshot-${stamp}.zip`;
+  return `meety-snapshot-${stamp}.zip`;
 }
 
 export function SectionStorage({ settings, onChange }: Props) {

@@ -29,10 +29,10 @@
         { "url": "https://api.anthropic.com/*" },
         { "url": "https://huggingface.co/*" },
         { "url": "https://github.com/woosal1337/*" },
-        { "url": "https://folio.app/*" },
+        { "url": "https://meety.app/*" },
         { "url": "mailto:*" },
         { "url": "obsidian://*" },
-        { "url": "folio://*" },
+        { "url": "meety://*" },
         { "url": "x-apple.systempreferences:*" }
       ]
     }

@@ -39,10 +39,10 @@ export function GlobalShortcuts({ onOpenCheatsheet, onOpenPalette }: Props) {
             else takeNotes();
           },
           segmentPrev: () => {
-            document.dispatchEvent(new CustomEvent("folio:transcript-prev"));
+            document.dispatchEvent(new CustomEvent("meety:transcript-prev"));
           },
           segmentNext: () => {
-            document.dispatchEvent(new CustomEvent("folio:transcript-next"));
+            document.dispatchEvent(new CustomEvent("meety:transcript-next"));
           },
         });
         return;

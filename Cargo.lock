@@ -1743,45 +1743,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77ce24cb58228fbb8aa041425bb1050850ac19177686ea6e0f41a70416f56fdb"
 
 [[package]]
-name = "folio-app"
-version = "2.0.0"
-dependencies = [
- "block",
- "block2",
- "chrono",
- "cocoa",
- "folio-core",
- "hound",
- "objc",
- "objc2",
- "parking_lot",
- "reqwest 0.12.28",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-deep-link",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tauri-plugin-opener",
- "tauri-plugin-updater",
- "tempfile",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "url",
- "uuid",
-]
-
-[[package]]
 name = "folio-cli"
-version = "2.0.0"
+version = "0.1.0-alpha"
 dependencies = [
  "anyhow",
  "chrono",
  "clap 4.6.1",
- "folio-core",
  "hound",
+ "meety-core",
  "serde",
  "serde_json",
  "tokio",
@@ -1791,58 +1760,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "folio-core"
-version = "2.0.0"
-dependencies = [
- "aes-gcm",
- "argon2",
- "async-trait",
- "chrono",
- "core-audio-types-rs",
- "core-media-rs",
- "coreaudio-rs 0.14.2",
- "coreaudio-sys",
- "cpal",
- "crossbeam-channel",
- "filetime",
- "hex",
- "hound",
- "keyring",
- "libc",
- "nnnoiseless",
- "objc2-core-audio",
- "parking_lot",
- "reqwest 0.12.28",
- "rubato",
- "rusqlite",
- "screencapturekit",
- "serde",
- "serde_json",
- "serde_norway",
- "sha2",
- "sherpa-onnx",
- "sqlite-vec",
- "tempfile",
- "thiserror 1.0.69",
- "tokio",
- "toml 0.8.2",
- "tracing",
- "ts-rs",
- "uuid",
- "voice_activity_detector",
- "whisper-rs",
- "zerocopy 0.7.35",
- "zip 2.4.2",
- "zstd",
-]
-
-[[package]]
 name = "folio-mcp"
-version = "2.0.0"
+version = "0.1.0-alpha"
 dependencies = [
  "anyhow",
  "chrono",
- "folio-core",
+ "meety-core",
  "serde",
  "serde_json",
 ]
@@ -3160,6 +3083,83 @@ checksum = "a06de3016e9fae57a36fd14dba131fccf49f74b40b7fbdb472f96e361ec71a08"
 dependencies = [
  "autocfg",
  "rawpointer",
+]
+
+[[package]]
+name = "meety-app"
+version = "0.1.0-alpha"
+dependencies = [
+ "block",
+ "block2",
+ "chrono",
+ "cocoa",
+ "hound",
+ "meety-core",
+ "objc",
+ "objc2",
+ "parking_lot",
+ "reqwest 0.12.28",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-deep-link",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tauri-plugin-opener",
+ "tauri-plugin-updater",
+ "tempfile",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "url",
+ "uuid",
+]
+
+[[package]]
+name = "meety-core"
+version = "0.1.0-alpha"
+dependencies = [
+ "aes-gcm",
+ "argon2",
+ "async-trait",
+ "chrono",
+ "core-audio-types-rs",
+ "core-media-rs",
+ "coreaudio-rs 0.14.2",
+ "coreaudio-sys",
+ "cpal",
+ "crossbeam-channel",
+ "filetime",
+ "hex",
+ "hound",
+ "keyring",
+ "libc",
+ "nnnoiseless",
+ "objc2-core-audio",
+ "parking_lot",
+ "reqwest 0.12.28",
+ "rubato",
+ "rusqlite",
+ "screencapturekit",
+ "serde",
+ "serde_json",
+ "serde_norway",
+ "sha2",
+ "sherpa-onnx",
+ "sqlite-vec",
+ "tempfile",
+ "thiserror 1.0.69",
+ "tokio",
+ "toml 0.8.2",
+ "tracing",
+ "ts-rs",
+ "uuid",
+ "voice_activity_detector",
+ "whisper-rs",
+ "zerocopy 0.7.35",
+ "zip 2.4.2",
+ "zstd",
 ]
 
 [[package]]

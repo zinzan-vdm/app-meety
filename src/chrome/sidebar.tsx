@@ -79,7 +79,7 @@ export function Sidebar({ onOpenSettings }: SidebarProps) {
           />
           {!collapsed && (
             <span className="font-wordmark text-2xl font-medium tracking-tight">
-              folio
+              meety
             </span>
           )}
         </div>

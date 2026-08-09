@@ -51,7 +51,7 @@ describe("navigate-bridge", () => {
 
   it("assertInternalPath rejects non-/ strings", () => {
     expect(() => mod.assertInternalPath("https://evil.example.com")).toThrow();
-    expect(() => mod.assertInternalPath("folio://open")).toThrow();
+    expect(() => mod.assertInternalPath("meety://open")).toThrow();
     expect(() => mod.assertInternalPath("javascript:alert(1)")).toThrow();
     expect(() => mod.assertInternalPath("library")).toThrow();
   });

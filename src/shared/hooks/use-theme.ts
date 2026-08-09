@@ -2,7 +2,7 @@ import * as React from "react";
 
 export type Theme = "light" | "dark";
 
-const STORAGE_KEY = "folio-theme";
+const STORAGE_KEY = "meety-theme";
 const DARK_QUERY = "(prefers-color-scheme: dark)";
 
 function applyTheme(theme: Theme) {

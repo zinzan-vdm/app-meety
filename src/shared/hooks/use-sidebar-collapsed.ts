@@ -1,6 +1,6 @@
 import * as React from "react";
 
-const STORAGE_KEY = "folio.sidebar.collapsed";
+const STORAGE_KEY = "meety.sidebar.collapsed";
 const AUTO_COLLAPSE_BREAKPOINT = 900;
 
 function readStored(): boolean {

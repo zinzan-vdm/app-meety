@@ -3,7 +3,7 @@
   "productName": "Meety",
   "mainBinaryName": "Meety",
   "version": "2.0.0",
-  "identifier": "dev.folio.app",
+  "identifier": "com.meety.app"
   "build": {
     "beforeDevCommand": "bun run dev",
     "beforeBuildCommand": "bun run build",

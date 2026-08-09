@@ -35,7 +35,7 @@ Recording a conversation can be illegal without the other participants' consent,
 
 ## Install
 
-Requires macOS 13 (Ventura) or later, on Apple Silicon or Intel. The
+- macOS 13+, Windows 10+, or Linux (PipeWire/PulseAudio). The
 first time you use local transcription or diarization, Meety downloads the
 model weights (a few hundred MB) from Hugging Face and the sherpa-onnx
 GitHub releases.
@@ -43,11 +43,10 @@ GitHub releases.
 ### Homebrew (recommended)
 
 ```sh
-brew tap zinzan-vdm/app-meety https://github.com/zinzan-vdm/app-meety
-brew install --cask folio
+# Coming soon — download from Releases
 ```
 
-`brew upgrade --cask folio` tracks new releases.
+`# Coming soon — download latest from Releases` tracks new releases.
 
 ### Direct download
 
@@ -145,7 +144,7 @@ bun run test
 
 ## Contributing
 
-See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for setup and the workflow. The authoritative code-style contract is [`docs/CODE_STYLE.md`](./docs/CODE_STYLE.md). Security issues go through [`SECURITY.md`](./SECURITY.md).
+Forked from [Folio](https://github.com/woosal1337/folio) by Ege Çelebi. See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for setup and the workflow. The authoritative code-style contract is [`docs/CODE_STYLE.md`](./docs/CODE_STYLE.md). Security issues go through [`SECURITY.md`](./SECURITY.md).
 
 ## License
 

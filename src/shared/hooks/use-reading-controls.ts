@@ -14,9 +14,9 @@ export type ReadingSize = (typeof READING_SIZES)[number];
 export const READING_SPACINGS = ["tight", "normal", "wide", "wider"] as const;
 export type ReadingSpacing = (typeof READING_SPACINGS)[number];
 
-const STORAGE_FONT = "folio.reading.font";
-const STORAGE_SIZE = "folio.reading.size";
-const STORAGE_SPACING = "folio.reading.spacing";
+const STORAGE_FONT = "meety.reading.font";
+const STORAGE_SIZE = "meety.reading.size";
+const STORAGE_SPACING = "meety.reading.spacing";
 
 const DEFAULTS: { font: ReadingFont; size: ReadingSize; spacing: ReadingSpacing } = {
   font: "system",

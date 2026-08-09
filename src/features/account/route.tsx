@@ -177,7 +177,7 @@ function ServerCard({
             <Input
               id="account-endpoint"
               type="url"
-              placeholder="https://folio-api.example.com"
+              placeholder="https://meety-api.example.com"
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onBlur={() => void commitEndpoint()}

@@ -12,7 +12,7 @@ export function MeetyMark({ className }: { className?: string }) {
         >
             <defs>
                 <radialGradient
-                    id="folio-orb-light"
+                    id="meety-orb-light"
                     cx="0"
                     cy="0"
                     r="1"
@@ -25,7 +25,7 @@ export function MeetyMark({ className }: { className?: string }) {
                     <stop offset="1" stopColor="#18181B" />
                 </radialGradient>
                 <linearGradient
-                    id="folio-wave-light"
+                    id="meety-wave-light"
                     x1="280"
                     y1="486"
                     x2="744"
@@ -37,7 +37,7 @@ export function MeetyMark({ className }: { className?: string }) {
                     <stop offset="1" stopColor="#D4D4D8" />
                 </linearGradient>
                 <linearGradient
-                    id="folio-tile"
+                    id="meety-tile"
                     x1="162"
                     y1="130"
                     x2="872"
@@ -49,7 +49,7 @@ export function MeetyMark({ className }: { className?: string }) {
                     <stop offset="1" stopColor="#0E0E10" />
                 </linearGradient>
                 <filter
-                    id="folio-orb-shadow"
+                    id="meety-orb-shadow"
                     x="174"
                     y="144"
                     width="678"
@@ -72,7 +72,7 @@ export function MeetyMark({ className }: { className?: string }) {
                         floodOpacity="0.22"
                     />
                 </filter>
-                <clipPath id="folio-orb-clip">
+                <clipPath id="meety-orb-clip">
                     <circle cx="512" cy="500" r="274" />
                 </clipPath>
             </defs>
@@ -82,7 +82,7 @@ export function MeetyMark({ className }: { className?: string }) {
                 width="864"
                 height="864"
                 rx="212"
-                fill="url(#folio-tile)"
+                fill="url(#meety-tile)"
             />
             <rect
                 x="81.5"
@@ -94,12 +94,12 @@ export function MeetyMark({ className }: { className?: string }) {
                 strokeWidth="3"
                 opacity="0.8"
             />
-            <g filter="url(#folio-orb-shadow)">
-                <circle cx="512" cy="500" r="274" fill="url(#folio-orb-light)" />
-                <g clipPath="url(#folio-orb-clip)">
+            <g filter="url(#meety-orb-shadow)">
+                <circle cx="512" cy="500" r="274" fill="url(#meety-orb-light)" />
+                <g clipPath="url(#meety-orb-clip)">
                     <path
                         d="M228 506C290 464 344 462 400 505C462 552 521 552 582 505C642 459 696 462 774 506"
-                        stroke="url(#folio-wave-light)"
+                        stroke="url(#meety-wave-light)"
                         strokeWidth="52"
                         strokeLinecap="round"
                         strokeLinejoin="round"

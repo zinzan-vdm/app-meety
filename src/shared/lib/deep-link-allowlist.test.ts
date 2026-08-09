@@ -4,7 +4,7 @@ import { classifyDeepLink } from "./deep-link-allowlist";
 
 describe("classifyDeepLink", () => {
   it("classifies an allowed folio:// route", () => {
-    const verdict = classifyDeepLink("folio://library");
+    const verdict = classifyDeepLink("meety://library");
     expect(verdict.kind).toBe("allowed-folio-route");
     if (verdict.kind === "allowed-folio-route") {
       expect(verdict.route).toBe("library");
@@ -12,7 +12,7 @@ describe("classifyDeepLink", () => {
   });
 
   it("preserves the allowlisted autoStart query param", () => {
-    const verdict = classifyDeepLink("folio://library?autoStart=1");
+    const verdict = classifyDeepLink("meety://library?autoStart=1");
     expect(verdict.kind).toBe("allowed-folio-route");
     if (verdict.kind === "allowed-folio-route") {
       expect(verdict.params.autoStart).toBe("1");
@@ -20,14 +20,14 @@ describe("classifyDeepLink", () => {
   });
 
   it("rejects routes retired by the Granola overhaul (record, inbox)", () => {
-    for (const dead of ["folio://record", "folio://inbox"]) {
+    for (const dead of ["meety://record", "meety://inbox"]) {
       const verdict = classifyDeepLink(dead);
       expect(verdict.kind).toBe("rejected");
     }
   });
 
   it("treats trailing path as the label param for editor", () => {
-    const verdict = classifyDeepLink("folio://editor/2026-05-26-meeting");
+    const verdict = classifyDeepLink("meety://editor/2026-05-26-meeting");
     expect(verdict.kind).toBe("allowed-folio-route");
     if (verdict.kind === "allowed-folio-route") {
       expect(verdict.route).toBe("editor");
@@ -36,7 +36,7 @@ describe("classifyDeepLink", () => {
   });
 
   it("rejects an unknown route", () => {
-    const verdict = classifyDeepLink("folio://hijack");
+    const verdict = classifyDeepLink("meety://hijack");
     expect(verdict.kind).toBe("rejected");
     if (verdict.kind === "rejected") {
       expect(verdict.reason).toContain("hijack");
@@ -44,7 +44,7 @@ describe("classifyDeepLink", () => {
   });
 
   it("rejects an unknown query parameter", () => {
-    const verdict = classifyDeepLink("folio://library?evil=1");
+    const verdict = classifyDeepLink("meety://library?evil=1");
     expect(verdict.kind).toBe("rejected");
     if (verdict.kind === "rejected") {
       expect(verdict.reason).toContain("evil");
@@ -68,7 +68,7 @@ describe("classifyDeepLink", () => {
   });
 
   it("rejects an empty folio:// (no route)", () => {
-    const verdict = classifyDeepLink("folio://");
+    const verdict = classifyDeepLink("meety://");
     expect(verdict.kind).toBe("rejected");
     if (verdict.kind === "rejected") {
       expect(verdict.reason).toBe("missing route");
@@ -76,7 +76,7 @@ describe("classifyDeepLink", () => {
   });
 
   it("URL-decodes allowed param values", () => {
-    const verdict = classifyDeepLink("folio://editor?label=2026-05-26%2010%3A00");
+    const verdict = classifyDeepLink("meety://editor?label=2026-05-26%2010%3A00");
     expect(verdict.kind).toBe("allowed-folio-route");
     if (verdict.kind === "allowed-folio-route") {
       expect(verdict.params.label).toBe("2026-05-26 10:00");

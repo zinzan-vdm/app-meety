@@ -9,7 +9,7 @@ const SANITIZE_SCHEMA = {
   ...defaultSchema,
   protocols: {
     ...defaultSchema.protocols,
-    href: ["http", "https", "mailto", "folio", "obsidian"],
+    href: ["http", "https", "mailto", "meety", "obsidian"],
     src: ["http", "https", "data"],
   },
   attributes: {

@@ -1,4 +1,4 @@
-export const SEEK_AUDIO_EVENT = "folio:seek-audio";
+export const SEEK_AUDIO_EVENT = "meety:seek-audio";
 
 export interface SeekAudioDetail {
   channel: string;

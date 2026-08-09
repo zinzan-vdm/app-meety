@@ -3,7 +3,7 @@ export type DeepLinkVerdict =
   | { kind: "allowed-audio-file"; path: string }
   | { kind: "rejected"; reason: string; url: string };
 
-const FOLIO_SCHEME = "folio://";
+const FOLIO_SCHEME = "meety://";
 const ALLOWED_AUDIO_EXTENSIONS = [".wav", ".m4a", ".mp3"] as const;
 
 const ALLOWED_FOLIO_ROUTES: ReadonlySet<string> = new Set([

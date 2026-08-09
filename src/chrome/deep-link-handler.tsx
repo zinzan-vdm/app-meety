@@ -43,7 +43,7 @@ function handle(urls: string[]) {
   for (const url of urls) {
     const verdict = classifyDeepLink(url);
     switch (verdict.kind) {
-      case "allowed-folio-route":
+      case "allowed-meety-route":
         bridgeNavigate(verdict.route);
         toast.message("Meety deep link", {
           description: `${verdict.route}${formatParams(verdict.params)}`,

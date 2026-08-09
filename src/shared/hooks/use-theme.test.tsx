@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { applyInitialTheme, useTheme } from "./use-theme";
 
-const STORAGE_KEY = "folio-theme";
+const STORAGE_KEY = "meety-theme";
 
 beforeEach(() => {
   window.localStorage.clear();

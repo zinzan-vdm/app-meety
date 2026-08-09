@@ -1,13 +1,13 @@
 export const siteConfig = {
     name: "Meety",
     wordmark: "Meety",
-    tagline: "Local-first meeting notes for macOS",
+    tagline: "Local-first meeting notes for macOS, Windows, and Linux",
     description:
-        "Meety captures system audio and your microphone, transcribes on-device, and writes a markdown note per meeting to your own vault. Audio never leaves your machine.",
+            "Meety captures system audio and your microphone, transcribes on-device, and writes a markdown note per meeting to your own vault. Audio never leaves your machine."
     url: "https://meety.app",
-    version: "1.1.0",
+    version: "0.1.0-alpha",
     license: "Apache-2.0",
-    platform: "macOS 13+",
+    platform: "macOS 13+, Windows 10+, Linux",
     links: {
         github: "https://github.com/woosal1337/folio",
         releases: "https://github.com/woosal1337/folio/releases/latest",
@@ -18,9 +18,9 @@ export const siteConfig = {
         license: "https://github.com/woosal1337/folio/blob/main/LICENSE",
     },
     install: {
-        tapCommand: "brew tap woosal1337/folio https://github.com/woosal1337/folio",
-        installCommand: "brew install --cask folio",
-        upgradeCommand: "brew upgrade --cask folio",
+        tapCommand: "coming soon",
+        installCommand: "coming soon",
+        upgradeCommand: "coming soon",
     },
 } as const;
 
