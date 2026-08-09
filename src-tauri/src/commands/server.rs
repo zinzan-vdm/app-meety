@@ -2,7 +2,7 @@ use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 
-use folio_core::server::{sync_session, RemoteClient, ServerTokens, SyncOutcome, SyncState};
+use meety_core::server::{sync_session, RemoteClient, ServerTokens, SyncOutcome, SyncState};
 use serde::Serialize;
 use tauri::State;
 use tracing::info;
@@ -164,7 +164,7 @@ pub async fn sync_recording(
 ) -> Result<SyncState, String> {
     if !ServerTokens::has() {
         return Err(
-            "Not signed in to your Folio server — open Settings → Transcription → Remote server and create an account or sign in.".into(),
+            "Not signed in to your Meety server — open Settings → Transcription → Remote server and create an account or sign in.".into(),
         );
     }
     let (endpoint, output_dir, language) = {
@@ -178,14 +178,14 @@ pub async fn sync_recording(
     if endpoint.trim().is_empty() {
         return Err("remote endpoint is not set".into());
     }
-    let session_dir = folio_core::paths::canonicalize_under(&output_dir, &session_dir)
+    let session_dir = meety_core::paths::canonicalize_under(&output_dir, &session_dir)
         .map_err(|e| format!("invalid session directory: {e}"))?;
     let language = (!language.is_empty() && language != "auto").then_some(language);
     let outcome = run_sync(&endpoint, &session_dir, language.as_deref()).await?;
     Ok(outcome.state)
 }
 
-fn is_auth_error(e: &folio_core::FolioError) -> bool {
+fn is_auth_error(e: &meety_core::MeetyError) -> bool {
     let s = e.to_string().to_lowercase();
     s.contains("401")
         || s.contains("invalid token")

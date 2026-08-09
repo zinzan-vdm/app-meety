@@ -32,14 +32,14 @@ pub fn run() {
                 let state: tauri::State<'_, app::AppState> = app.state();
                 let settings = state.settings.lock().clone();
                 let on = settings.privacy_mode;
-                folio_core::cloud_guard::set_airgap(on);
+                meety_core::cloud_guard::set_airgap(on);
                 let vault_root = settings
                     .output_dir
                     .parent()
                     .map(|p| p.to_path_buf())
                     .unwrap_or_else(|| settings.output_dir.clone());
-                let policy = folio_core::cloud_guard::load_egress_policy(&vault_root);
-                folio_core::cloud_guard::set_egress_policy(policy);
+                let policy = meety_core::cloud_guard::load_egress_policy(&vault_root);
+                meety_core::cloud_guard::set_egress_policy(policy);
                 tracing::info!(privacy_mode = on, "cloud guard initialised");
             }
 

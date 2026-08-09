@@ -1,17 +1,17 @@
 use std::path::PathBuf;
 
 use chrono::Utc;
-use folio_core::llm::agent_tools;
-use folio_core::llm::agents;
-use folio_core::llm::prompt;
-use folio_core::llm::provider::LlmProvider;
-use folio_core::llm::router::{decide, signals_from, RouterPolicy};
-use folio_core::llm::{
+use meety_core::llm::agent_tools;
+use meety_core::llm::agents;
+use meety_core::llm::prompt;
+use meety_core::llm::provider::LlmProvider;
+use meety_core::llm::router::{decide, signals_from, RouterPolicy};
+use meety_core::llm::{
     AgentRun, AgentRunStore, ChatMessage, ChatRequest, ChatRole, KeyStore, OpenAiProvider,
     ProviderId,
 };
-use folio_core::memory::{EmbeddingClient, MemoryStore};
-use folio_core::transcription::SessionTranscript;
+use meety_core::memory::{EmbeddingClient, MemoryStore};
+use meety_core::transcription::SessionTranscript;
 use tauri::State;
 use tracing::{debug, info, warn};
 
@@ -29,7 +29,7 @@ pub async fn list_agent_runs(
 ) -> Result<Vec<AgentRun>, String> {
     let output_dir = state.settings.lock().output_dir.clone();
     tauri::async_runtime::spawn_blocking(move || -> Result<Vec<AgentRun>, String> {
-        let path = folio_core::paths::canonicalize_under(&output_dir, &session_dir)
+        let path = meety_core::paths::canonicalize_under(&output_dir, &session_dir)
             .map_err(|e| e.to_string())?;
         AgentRunStore::list(&path).map_err(|e| e.to_string())
     })
@@ -50,7 +50,7 @@ pub async fn run_agent(
         let target = session_dir.clone();
         let root = output_dir.clone();
         tauri::async_runtime::spawn_blocking(move || {
-            folio_core::paths::canonicalize_under(&root, &target).map_err(|e| e.to_string())
+            meety_core::paths::canonicalize_under(&root, &target).map_err(|e| e.to_string())
         })
         .await
         .map_err(|e| format!("canonicalize task panicked: {e}"))??
@@ -150,14 +150,14 @@ pub async fn run_agent(
     let tools = agent_tools::tools_for_agent(&agent.id);
     let session_label = prompt::session_label_from_dir(&session_dir);
 
-    let user_message = if folio_core::llm::two_stage::should_apply(&agent.id, &transcript_text) {
+    let user_message = if meety_core::llm::two_stage::should_apply(&agent.id, &transcript_text) {
         tracing::info!(
             agent = %agent.id,
             transcript_chars = transcript_text.len(),
             "two-stage pipeline: extracting evidence"
         );
 
-        match folio_core::llm::two_stage::extract_evidence(
+        match meety_core::llm::two_stage::extract_evidence(
             &transcript_text,
             &api_key,
             EVIDENCE_EXTRACTOR_MODEL,
@@ -169,7 +169,7 @@ pub async fn run_agent(
                     evidence_chars = evidence.len(),
                     "two-stage pipeline: evidence extracted, building synthesis message"
                 );
-                let evidence_msg = folio_core::llm::two_stage::evidence_user_message(&evidence);
+                let evidence_msg = meety_core::llm::two_stage::evidence_user_message(&evidence);
                 prompt::build_user_message(
                     &evidence_msg,
                     live_notes_md.as_deref(),
@@ -191,7 +191,7 @@ pub async fn run_agent(
         .map(|p| p.to_path_buf())
         .unwrap_or(output_dir);
     let profile_ctx =
-        folio_core::user_profile::load(&vault_root).and_then(|p| p.as_prompt_context());
+        meety_core::user_profile::load(&vault_root).and_then(|p| p.as_prompt_context());
 
     let base = {
         let mut parts: Vec<String> = Vec::new();

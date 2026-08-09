@@ -41,7 +41,7 @@ function rawMessage(e: unknown): string {
 export function humanizeError(e: unknown): string {
   let msg = rawMessage(e).trim();
   msg = msg.replace(/^ipc\s+[\w-]+\s+failed:\s*/i, "");
-  msg = msg.replace(/^(IpcError|Error|RuntimeError|FolioError):\s*/i, "");
+  msg = msg.replace(/^(IpcError|Error|RuntimeError|MeetyError):\s*/i, "");
   msg = msg.trim();
 
   const lower = msg.toLowerCase();

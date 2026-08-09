@@ -1,10 +1,10 @@
 use std::path::PathBuf;
 use std::time::Instant;
 
-use folio_core::audio::{
+use meety_core::audio::{
     concat_wavs, CaptureArtifacts, CaptureConfig, CaptureSession, RecordingResult, RecordingStatus,
 };
-use folio_core::storage::RecordingSummary;
+use meety_core::storage::RecordingSummary;
 use tauri::{Emitter, State};
 use tracing::{debug, info};
 
@@ -12,7 +12,7 @@ use crate::app::state::PausedNote;
 use crate::app::AppState;
 
 fn maybe_start_live_transcript(app: &tauri::AppHandle, state: &AppState, session_dir: PathBuf) {
-    use folio_core::transcription::{WhisperModel, WhisperModelStore};
+    use meety_core::transcription::{WhisperModel, WhisperModelStore};
 
     let (enabled, kind, model_id, language) = {
         let s = state.settings.lock();
@@ -72,11 +72,11 @@ pub async fn create_note(state: State<'_, AppState>) -> Result<RecordingSummary,
         let label = chrono::Local::now().format("%Y-%m-%d-%H-%M-%S").to_string();
         let dir = output_dir.join(&label);
         std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
-        folio_core::storage::atomic_write::atomic_write(&dir.join("live_notes.json"), b"[]")
+        meety_core::storage::atomic_write::atomic_write(&dir.join("live_notes.json"), b"[]")
             .map_err(|e| e.to_string())?;
 
-        let draft_name = folio_core::storage::session::allocate_draft_name(&output_dir);
-        folio_core::storage::atomic_write::atomic_write(
+        let draft_name = meety_core::storage::session::allocate_draft_name(&output_dir);
+        meety_core::storage::atomic_write::atomic_write(
             &dir.join("draft.txt"),
             draft_name.as_bytes(),
         )
@@ -114,7 +114,7 @@ pub async fn rename_note(
     let output_dir = state.settings.lock().output_dir.clone();
 
     let dir =
-        folio_core::paths::canonicalize_under(&output_dir, std::path::Path::new(&session_dir))
+        meety_core::paths::canonicalize_under(&output_dir, std::path::Path::new(&session_dir))
             .map_err(|e| format!("invalid session directory: {e}"))?;
     let trimmed = title.trim().to_string();
     tauri::async_runtime::spawn_blocking(move || -> Result<(), String> {
@@ -126,7 +126,7 @@ pub async fn rename_note(
                 Err(e) => Err(e.to_string()),
             }
         } else {
-            folio_core::storage::atomic_write::atomic_write(&path, trimmed.as_bytes())
+            meety_core::storage::atomic_write::atomic_write(&path, trimmed.as_bytes())
                 .map_err(|e| e.to_string())
         }
     })
@@ -166,7 +166,7 @@ pub async fn set_enhanced_notes_accepted(
                 Err(e) => Err(e.to_string()),
             }
         } else {
-            folio_core::storage::atomic_write::atomic_write(&path, trimmed.as_bytes())
+            meety_core::storage::atomic_write::atomic_write(&path, trimmed.as_bytes())
                 .map_err(|e| e.to_string())
         }
     })
@@ -189,7 +189,7 @@ pub async fn start_recording(
 
     let session_dir = match session_dir {
         Some(dir) => Some(
-            folio_core::paths::canonicalize_under(&config.output_dir, std::path::Path::new(&dir))
+            meety_core::paths::canonicalize_under(&config.output_dir, std::path::Path::new(&dir))
                 .map_err(|e| format!("invalid session directory: {e}"))?,
         ),
         None => None,

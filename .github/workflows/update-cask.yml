@@ -28,7 +28,7 @@ jobs:
           fi
           version="${TAG#v}"
           base="https://github.com/${REPO}/releases/download/${TAG}"
-          arm_sha="$(curl -fsSL "${base}/Folio_${version}_aarch64.dmg" | sha256sum | cut -d' ' -f1)"
+          arm_sha="$(curl -fsSL "${base}/Meety_${version}_aarch64.dmg" | sha256sum | cut -d' ' -f1)"
           VERSION="$version" ARM_SHA="$arm_sha" python3 - <<'PY'
           import os, re
           v = os.environ["VERSION"]

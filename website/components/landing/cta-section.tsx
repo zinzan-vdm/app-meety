@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { siteConfig } from "@/lib/site-config";
 import { Button } from "@/components/ui/button";
 import { CommandLine } from "@/components/site/code-block";
-import { FolioMark } from "@/components/site/logo";
+import { MeetyMark } from "@/components/site/logo";
 import { WaveBars } from "@/components/landing/wave-bars";
 
 export function CtaSection() {
@@ -20,7 +20,7 @@ export function CtaSection() {
                     }}
                 />
                 <div className="mx-auto flex max-w-2xl flex-col items-center gap-6">
-                    <FolioMark className="h-12 w-12" />
+                    <MeetyMark className="h-12 w-12" />
                     <h2 className="text-balance font-display text-ms-34 font-semibold tracking-tight sm:text-ms-45">
                         Own your meeting notes
                     </h2>

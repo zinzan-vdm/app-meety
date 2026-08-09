@@ -1,6 +1,6 @@
-# Rust workspace & module architecture — Folio guidelines
+# Rust workspace & module architecture — Meety guidelines
 
-Source-cited synthesis for organising the Folio workspace, drawing module boundaries, and shaping public APIs. Targets the multi-crate workspace (`folio-core`, `folio-cli`, `folio-app`) and is intended to be re-read whenever a new module, crate, or public type is added.
+Source-cited synthesis for organising the Meety workspace, drawing module boundaries, and shaping public APIs. Targets the multi-crate workspace (`folio-core`, `folio-cli`, `folio-app`) and is intended to be re-read whenever a new module, crate, or public type is added.
 
 ## TL;DR — the rules
 
@@ -14,7 +14,7 @@ Source-cited synthesis for organising the Folio workspace, drawing module bounda
 
 ## Workspace layout
 
-Current Folio layout (good):
+Current Meety layout (good):
 
 ```
 folio/
@@ -74,7 +74,7 @@ From [Effective Rust Item 22](https://effective-rust.com/visibility.html):
 
 > "Visibility changes can be hard to undo. Once a crate item is public, it can't be made private again without breaking any code that uses the crate."
 
-Practical Folio rule: Tauri command modules in `src-tauri/src/commands/` must be `pub` (Tauri's `generate_handler!` requires it); the `folio-core` helpers they call should be `pub(crate)` _unless_ `folio-cli` also needs them. Re-export the chosen API from `lib.rs`.
+Practical Meety rule: Tauri command modules in `src-tauri/src/commands/` must be `pub` (Tauri's `generate_handler!` requires it); the `folio-core` helpers they call should be `pub(crate)` _unless_ `folio-cli` also needs them. Re-export the chosen API from `lib.rs`.
 
 ### `pub use` facade pattern
 
@@ -88,7 +88,7 @@ pub mod storage;
 pub mod llm;
 
 pub use audio::{CaptureSession, CaptureArtifacts, CaptureConfig, Channel};
-pub use error::{FolioError, Result};
+pub use error::{MeetyError, Result};
 ```
 
 Consumers `use folio_core::CaptureSession`, not `folio_core::audio::capture::CaptureSession`. You can rename, move, or split `audio::capture` later without breaking anyone.
@@ -232,10 +232,10 @@ Downside (per [Knoldus](https://medium.com/@knoldus/prevent-breaking-code-change
 
 For items that must be technically public (macro-generated impls, cross-crate workspace internals) but conceptually internal. Doesn't change visibility — only hides from rustdoc. Pair with module-level `//!` "this is internal" notes.
 
-## Folio-specific recommendations (priority order)
+## Meety-specific recommendations (priority order)
 
 1. **Adopt the `<name>.rs + <name>/` pattern** for all modules. Current code already does this except where files are short enough to live inline.
-2. **Mark public enums `#[non_exhaustive]`.** Top candidate: `FolioError` in `crates/folio-core/src/error.rs`.
+2. **Mark public enums `#[non_exhaustive]`.** Top candidate: `MeetyError` in `crates/folio-core/src/error.rs`.
 3. **Tighten visibility** — sweep `folio-core` for `pub` items that only one other module uses, demote to `pub(crate)`. Each demotion frees you to refactor.
 4. **Split `folio-cli/src/main.rs` (600 lines) into per-subcommand modules** under `crates/folio-cli/src/commands/`. The main fn becomes the dispatch table.
 5. **Split `voice_processing_capture.rs` (470 lines)** — the smoke-test type used only by the `vpio-smoke` CLI subcommand and the production `VoiceProcessingMicCapture` are two different concerns sharing a file. Move them into a `voice_processing_capture/` directory.

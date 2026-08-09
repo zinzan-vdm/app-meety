@@ -1,6 +1,6 @@
 # Release engineering
 
-How the signed, notarised, auto-updating Folio builds get produced.
+How the signed, notarised, auto-updating Meety builds get produced.
 Cited from `docs/CODE_STYLE.md` §9.5 and `docs/refactor/PHASE-3-PUNCH-LIST.md` D1/D3.
 
 ## One-line summary
@@ -67,7 +67,7 @@ The workflow writes `latest.json` to the GitHub release with the shape Tauri-upd
   "platforms": {
     "darwin-aarch64": {
       "signature": "<base64 ed25519 signature>",
-      "url": "https://github.com/woosal1337/folio/releases/download/v1.0.1/Folio.app.tar.gz"
+      "url": "https://github.com/zinzan-vdm/app-meety/releases/download/v1.0.1/Meety.app.tar.gz"
     },
     "darwin-x86_64": { … },
     "windows-x86_64": { … }

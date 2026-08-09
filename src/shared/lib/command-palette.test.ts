@@ -26,7 +26,7 @@ const items: CommandItem[] = [
     subtitle: "yesterday",
     action: noop,
   },
-  { id: "4", kind: "memory", title: "user.company is Folio", action: noop },
+  { id: "4", kind: "memory", title: "user.company is Meety", action: noop },
 ];
 
 describe("scoreFuzzy", () => {

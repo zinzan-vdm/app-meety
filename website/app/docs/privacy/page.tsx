@@ -21,7 +21,7 @@ import {
 export const metadata: Metadata = {
     title: "Privacy & consent",
     description:
-        "How the private path is the default path in Folio, what stays on disk, the exact network surface, and your responsibility around recording consent.",
+        "How the private path is the default path in Meety, what stays on disk, the exact network surface, and your responsibility around recording consent.",
 };
 
 export default function PrivacyPage() {

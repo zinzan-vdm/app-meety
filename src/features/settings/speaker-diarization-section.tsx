@@ -120,7 +120,7 @@ export function SpeakerDiarizationSection({ settings, onChange }: Props) {
             </span>
           </Label>
           <p className="max-w-md text-xs text-muted-foreground">
-            After transcribing, Folio tells apart who spoke on the system-audio track
+            After transcribing, Meety tells apart who spoke on the system-audio track
             and labels each turn Speaker 1, 2, 3… Your own microphone is always labelled
             “You”. Runs fully on-device and needs the two models below.
           </p>

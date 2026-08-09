@@ -74,7 +74,7 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
         <div className="flex items-center gap-3">
           <Sparkles className="h-6 w-6 text-primary" />
           <h1 className="font-serif text-4xl font-medium tracking-tight">
-            Welcome to Folio
+            Welcome to Meety
           </h1>
         </div>
         <p className="mt-2 text-sm text-muted-foreground">

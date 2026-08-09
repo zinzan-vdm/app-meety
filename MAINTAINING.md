@@ -1,4 +1,4 @@
-# Maintaining Folio
+# Maintaining Meety
 
 How the maintainer's day-to-day workflow runs. Strangers shipping a
 one-off fix should start with [`CONTRIBUTING.md`](./CONTRIBUTING.md)

@@ -1,6 +1,6 @@
 # Remote transcription server
 
-Folio is local-first: by default audio never leaves the machine and Whisper
+Meety is local-first: by default audio never leaves the machine and Whisper
 runs on-device. This document describes the **optional** remote backend that
 lets a user offload transcription to a self-hosted, GPU-accelerated server so
 the Mac can sleep or be closed while a meeting is transcribed elsewhere.
@@ -22,7 +22,7 @@ local stays the default.
 
 ```
 ┌───────────────┐        HTTPS / bearer JWT        ┌─────────────────────────┐
-│  Folio (Mac)  │ ───────────────────────────────▶ │  FastAPI API            │
+│  Meety (Mac)  │ ───────────────────────────────▶ │  FastAPI API            │
 │               │  create → upload → enqueue        │  (auth, uploads, jobs)  │
 │  sync engine  │ ◀─────────────────────────────── │                         │
 │  sync.json    │   poll job → pull transcript      └───────────┬─────────────┘

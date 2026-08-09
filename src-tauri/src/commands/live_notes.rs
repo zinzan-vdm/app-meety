@@ -1,7 +1,7 @@
 use std::path::Path;
 
-use folio_core::live_notes::{parse_lines, render_markdown, RawNoteLine};
-use folio_core::storage::atomic_write::{atomic_write, atomic_write_json};
+use meety_core::live_notes::{parse_lines, render_markdown, RawNoteLine};
+use meety_core::storage::atomic_write::{atomic_write, atomic_write_json};
 use tauri::State;
 use tracing::debug;
 
@@ -18,7 +18,7 @@ pub async fn save_live_notes(
 ) -> Result<(), String> {
     let output_dir = state.settings.lock().output_dir.clone();
 
-    let dir = folio_core::paths::canonicalize_under(&output_dir, Path::new(&session_dir))
+    let dir = meety_core::paths::canonicalize_under(&output_dir, Path::new(&session_dir))
         .map_err(|e| format!("invalid session directory: {e}"))?;
     let markdown = render_markdown(&parse_lines(&lines));
 
@@ -41,7 +41,7 @@ pub async fn load_live_notes(
 ) -> Result<Vec<RawNoteLine>, String> {
     let output_dir = state.settings.lock().output_dir.clone();
 
-    let dir = match folio_core::paths::canonicalize_under(&output_dir, Path::new(&session_dir)) {
+    let dir = match meety_core::paths::canonicalize_under(&output_dir, Path::new(&session_dir)) {
         Ok(d) => d,
         Err(_) => return Ok(Vec::new()),
     };

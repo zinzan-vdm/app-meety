@@ -3,7 +3,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 
-use folio_core::transcription::{LocalWhisperTranscriber, Transcriber};
+use meety_core::transcription::{LocalWhisperTranscriber, Transcriber};
 use serde::Serialize;
 use tauri::{AppHandle, Emitter, Runtime};
 use tracing::debug;

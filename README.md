@@ -1,20 +1,21 @@
 <p align="center">
-  <img src="docs/assets/banner.png" alt="Folio — local-first meeting notes for macOS" width="100%">
+  <img src="docs/assets/banner.png" alt="Meety — local-first meeting notes" width="100%">
 </p>
 
 <p align="center">
-  <a href="https://folio.chele.bi"><img src="https://img.shields.io/badge/website-folio.chele.bi-0E0E10.svg" alt="Website"></a>
-  <a href="https://github.com/woosal1337/folio/actions/workflows/ci.yml"><img src="https://github.com/woosal1337/folio/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License"></a>
-  <a href="#development"><img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="Platform"></a>
+  <a href="https://github.com/zinzan-vdm/app-meety"><img src="https://img.shields.io/badge/status-alpha-orange.svg" alt="Status"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+  <a href="#development"><img src="https://img.shields.io/badge/platform-macOS%20|%20Windows%20|%20Linux-lightgrey.svg" alt="Platform"></a>
   <a href="https://tauri.app"><img src="https://img.shields.io/badge/built%20with-Tauri%202-24C8DB.svg" alt="Built with Tauri"></a>
 </p>
 
-# [Folio](https://folio.chele.bi)
+# Meety
 
-Local-first meeting transcription for macOS. Captures system audio + microphone independently, transcribes on-device by default, writes per-meeting markdown to your vault. Audio leaves your machine only if you opt in — cloud transcription, or a GPU server you host yourself ([`server/`](server/README.md)). Website: [folio.chele.bi](https://folio.chele.bi).
+**Local-first meeting transcription for macOS, Windows, and Linux.** Captures system audio + microphone independently, transcribes on-device (GPU-accelerated where available), writes per-meeting markdown to your vault. Audio never leaves your machine on the default path.
 
-**Status:** `1.0.0`. Install via [Homebrew](#install) or the notarized DMG, or build from source.
+Meety is a cross-platform fork of [Folio](https://github.com/woosal1337/folio) by Ege Çelebi. The original is macOS-only; Meety extends the same local-first pipeline to all desktop platforms.
+
+**Status:** `v0.1.0-alpha`. Build from source (see [Development](#development)).
 
 ## What it does
 
@@ -30,19 +31,19 @@ Local-first meeting transcription for macOS. Captures system audio + microphone 
 
 No telemetry, no analytics, no crash reporting — enforced in CI. Audio, transcripts, and notes stay on your machine on the default path; the only network calls are the opt-in cloud-AI and webhook paths plus the one-time model download, all of which Privacy Mode can block. Full details, including data retention, are in [`docs/PRIVACY.md`](./docs/PRIVACY.md).
 
-Recording a conversation can be illegal without the other participants' consent, and the rules vary by US state and by country (many require all-party consent). Folio gives you the tool; obtaining consent is your responsibility. Tell people before you record. See [`docs/PRIVACY.md`](./docs/PRIVACY.md#recording-consent).
+Recording a conversation can be illegal without the other participants' consent, and the rules vary by US state and by country (many require all-party consent). Meety gives you the tool; obtaining consent is your responsibility. Tell people before you record. See [`docs/PRIVACY.md`](./docs/PRIVACY.md#recording-consent).
 
 ## Install
 
 Requires macOS 13 (Ventura) or later, on Apple Silicon or Intel. The
-first time you use local transcription or diarization, Folio downloads the
+first time you use local transcription or diarization, Meety downloads the
 model weights (a few hundred MB) from Hugging Face and the sherpa-onnx
 GitHub releases.
 
 ### Homebrew (recommended)
 
 ```sh
-brew tap woosal1337/folio https://github.com/woosal1337/folio
+brew tap zinzan-vdm/app-meety https://github.com/zinzan-vdm/app-meety
 brew install --cask folio
 ```
 
@@ -50,9 +51,9 @@ brew install --cask folio
 
 ### Direct download
 
-Grab the latest **Apple Silicon** `.dmg` from the [Releases page](https://github.com/woosal1337/folio/releases/latest), open it, and drag **Folio** to Applications:
+Grab the latest **Apple Silicon** `.dmg` from the [Releases page](https://github.com/zinzan-vdm/app-meety/releases/latest), open it, and drag **Meety** to Applications:
 
-- Apple Silicon — `Folio_<version>_aarch64.dmg`
+- Apple Silicon — `Meety_<version>_aarch64.dmg`
 
 Releases are code-signed with a Developer ID and notarized by Apple, so they open without a Gatekeeper prompt. (Intel builds aren't published yet — build from source on an Intel Mac if you need one.)
 
@@ -91,7 +92,7 @@ Requirements:
 - Xcode command-line tools: `xcode-select --install`
 
 ```sh
-git clone git@github.com:woosal1337/folio.git
+git clone git@github.com:zinzan-vdm/app-meety.git
 cd folio
 bun install
 pre-commit install

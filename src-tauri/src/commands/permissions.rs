@@ -1,4 +1,4 @@
-use folio_core::permissions::{Permission, PermissionRow, PermissionStatus};
+use meety_core::permissions::{Permission, PermissionRow, PermissionStatus};
 
 const MIC_URL: &str = "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone";
 
@@ -132,7 +132,7 @@ mod mac {
     use cocoa::foundation::NSString;
     use objc::{class, msg_send, sel, sel_impl};
 
-    use folio_core::permissions::PermissionStatus;
+    use meety_core::permissions::PermissionStatus;
 
     pub fn mic_status() -> PermissionStatus {
         unsafe {

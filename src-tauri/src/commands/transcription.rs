@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
-use folio_core::storage::session::TRANSCRIPT_FILENAME;
-use folio_core::transcription::{
+use meety_core::storage::session::TRANSCRIPT_FILENAME;
+use meety_core::transcription::{
     ChannelTranscript, LocalWhisperTranscriber, OpenAiTranscriber, SessionTranscript, Transcriber,
     Transcript, TranscriptionResult, WhisperModel, WhisperModelStatus, WhisperModelStore,
 };
@@ -28,10 +28,10 @@ pub async fn transcribe_recording(
         )
     };
 
-    let session_dir = folio_core::paths::canonicalize_under(&output_dir, &session_dir)
+    let session_dir = meety_core::paths::canonicalize_under(&output_dir, &session_dir)
         .map_err(|e| format!("invalid session directory: {e}"))?;
 
-    let api_key = folio_core::llm::KeyStore::get(folio_core::llm::ProviderId::OpenAi)
+    let api_key = meety_core::llm::KeyStore::get(meety_core::llm::ProviderId::OpenAi)
         .map_err(|e| format!("could not read OpenAI key from Keychain: {e}"))?
         .unwrap_or_default();
 
@@ -116,7 +116,7 @@ pub async fn transcribe_recording(
                     match std::fs::read(side)
                         .map_err(|e| e.to_string())
                         .and_then(|bytes| {
-                            serde_json::from_slice::<folio_core::audio::vad_filter::VadSidecar>(
+                            serde_json::from_slice::<meety_core::audio::vad_filter::VadSidecar>(
                                 &bytes,
                             )
                             .map_err(|e| e.to_string())
@@ -124,12 +124,12 @@ pub async fn transcribe_recording(
                         Ok(sidecar) => {
                             for seg in &mut transcript.segments {
                                 seg.start_seconds =
-                                    folio_core::audio::vad_filter::remap_cut_seconds_to_original(
+                                    meety_core::audio::vad_filter::remap_cut_seconds_to_original(
                                         &sidecar,
                                         seg.start_seconds,
                                     );
                                 seg.end_seconds =
-                                    folio_core::audio::vad_filter::remap_cut_seconds_to_original(
+                                    meety_core::audio::vad_filter::remap_cut_seconds_to_original(
                                         &sidecar,
                                         seg.end_seconds,
                                     );
@@ -319,7 +319,7 @@ pub async fn save_transcript(
         let path = canon_target.join(TRANSCRIPT_FILENAME);
         let json = serde_json::to_string_pretty(&transcript)
             .map_err(|e| format!("could not serialize transcript: {e}"))?;
-        folio_core::storage::atomic_write::atomic_write(&path, json.as_bytes())
+        meety_core::storage::atomic_write::atomic_write(&path, json.as_bytes())
             .map_err(|e| format!("could not write transcript file {}: {e}", path.display()))?;
         info!(path = %path.display(), "transcript saved (edited)");
         Ok(path)
@@ -368,7 +368,7 @@ pub async fn locate_note_evidence(
     state: State<'_, AppState>,
     session_dir: PathBuf,
     line: String,
-) -> Result<Option<folio_core::transcription::locate::TranscriptHit>, String> {
+) -> Result<Option<meety_core::transcription::locate::TranscriptHit>, String> {
     let output_dir = state.settings.lock().output_dir.clone();
 
     tauri::async_runtime::spawn_blocking(move || -> Result<_, String> {
@@ -382,7 +382,7 @@ pub async fn locate_note_evidence(
         }
         let path = canon_target.join(TRANSCRIPT_FILENAME);
         let transcript = SessionTranscript::read_json(&path).map_err(|e| e.to_string())?;
-        Ok(folio_core::transcription::locate::locate_fuzzy(
+        Ok(meety_core::transcription::locate::locate_fuzzy(
             &transcript,
             &line,
         ))
@@ -419,19 +419,19 @@ pub async fn diarize_session(
     let session_dir = {
         let target = session_dir;
         tauri::async_runtime::spawn_blocking(move || {
-            folio_core::paths::canonicalize_under(&output_dir, &target).map_err(|e| e.to_string())
+            meety_core::paths::canonicalize_under(&output_dir, &target).map_err(|e| e.to_string())
         })
         .await
         .map_err(|e| format!("canonicalize panicked: {e}"))??
     };
 
     let did_label = tauri::async_runtime::spawn_blocking(move || -> Result<bool, String> {
-        use folio_core::diarization::{
+        use meety_core::diarization::{
             anchor_self_from_session, identify_session_speakers, DiarizationError,
             DiarizationOptions,
         };
-        use folio_core::speaker_memory::{self, SpeakerRegistry};
-        use folio_core::storage::session::TRANSCRIPT_FILENAME;
+        use meety_core::speaker_memory::{self, SpeakerRegistry};
+        use meety_core::storage::session::TRANSCRIPT_FILENAME;
 
         let transcript_path = session_dir.join(TRANSCRIPT_FILENAME);
         let mut session_transcript = SessionTranscript::read_json(&transcript_path)

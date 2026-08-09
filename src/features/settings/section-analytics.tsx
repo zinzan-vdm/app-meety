@@ -178,7 +178,7 @@ function RejectedFeatureCard() {
       <div className="min-w-0 flex-1 space-y-0.5">
         <p className="text-sm font-medium">No engagement scoring</p>
         <p className="max-w-prose text-xs text-muted-foreground">
-          Folio does not compute per-person talk-time, attention, or engagement scores.
+          Meety does not compute per-person talk-time, attention, or engagement scores.
           Meeting analytics that surveil individuals are out of scope by policy — the
           only counts you&apos;ll ever see are your own totals.
         </p>

@@ -47,7 +47,7 @@ export function InstallSection() {
                                     <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-2xs">
                                         .dmg
                                     </code>{" "}
-                                    from the releases page, open it, and drag Folio to
+                                    from the releases page, open it, and drag Meety to
                                     Applications. Builds are code-signed and notarized, so
                                     they open without a Gatekeeper prompt.
                                 </p>

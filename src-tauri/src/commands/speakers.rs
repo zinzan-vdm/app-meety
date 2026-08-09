@@ -1,9 +1,9 @@
 use std::path::Path;
 
-use folio_core::diarization::{
+use meety_core::diarization::{
     local_device_uuid, now_ms, recording_uuid, SessionSpeakers, SpeakerLabel,
 };
-use folio_core::speaker_memory::{self, NameTarget, SpeakerRegistry};
+use meety_core::speaker_memory::{self, NameTarget, SpeakerRegistry};
 use uuid::Uuid;
 
 #[tauri::command]
@@ -149,7 +149,7 @@ pub async fn reject_session_speaker(
     .map_err(|e| format!("reject_session_speaker task panicked: {e}"))?
 }
 
-fn clear_suggestion(speaker: &mut folio_core::diarization::SessionSpeaker) {
+fn clear_suggestion(speaker: &mut meety_core::diarization::SessionSpeaker) {
     speaker.suggested_name = None;
     speaker.suggested_registry_id = None;
     speaker.suggested_score = None;

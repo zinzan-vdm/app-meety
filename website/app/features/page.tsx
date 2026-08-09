@@ -22,7 +22,7 @@ import { CapabilityTable } from "@/components/landing/capability-table";
 export const metadata: Metadata = {
     title: "Features",
     description:
-        "Everything Folio does, in detail: two-stream capture, on-device transcription and diarization, a markdown vault you own, local connectors, and a network you control.",
+        "Everything Meety does, in detail: two-stream capture, on-device transcription and diarization, a markdown vault you own, local connectors, and a network you control.",
 };
 
 type FeatureBlock = {
@@ -39,7 +39,7 @@ const blocks: FeatureBlock[] = [
         eyebrow: "Capture",
         title: "Two streams, kept apart",
         description:
-            "Folio records system audio and your microphone as independent tracks, so the transcript stays clean and every line is attributable.",
+            "Meety records system audio and your microphone as independent tracks, so the transcript stays clean and every line is attributable.",
         points: [
             "cpal captures your microphone, ScreenCaptureKit captures system audio.",
             "No bot joins the call, so there is nothing for other people to admit.",
@@ -104,7 +104,7 @@ const blocks: FeatureBlock[] = [
         eyebrow: "Privacy",
         title: "The network is opt-in",
         description:
-            "Folio is built so the private path is the easy path. Privacy Mode airgaps the app, and there is no telemetry to turn off.",
+            "Meety is built so the private path is the easy path. Privacy Mode airgaps the app, and there is no telemetry to turn off.",
         points: [
             "No telemetry, no analytics, no crash reporting, enforced in CI.",
             "Privacy Mode blocks every outbound call except localhost.",

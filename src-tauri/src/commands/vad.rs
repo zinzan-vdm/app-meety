@@ -4,8 +4,8 @@ use serde::Serialize;
 use tauri::State;
 use tracing::{info, warn};
 
-use folio_core::audio::enhancement::{self, EnhancementConfig};
-use folio_core::audio::vad_filter::{apply_vad_to_wav_with_stem, VadEngine, VadSidecar};
+use meety_core::audio::enhancement::{self, EnhancementConfig};
+use meety_core::audio::vad_filter::{apply_vad_to_wav_with_stem, VadEngine, VadSidecar};
 
 use crate::app::AppState;
 
@@ -42,7 +42,7 @@ pub async fn run_vad(
     };
 
     let canonical = tauri::async_runtime::spawn_blocking(move || {
-        folio_core::paths::canonicalize_under(&output_dir, &session_dir).map_err(|e| e.to_string())
+        meety_core::paths::canonicalize_under(&output_dir, &session_dir).map_err(|e| e.to_string())
     })
     .await
     .map_err(|e| format!("canonicalize task panicked: {e}"))??;

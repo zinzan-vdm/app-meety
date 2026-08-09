@@ -1,5 +1,5 @@
-use folio_core::cloud_guard;
-use folio_core::storage::{Settings, SettingsStore};
+use meety_core::cloud_guard;
+use meety_core::storage::{Settings, SettingsStore};
 use tauri::{Emitter, State};
 use tracing::{debug, info};
 

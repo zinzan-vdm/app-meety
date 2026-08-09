@@ -30,14 +30,14 @@ export default function InstallationPage() {
         <>
             <DocHeader
                 eyebrow="Getting started"
-                title="Install Folio"
-                description="Folio is a menu-bar app for macOS. With Homebrew you can be ready in about a minute."
+                title="Install Meety"
+                description="Meety is a menu-bar app for macOS. With Homebrew you can be ready in about a minute."
             />
 
             <DocH2 id="requirements">Requirements</DocH2>
             <Prose>
                 <p>
-                    Folio runs on <strong>{siteConfig.platform}</strong>. Apple Silicon is
+                    Meety runs on <strong>{siteConfig.platform}</strong>. Apple Silicon is
                     the performance target, and Intel Macs are supported by building from
                     source. Local transcription is Metal-accelerated on Apple Silicon.
                 </p>
@@ -49,7 +49,7 @@ export default function InstallationPage() {
                     <li>
                         A <strong>one-time model-weights download</strong> on first use.
                         The first local transcription or diarization fetches a few hundred
-                        megabytes of weights, then Folio works offline.
+                        megabytes of weights, then Meety works offline.
                     </li>
                 </ul>
             </Prose>
@@ -57,7 +57,7 @@ export default function InstallationPage() {
             <DocH2 id="homebrew">Homebrew</DocH2>
             <Prose>
                 <p>
-                    Homebrew is the recommended way to install Folio. Tap the cask, then
+                    Homebrew is the recommended way to install Meety. Tap the cask, then
                     install it. The two commands below run in order.
                 </p>
             </Prose>
@@ -77,8 +77,8 @@ export default function InstallationPage() {
                     <a href={siteConfig.links.releases} target="_blank" rel="noreferrer">
                         Releases page
                     </a>
-                    . The file is named <code>Folio_&lt;version&gt;_aarch64.dmg</code>.
-                    Open it and drag Folio to your Applications folder.
+                    . The file is named <code>Meety_&lt;version&gt;_aarch64.dmg</code>.
+                    Open it and drag Meety to your Applications folder.
                 </p>
                 <p>
                     Releases are code-signed with a Developer ID and notarized by Apple,
@@ -131,8 +131,8 @@ export default function InstallationPage() {
             <DocH2 id="grant-permissions">Grant permissions</DocH2>
             <Prose>
                 <p>
-                    On first run, macOS prompts for the permissions Folio needs to capture
-                    a meeting. Folio watches your calendar and audio devices through
+                    On first run, macOS prompts for the permissions Meety needs to capture
+                    a meeting. Meety watches your calendar and audio devices through
                     EventKit. No bot joins the call.
                 </p>
             </Prose>
@@ -140,7 +140,7 @@ export default function InstallationPage() {
                 <Step n={1} title="Allow microphone access">
                     <Prose>
                         <p>
-                            macOS asks for microphone permission so Folio can record your
+                            macOS asks for microphone permission so Meety can record your
                             voice. Your microphone track is always labelled{" "}
                             <code>You</code>.
                         </p>
@@ -149,7 +149,7 @@ export default function InstallationPage() {
                 <Step n={2} title="Allow screen recording">
                     <Prose>
                         <p>
-                            macOS asks for screen recording permission. Folio uses it to
+                            macOS asks for screen recording permission. Meety uses it to
                             capture system audio, the other side of the conversation, as a
                             separate stream from your microphone.
                         </p>
@@ -159,7 +159,7 @@ export default function InstallationPage() {
             <Callout variant="warning" title="Screen recording is required">
                 <p>
                     System audio capture on macOS goes through ScreenCaptureKit, which is
-                    gated behind the screen recording permission. Without it, Folio can
+                    gated behind the screen recording permission. Without it, Meety can
                     record your microphone but not the other participants. Grant screen
                     recording so both streams are captured.
                 </p>
@@ -167,7 +167,7 @@ export default function InstallationPage() {
 
             <DocH2 id="update-and-uninstall">Update and uninstall</DocH2>
             <Prose>
-                <p>To update Folio to the latest release, run the upgrade command.</p>
+                <p>To update Meety to the latest release, run the upgrade command.</p>
             </Prose>
             <CommandLine command={siteConfig.install.upgradeCommand} />
             <Prose>
@@ -175,7 +175,7 @@ export default function InstallationPage() {
                     To remove the app, run <code>brew uninstall --cask folio</code>.
                     Uninstalling removes the application only. Your markdown vault is left
                     untouched, since notes are plain files on disk that you own. You can
-                    read, search, or back them up with any tool, with or without Folio
+                    read, search, or back them up with any tool, with or without Meety
                     installed.
                 </p>
                 <p>

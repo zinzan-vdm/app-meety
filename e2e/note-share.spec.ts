@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { ipcCalls, setupScenario } from "./fixtures/scenario";
 
 const RECORDING = {
-  session_dir: "/tmp/Folio/2026-05-28-share",
+  session_dir: "/tmp/Meety/2026-05-28-share",
   label: "2026-05-28-share",
   duration_seconds: 600,
   mic_bytes: 1_000_000,

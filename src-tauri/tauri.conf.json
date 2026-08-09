@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Folio",
-  "mainBinaryName": "Folio",
+  "productName": "Meety",
+  "mainBinaryName": "Meety",
   "version": "2.0.0",
   "identifier": "dev.folio.app",
   "build": {
@@ -14,7 +14,7 @@
     "macOSPrivateApi": true,
     "windows": [
       {
-        "title": "Folio",
+        "title": "Meety",
         "width": 1200,
         "height": 780,
         "minWidth": 880,
@@ -30,7 +30,7 @@
       "csp": null,
       "assetProtocol": {
         "enable": true,
-        "scope": ["$HOME/Documents/Folio/**", "$APPDATA/Folio/**", "$CACHE/Folio/**"]
+        "scope": ["$HOME/Documents/Meety/**", "$APPDATA/Meety/**", "$CACHE/Meety/**"]
       }
     }
   },
@@ -51,7 +51,7 @@
       {
         "ext": ["wav", "m4a", "mp3"],
         "name": "Audio Recording",
-        "description": "Audio file Folio can transcribe",
+        "description": "Audio file Meety can transcribe",
         "role": "Editor",
         "rank": "Alternate"
       }

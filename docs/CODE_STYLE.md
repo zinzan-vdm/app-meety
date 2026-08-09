@@ -1,4 +1,4 @@
-# Folio Code Style
+# Meety Code Style
 
 The contract every file in this repository follows. Reviewers will reject PRs that violate the rules in this document. AI agents (Claude Code, Codex, etc.) MUST treat these rules as overriding any default behaviour they might otherwise apply.
 
@@ -8,7 +8,7 @@ This document is the authoritative source. The `AGENTS.md` and `CONTRIBUTING.md`
 
 ## 0. North star
 
-Folio is open-source software written for an audience of strangers. Every line should be **legible cold** — readable by someone who has never seen the rest of the codebase — and every public interface should be **stable**: rename it now if you ever will, because we will not break it for downstream users.
+Meety is open-source software written for an audience of strangers. Every line should be **legible cold** — readable by someone who has never seen the rest of the codebase — and every public interface should be **stable**: rename it now if you ever will, because we will not break it for downstream users.
 
 When the rules below conflict with one another, the order of precedence is:
 
@@ -141,10 +141,10 @@ Tauri command and event names are exported constants from `src/shared/ipc/`, nev
 ### 3.1 Rust
 
 - Every error type derives from `thiserror` and lives next to its module.
-- The crate-level `FolioError` enum in `crates/folio-core/src/error.rs` is the public surface that exits the library boundary. Module-local errors implement `From<…> for FolioError`.
+- The crate-level `MeetyError` enum in `crates/folio-core/src/error.rs` is the public surface that exits the library boundary. Module-local errors implement `From<…> for MeetyError`.
 - No `unwrap` outside `#[cfg(test)]`. `expect("<reason>")` is permitted for invariants that genuinely cannot fail; the reason text must explain the invariant.
 - Errors that cross IPC into Tauri commands convert to `String` at the boundary, not earlier.
-- `Result<T>` aliases the crate's `Result<T, FolioError>`; module-local results may use `Result<T, MyError>` directly.
+- `Result<T>` aliases the crate's `Result<T, MeetyError>`; module-local results may use `Result<T, MyError>` directly.
 - The shared `IpcError` formatter in `src/shared/ipc/errors.ts` redacts secrets, API keys, and transcript content before serialising the cause. Error strings are safe to log and safe to surface to users — never paste raw `cause` into a toast.
 
 ### 3.2 TypeScript
@@ -236,7 +236,7 @@ Every Tauri command follows this shape:
 #[tauri::command]
 pub async fn do_thing(state: State<'_, AppState>, input: Input) -> Result<Output, String> {
     let cloned = state.settings.lock().some_field.clone();
-    tauri::async_runtime::spawn_blocking(move || -> Result<Output, FolioError> {
+    tauri::async_runtime::spawn_blocking(move || -> Result<Output, MeetyError> {
         folio_core::module::do_thing(cloned, input)
     })
     .await
@@ -250,7 +250,7 @@ The contract:
 1. Parse IPC args; nothing else happens before the validation step.
 2. Clone every `State` field needed for the blocking work, then drop the `State` guard before any `.await`.
 3. Delegate to `folio-core` — the command body does not contain domain logic.
-4. Map errors at the boundary (`FolioError → String`); the conversion happens once, here, not deeper.
+4. Map errors at the boundary (`MeetyError → String`); the conversion happens once, here, not deeper.
 5. Emit events for long-running work (`window.emit("transcribe:progress", …)`) instead of returning a giant payload.
 
 ### 6.2 TypeScript

@@ -6,7 +6,7 @@ import { DocHeader, DocH2, DocH3, Prose } from "@/components/docs/doc-primitives
 export const metadata: Metadata = {
     title: "FAQ",
     description:
-        "Short answers to common questions about how Folio captures meetings, where your data lives, and which Macs it runs on.",
+        "Short answers to common questions about how Meety captures meetings, where your data lives, and which Macs it runs on.",
 };
 
 export default function FaqPage() {

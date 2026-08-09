@@ -1,4 +1,4 @@
-use folio_core::storage::{Task, TaskStore};
+use meety_core::storage::{Task, TaskStore};
 use std::path::PathBuf;
 use tauri::State;
 use tracing::debug;

@@ -15,7 +15,7 @@ const faqs = [
     },
     {
         question: "Does it join my calls as a bot?",
-        answer: "No. Folio captures system audio directly through ScreenCaptureKit, so there is no bot in the meeting and nothing for other participants to admit.",
+        answer: "No. Meety captures system audio directly through ScreenCaptureKit, so there is no bot in the meeting and nothing for other participants to admit.",
     },
     {
         question: "Where do my notes go?",

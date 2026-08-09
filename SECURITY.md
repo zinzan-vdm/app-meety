@@ -18,13 +18,13 @@ Include:
 
 In scope:
 
-- The Folio desktop binary (Rust, Tauri, JS/TS).
+- The Meety desktop binary (Rust, Tauri, JS/TS).
 - Build and release tooling under `.github/workflows/`.
 - The Tauri command boundary and capability files in `src-tauri/capabilities/`.
 
 Out of scope:
 
-- The OpenAI API itself, or any third-party service Folio is configured to talk to.
+- The OpenAI API itself, or any third-party service Meety is configured to talk to.
 - Third-party plugins or extensions distributed outside this repository.
 - Issues that require physical access to an unlocked machine.
 - Issues that require running an attacker-supplied binary.
@@ -42,7 +42,7 @@ For the `1.0.x` line, the latest patch release receives security fixes. When a n
 
 ## Privacy and data
 
-Folio is local-first by design.
+Meety is local-first by design.
 
 - No telemetry, analytics, or crash reporting is bundled.
 - Audio, transcripts, and notes never leave the machine on the default path.

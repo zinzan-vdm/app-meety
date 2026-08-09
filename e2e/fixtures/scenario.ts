@@ -33,8 +33,8 @@ export function freshSettings(overrides: Partial<MockSettings> = {}): MockSettin
   return {
     mic_device: null,
     system_audio_enabled: true,
-    output_dir: "/tmp/Folio",
-    tasks_path: "/tmp/Folio/Tasks.json",
+    output_dir: "/tmp/Meety",
+    tasks_path: "/tmp/Meety/Tasks.json",
     theme: "dark",
     transcriber: "local_whisper",
     transcription_language: "auto",
@@ -44,7 +44,7 @@ export function freshSettings(overrides: Partial<MockSettings> = {}): MockSettin
     auto_transcribe_enabled: true,
     auto_vad_enabled: true,
     live_transcript_enabled: false,
-    memory_dir: "/tmp/Folio/Memory",
+    memory_dir: "/tmp/Meety/Memory",
     auto_extract_memories_enabled: false,
     feedback_sounds_enabled: false,
     auto_summarize_enabled: false,
@@ -126,7 +126,7 @@ export async function setupScenario(page: Page, options: ScenarioOptions = {}) {
           device_name: "MacBook Pro (this Mac)",
           created_at: new Date().toISOString(),
           last_seen_at: new Date().toISOString(),
-          user_agent: "Folio e2e",
+          user_agent: "Meety e2e",
           ip: "127.0.0.1",
         },
       ];
@@ -360,7 +360,7 @@ export async function setupScenario(page: Page, options: ScenarioOptions = {}) {
       recording_bar_resume: () => null,
 
       create_note: () => ({
-        session_dir: "/tmp/Folio/2026-05-28-note",
+        session_dir: "/tmp/Meety/2026-05-28-note",
         label: "2026-05-28-note",
         duration_seconds: 0,
         mic_bytes: null,
@@ -378,7 +378,7 @@ export async function setupScenario(page: Page, options: ScenarioOptions = {}) {
         recording: true,
         elapsed_secs: 0,
         channels: ["mic", "system"],
-        session_dir: "/tmp/Folio/2026-05-28-note",
+        session_dir: "/tmp/Meety/2026-05-28-note",
         paused: false,
       }),
       stop_recording: () => {
@@ -386,7 +386,7 @@ export async function setupScenario(page: Page, options: ScenarioOptions = {}) {
         const recs = w.__FOLIO_RECORDINGS__ as Array<Record<string, unknown>>;
         if (!recs.some((r) => r.label === "2026-05-28-note")) {
           recs.unshift({
-            session_dir: "/tmp/Folio/2026-05-28-note",
+            session_dir: "/tmp/Meety/2026-05-28-note",
             label: "2026-05-28-note",
             duration_seconds: 60,
             mic_bytes: 1048576,
@@ -401,8 +401,8 @@ export async function setupScenario(page: Page, options: ScenarioOptions = {}) {
         }
         return {
           artifacts: {
-            session_dir: "/tmp/Folio/2026-05-28-note",
-            mic_path: "/tmp/Folio/2026-05-28-note/mic.wav",
+            session_dir: "/tmp/Meety/2026-05-28-note",
+            mic_path: "/tmp/Meety/2026-05-28-note/mic.wav",
             system_path: null,
             started_at: "2026-05-28T14:00:00Z",
             stopped_at: "2026-05-28T14:01:00Z",
@@ -414,14 +414,14 @@ export async function setupScenario(page: Page, options: ScenarioOptions = {}) {
         recording: false,
         elapsed_secs: 5,
         channels: [],
-        session_dir: "/tmp/Folio/2026-05-28-note",
+        session_dir: "/tmp/Meety/2026-05-28-note",
         paused: true,
       }),
       resume_recording: () => ({
         recording: true,
         elapsed_secs: 5,
         channels: ["mic", "system"],
-        session_dir: "/tmp/Folio/2026-05-28-note",
+        session_dir: "/tmp/Meety/2026-05-28-note",
         paused: false,
       }),
       save_live_notes: () => null,
@@ -429,11 +429,11 @@ export async function setupScenario(page: Page, options: ScenarioOptions = {}) {
       ask_note: () => ({ answer: "That isn't covered in this meeting." }),
       ask_library: () => ({ answer: "No open action items found." }),
       transcribe_recording: () => ({
-        transcript_path: "/tmp/Folio/2026-05-28-note/transcript.json",
+        transcript_path: "/tmp/Meety/2026-05-28-note/transcript.json",
         session_transcript: { channels: [] },
       }),
       read_transcript: () => ({ channels: [] }),
-      save_transcript: () => "/tmp/Folio/2026-05-28-note/transcript.json",
+      save_transcript: () => "/tmp/Meety/2026-05-28-note/transcript.json",
       run_vad: () => ({ session_dir: "", channels: [], channel_errors: [] }),
 
       list_providers: () => {
@@ -456,7 +456,7 @@ export async function setupScenario(page: Page, options: ScenarioOptions = {}) {
         engine: "faster_whisper",
         model: "large-v3",
         gpu: true,
-        message: "Connected to Folio Server v0.1.0",
+        message: "Connected to Meety Server v0.1.0",
       }),
       remote_login: () => {
         (window as unknown as Record<string, unknown>).__FOLIO_REMOTE_SIGNED_IN__ =

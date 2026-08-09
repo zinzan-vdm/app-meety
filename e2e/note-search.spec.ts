@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { setupScenario } from "./fixtures/scenario";
 
 const RECORDING = {
-  session_dir: "/tmp/Folio/2026-05-28-budget",
+  session_dir: "/tmp/Meety/2026-05-28-budget",
   label: "2026-05-28-budget",
   duration_seconds: 1200,
   mic_bytes: 1_000_000,

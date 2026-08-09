@@ -22,7 +22,7 @@ const SLOTS: SlotConfig[] = [
   {
     slot: "microphone",
     title: "My microphone",
-    description: "Capture what you say so Folio can transcribe it.",
+    description: "Capture what you say so Meety can transcribe it.",
     icon: Mic,
   },
   {
@@ -97,10 +97,10 @@ export function PermissionsScreen({ onContinue, onSkip }: Props) {
           </p>
         </div>
         <h1 className="mt-3 font-serif text-3xl font-medium tracking-tight">
-          Allow Folio to transcribe your meetings
+          Allow Meety to transcribe your meetings
         </h1>
         <p className="mt-3 max-w-prose text-sm text-muted-foreground">
-          Folio captures your meeting audio locally. No bots. No upload.
+          Meety captures your meeting audio locally. No bots. No upload.
         </p>
       </header>
 

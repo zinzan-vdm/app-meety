@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use folio_core::memory::{Memory, MemoryQuery, MemoryStore};
+use meety_core::memory::{Memory, MemoryQuery, MemoryStore};
 use tauri::State;
 use tracing::debug;
 

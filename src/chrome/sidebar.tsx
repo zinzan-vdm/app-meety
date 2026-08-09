@@ -73,7 +73,7 @@ export function Sidebar({ onOpenSettings }: SidebarProps) {
         <div className={cn("flex items-center gap-2.5", collapsed && "justify-center")}>
           <img
             src={logoUrl}
-            alt="Folio"
+            alt="Meety"
             className="h-6 w-6 select-none"
             draggable={false}
           />

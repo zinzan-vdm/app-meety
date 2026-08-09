@@ -4,9 +4,9 @@ use std::time::Instant;
 
 use chrono::{DateTime, Utc};
 
-use folio_core::audio::{CaptureSession, RecordingStatus};
-use folio_core::memory::MemoryStore;
-use folio_core::storage::{Settings, SettingsStore};
+use meety_core::audio::{CaptureSession, RecordingStatus};
+use meety_core::memory::MemoryStore;
+use meety_core::storage::{Settings, SettingsStore};
 use parking_lot::Mutex;
 use tracing::warn;
 
@@ -24,7 +24,7 @@ pub struct AppState {
 
     pub live_transcript_thread: Mutex<Option<std::thread::JoinHandle<()>>>,
 
-    pub mic_monitor: Mutex<Option<folio_core::audio::mic_monitor::MicMonitor>>,
+    pub mic_monitor: Mutex<Option<meety_core::audio::mic_monitor::MicMonitor>>,
 }
 
 #[derive(Debug, Clone)]

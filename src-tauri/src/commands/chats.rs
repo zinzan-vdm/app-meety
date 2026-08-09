@@ -1,4 +1,4 @@
-use folio_core::storage::chats::{self, ChatThread};
+use meety_core::storage::chats::{self, ChatThread};
 use tauri::State;
 use tracing::info;
 

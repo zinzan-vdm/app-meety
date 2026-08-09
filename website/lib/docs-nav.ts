@@ -17,7 +17,7 @@ export const docsNav: DocSection[] = [
                 title: "Overview",
                 href: "/docs",
                 summary:
-                    "What Folio is, the core ideas, and how the pieces fit together.",
+                    "What Meety is, the core ideas, and how the pieces fit together.",
             },
             {
                 title: "Installation",

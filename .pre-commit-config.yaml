@@ -1,4 +1,4 @@
-# Pre-commit hooks for Folio.
+# Pre-commit hooks for Meety.
 #
 # One-time setup:
 #   brew install pre-commit gitleaks shellcheck     (or your package manager)

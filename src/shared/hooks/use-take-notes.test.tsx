@@ -19,7 +19,7 @@ vi.mock("@/shared/stores/recording-store", () => {
 
 import { useQuickNote, useTakeNotes } from "./use-take-notes";
 
-const NOTE = { label: "2026-05-29-note", session_dir: "/tmp/Folio/2026-05-29-note" };
+const NOTE = { label: "2026-05-29-note", session_dir: "/tmp/Meety/2026-05-29-note" };
 
 beforeEach(() => {
   vi.clearAllMocks();

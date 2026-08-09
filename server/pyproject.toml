@@ -1,7 +1,7 @@
 [project]
 name = "folio-server"
 version = "0.1.0"
-description = "Self-hostable GPU transcription backend for Folio"
+description = "Self-hostable GPU transcription backend for Meety"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
 

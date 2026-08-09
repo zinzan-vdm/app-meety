@@ -1,4 +1,4 @@
-# Tauri 2 architecture — Folio guidelines
+# Tauri 2 architecture — Meety guidelines
 
 Source-cited guidance for the `src-tauri` shell and the IPC boundary with the React frontend. Targets Tauri 2.x. Updated 2026-05-24.
 
@@ -25,7 +25,7 @@ From the Tauri 2 docs:
 
 > "Borrowed arguments like `&str` and `State<'_, Data>` are unsupported [in async commands]. Workarounds: take owned types (`String`), or wrap the return in `Result<T, E>`."
 
-**Rules for Folio:**
+**Rules for Meety:**
 
 - Command signature is always `async fn` and always returns `Result<T, AppError>`. Even when "this can't fail today" — the type contract should pre-allocate the failure slot.
 - No business logic inside a command body. Commands read like:
@@ -60,7 +60,7 @@ All of that lives in `folio-core` behind a trait like `RecordingService`, `Trans
 
 > "Since the return type must implement `serde::Serialize`, most errors don't work directly... The `thiserror` + tagged enum pattern is the correct default for Tauri app error handling. Set it up on day one." — [dev.to](https://dev.to/hiyoyok/rust-error-handling-in-tauri-commands-the-pattern-that-actually-works-35le)
 
-Pattern Folio should adopt:
+Pattern Meety should adopt:
 
 ```rust
 // src-tauri/src/error.rs
@@ -175,7 +175,7 @@ From [Calling Frontend](https://v2.tauri.app/develop/calling-frontend/):
 
 ## Typed payloads — `ts-rs` vs `tauri-specta`
 
-Folio currently uses `ts-rs` (cross-language type generation). It works but has limits:
+Meety currently uses `ts-rs` (cross-language type generation). It works but has limits:
 
 - Type-by-type generation; doesn't recursively export dependent types.
 - No typed event support.
@@ -203,7 +203,7 @@ Extract into a `tauri-plugin-*` when **all three** are true:
 2. It is, or might plausibly become, useful in another Tauri app or to the community.
 3. It needs its own capability namespace and JS API package.
 
-For Folio:
+For Meety:
 
 - **Keep in `src-tauri`**: recording control, settings, app menu, dock icon. They're app-specific glue.
 - **Candidate for an internal plugin crate**: macOS system-audio capture via ScreenCaptureKit if it grows beyond a single file. Lifecycle, permissions, OS-specific Swift package — that's plugin-shaped.
@@ -219,11 +219,11 @@ From [Capabilities](https://v2.tauri.app/security/capabilities/):
 
 > "All capabilities inside the `capabilities` directory are automatically enabled by default. Once capabilities are explicitly enabled in the `tauri.conf.json`, only these are used in the application build."
 
-Rules for Folio:
+Rules for Meety:
 
 - One capability file per feature area: `capabilities/recording.json`, `capabilities/transcription.json`, `capabilities/settings.json`, `capabilities/core.json`. Don't pile everything into `default.json`.
 - Each file lists `windows: ["main"]` (or the actual labels used), and only the permissions that window needs.
-- Custom Folio commands are NOT automatically callable from JS in Tauri 2 — capability files must grant them.
+- Custom Meety commands are NOT automatically callable from JS in Tauri 2 — capability files must grant them.
 - Be explicit in `tauri.conf.json` about which capability identifiers are active per build target so dev-only capabilities don't ship.
 - Prefer scoped `fs` permissions over blanket access. The capability `scope` field is the Tauri 2 replacement for the v1 allowlist's path globs.
 
@@ -233,7 +233,7 @@ From [Project Structure](https://v2.tauri.app/start/project-structure/):
 
 > "`src/lib.rs` contains the Rust code and the mobile entry point... `src/main.rs` is the main entry point for the desktop, and we run `app_lib::run` in `main`."
 
-Target tree for Folio (current vs target):
+Target tree for Meety (current vs target):
 
 ```
 src-tauri/

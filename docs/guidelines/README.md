@@ -1,4 +1,4 @@
-# Folio engineering guidelines
+# Meety engineering guidelines
 
 Five focused documents, each a source-cited synthesis from ~25 web searches in May 2026 of current professional practice. Re-read these when adding new code in the relevant area; cite specific sections in PR reviews.
 
@@ -15,7 +15,7 @@ Five focused documents, each a source-cited synthesis from ~25 web searches in M
 
 - **Cross-link, don't duplicate.** When you reference a guideline in a PR description, link to the specific section heading.
 - **Update with reality.** When a guideline is wrong because the codebase outgrew it, update the doc in the same PR that breaks the rule. Don't let docs lie.
-- **New patterns get a section.** When you discover a new "Folio-specific refactor candidate" or pitfall, add it to the matching doc under the existing "Folio-specific recommendations" section.
+- **New patterns get a section.** When you discover a new "Meety-specific refactor candidate" or pitfall, add it to the matching doc under the existing "Meety-specific recommendations" section.
 - **Sources are load-bearing.** Every rule cites an authoritative source. If you add a rule, cite a source — official docs, well-known blogs (matklad, Palmieri, burntsushi, Bencina), or working repos (LukeMathWalker/zero-to-production, tauri-apps/plugins-workspace).
 
 ## Hierarchy of conventions

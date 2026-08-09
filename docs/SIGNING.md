@@ -1,6 +1,6 @@
 # macOS code signing & notarization
 
-How Folio is signed so that, when another user installs it, the app is a
+How Meety is signed so that, when another user installs it, the app is a
 notarized Developer ID build that opens with no Gatekeeper warning and keeps
 its microphone / screen-recording permissions across updates.
 
@@ -66,8 +66,8 @@ With those set, tag a release (`v1.0.0`) and the pipeline signs + notarizes.
 Run against the built bundle / DMG:
 
 ```sh
-APP="src-tauri/target/release/bundle/macos/Folio.app"
-DMG="src-tauri/target/release/bundle/dmg/Folio_1.0.0_aarch64.dmg"
+APP="src-tauri/target/release/bundle/macos/Meety.app"
+DMG="src-tauri/target/release/bundle/dmg/Meety_1.0.0_aarch64.dmg"
 
 codesign --verify --deep --strict --verbose=2 "$APP"          # valid on disk
 codesign --display --verbose=4 "$APP" 2>&1 | grep -E 'Authority|TeamIdentifier|flags'
@@ -91,7 +91,7 @@ The two phrases that prove success are **`accepted`** and
 
 Tauri issue [#11992](https://github.com/tauri-apps/tauri/issues/11992) reports
 notarization occasionally failing when an `externalBin` sidecar is not signed
-with `--options runtime`. Folio ships one sidecar (`folio-mcp`). After the first
+with `--options runtime`. Meety ships one sidecar (`folio-mcp`). After the first
 release, confirm it with the `folio-mcp` verification line above. If it lacks
 the runtime flag, pre-sign it in `release.yml` after the "Build folio-mcp
 sidecar" step (requires importing the cert into the runner keychain first):
@@ -105,8 +105,8 @@ codesign --force --options runtime --timestamp \
 ## Permissions on first launch
 
 Because the app is signed with a stable identity (`dev.folio.app`) and ships the
-`NS*UsageDescription` strings plus `CFBundleDisplayName = "Folio"`, the first-run
-TCC prompts show **"Folio"** with the app icon, and the grants persist across
+`NS*UsageDescription` strings plus `CFBundleDisplayName = "Meety"`, the first-run
+TCC prompts show **"Meety"** with the app icon, and the grants persist across
 updates (TCC binds permissions to the code signature). Unsigned local builds get
 a generic name/icon and may lose grants on rebuild — always test permission flows
 against a signed build.

@@ -49,7 +49,7 @@ release of overlap has passed.
 
 Industry standard for HTTP signing (Stripe, GitHub, Slack, Twilio all
 use HMAC-SHA256). Library support is universal, so users wiring
-Folio into their own infrastructure can verify the signature in any
+Meety into their own infrastructure can verify the signature in any
 language. KMAC / SHA-3 would be marginally stronger but the
 ecosystem cost outweighs the gain.
 

@@ -14,7 +14,7 @@ import {
 export const metadata: Metadata = {
     title: "Documentation",
     description:
-        "Get started with Folio, the local-first app that captures, transcribes, and files your meetings on your own machine.",
+        "Get started with Meety, the local-first app that captures, transcribes, and files your meetings on your own machine.",
 };
 
 export default function DocsOverviewPage() {
@@ -22,7 +22,7 @@ export default function DocsOverviewPage() {
         <>
             <DocHeader
                 eyebrow="Documentation"
-                title="Folio documentation"
+                title="Meety documentation"
                 description={`${siteConfig.name} captures your meetings, transcribes them on-device, and files one markdown note per meeting into a vault you control. Everything happens locally.`}
             />
 
@@ -38,7 +38,7 @@ export default function DocsOverviewPage() {
                 </Prose>
             </Callout>
 
-            <DocH2 id="what-is-folio">What is Folio</DocH2>
+            <DocH2 id="what-is-folio">What is Meety</DocH2>
             <Prose>
                 <p>
                     <strong>{siteConfig.name}</strong> is a menu-bar app for{" "}
@@ -140,7 +140,7 @@ export default function DocsOverviewPage() {
                     other MCP tools can read your notes.
                 </LinkCard>
                 <LinkCard href="/docs/privacy" title="Privacy">
-                    What Folio does and does not send, Privacy Mode, encryption at rest,
+                    What Meety does and does not send, Privacy Mode, encryption at rest,
                     and recording consent.
                 </LinkCard>
                 <LinkCard href="/docs/faq" title="FAQ">

@@ -1,12 +1,12 @@
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { FolioMark } from "@/components/site/logo";
+import { MeetyMark } from "@/components/site/logo";
 
 export default function NotFound() {
     return (
         <div className="container flex min-h-[60vh] flex-col items-center justify-center gap-6 py-24 text-center">
-            <FolioMark className="h-12 w-12" />
+            <MeetyMark className="h-12 w-12" />
             <p className="font-mono text-2xs uppercase tracking-[0.18em] text-muted-foreground">
                 404 — not found
             </p>

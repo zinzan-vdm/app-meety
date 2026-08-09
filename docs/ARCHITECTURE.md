@@ -54,7 +54,7 @@ clusters against the speaker registry, and `session_speakers.rs` /
 ```
 src/
 ├── lib.rs                # crate root, module declarations + re-exports
-├── error.rs              # FolioError — the single public error enum
+├── error.rs              # MeetyError — the single public error enum
 ├── ask_folio.rs         # cross-library RAG citation contract
 ├── audio/                # capture pipeline (cpal + VPIO + ScreenCaptureKit)
 ├── calendar.rs           # EventKit + conference-URL helpers
@@ -97,7 +97,7 @@ src/
 
 ### Rules
 
-- `FolioError` is the single public error type. New error categories
+- `MeetyError` is the single public error type. New error categories
   are added there, not invented per module.
 - Logging uses `tracing`, never `println!`. Audio callbacks are
   alloc-free hot paths; do not log from inside the cpal /
@@ -291,7 +291,7 @@ This project tracks work in three places that round-trip:
 | Layer                           | What lives there                                                                        |
 | ------------------------------- | --------------------------------------------------------------------------------------- |
 | **Issue tracker**               | Status, priority, assignment. The live source of truth. Issues are `GET-<n>` (e.g. ``). |
-| **GitHub** (`woosal1337/folio`) | Code, issues, and pull requests.                                                        |
+| **GitHub** (`zinzan-vdm/app-meety`) | Code, issues, and pull requests.                                                        |
 
 ### Workflow for a new feature
 
@@ -364,7 +364,7 @@ condensed cheat sheet.
   Treat warnings as errors. Use `#[allow(clippy::name)]` with a
   one-line comment explaining why, never workspace-wide unless
   there's a known false positive.
-- **Errors**: return `Result<T, FolioError>`. New error categories
+- **Errors**: return `Result<T, MeetyError>`. New error categories
   go on the public enum in `folio-core/src/error.rs`; never invent
   per-module error types.
 - **Async**: prefer `tauri::async_runtime::spawn_blocking` for any

@@ -3,7 +3,7 @@
 # Reject any commit that introduces a known telemetry / analytics SDK
 # into the dependency tree. v2 roadmap finding R11.
 #
-# Folio's brand promise: "no telemetry, logs are local." Once a
+# Meety's brand promise: "no telemetry, logs are local." Once a
 # Mixpanel / PostHog / Sentry / etc. lands in the lock files it is
 # very hard to extricate — packages bleed transitive dependencies
 # that import the SDK lazily. The cheapest defence is a CI check that
@@ -77,7 +77,7 @@ for pkg in "${FORBIDDEN[@]}"; do
     if grep -F -q "\"${pkg}\"" "$lock" 2>/dev/null \
       || grep -F -q "name = \"${pkg}\"" "$lock" 2>/dev/null; then
       echo "FAIL: '${pkg}' appears in ${lock}"
-      echo "  Folio is local-first: no telemetry / analytics / crash reporters."
+      echo "  Meety is local-first: no telemetry / analytics / crash reporters."
       echo "  See projects/folio/plan/v2-roadmap-multi-agent-consensus.md (finding R11)."
       EXIT=1
     fi

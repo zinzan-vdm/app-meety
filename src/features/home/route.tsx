@@ -229,7 +229,7 @@ export default function Home() {
             <p className="max-w-sm text-sm text-muted-foreground">
               Every note keeps its own transcript, summary, and audio in a folder under{" "}
               <code className="rounded bg-muted px-1 py-0.5 text-2xs">
-                ~/Documents/Folio/Recordings/
+                ~/Documents/Meety/Recordings/
               </code>{" "}
               — yours to keep.
             </p>

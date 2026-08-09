@@ -159,7 +159,7 @@ export function SectionTranscription({ settings, onChange }: Props) {
           <p className="max-w-md text-xs text-muted-foreground">
             Streams a live caption into the record dock while you&apos;re recording,
             using local Whisper over a rolling window. Still experimental — when off,
-            Folio transcribes once automatically as soon as the recording stops.
+            Meety transcribes once automatically as soon as the recording stops.
             Requires a downloaded local Whisper model.
           </p>
           {!isLocalProvider ? (
@@ -376,7 +376,7 @@ function RemoteServerSection({
           <div className="min-w-0 space-y-1">
             <p className="flex items-center gap-2 text-sm font-medium">
               <Server className="h-4 w-4 text-muted-foreground" />
-              Folio Server
+              Meety Server
             </p>
             <p className="truncate font-mono text-xs text-muted-foreground">
               {endpoint || "No endpoint configured"}

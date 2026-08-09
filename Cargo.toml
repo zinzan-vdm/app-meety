@@ -1,19 +1,19 @@
 [workspace]
 members = [
-  "crates/folio-core",
-  "crates/folio-cli",
-  "crates/folio-mcp",
+  "crates/meety-core",
+  "crates/meety-cli",
+  "crates/meety-mcp",
   "src-tauri",
 ]
 resolver = "2"
 
 [workspace.package]
-version = "2.0.0"
+version = "0.1.0-alpha"
 edition = "2021"
 rust-version = "1.88"
-license = "Apache-2.0"
-repository = "https://github.com/woosal1337/folio"
-authors = ["Ege Çelebi <woosal@pm.me>"]
+license = "MIT"
+repository = "https://github.com/zinzan-vdm/app-meety"
+authors = ["Meety Contributors"]
 
 [workspace.dependencies]
 # error handling
@@ -89,7 +89,7 @@ zip = { version = "2", default-features = false, features = ["deflate"] }
 
 # HMAC-SHA256 for the webhook signed event stream (v2 finding 079 /
 # GET-101). The MAC accompanies every outbound POST so subscribers
-# can verify Folio sent it without a shared cleartext token.
+# can verify Meety sent it without a shared cleartext token.
 hmac = "0.12"
 sha2 = "0.10"
 hex = "0.4"
@@ -187,7 +187,7 @@ tauri-plugin-deep-link = "2"
 tauri-plugin-updater = "2"
 
 [workspace.metadata]
-description = "Local-first meeting transcription, cross-platform via Tauri 2"
+description = "Meety — local-first meeting transcription for macOS, Windows, Linux"
 
 [workspace.lints.clippy]
 uninlined_format_args = "allow"

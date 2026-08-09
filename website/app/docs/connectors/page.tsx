@@ -66,7 +66,7 @@ export default function ConnectorsPage() {
                 </p>
             </Prose>
             <Steps>
-                <Step n={1} title="Enable connectors in Folio">
+                <Step n={1} title="Enable connectors in Meety">
                     <p>
                         Open <strong>Settings</strong> then <strong>Connectors</strong>{" "}
                         and enable the local MCP server. {siteConfig.name} runs{" "}

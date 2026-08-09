@@ -1,15 +1,15 @@
-# Folio website
+# Meety website
 
-Marketing and documentation site for [Folio](https://folio.chele.bi), the local-first
-meeting transcription app for macOS. Live at **[folio.chele.bi](https://folio.chele.bi)**.
-Built with Next.js, React, TypeScript, and Tailwind CSS, and styled with Folio's own
-design tokens. Lives in `website/` inside the main Folio repository.
+Marketing and documentation site for [Meety](https://meety.app), the local-first
+meeting transcription app for macOS. Live at **[meety.app](https://meety.app)**.
+Built with Next.js, React, TypeScript, and Tailwind CSS, and styled with Meety's own
+design tokens. Lives in `website/` inside the main Meety repository.
 
 ## Stack
 
 - **Next.js 15** (App Router) + **React 18**
 - **TypeScript**
-- **Tailwind CSS 3** with Folio's color, type, and motion tokens
+- **Tailwind CSS 3** with Meety's color, type, and motion tokens
 - **Radix UI** primitives (tabs, accordion) and **lucide-react** icons
 - **Bun** as the package manager and runtime
 
@@ -53,19 +53,19 @@ website/
 
 ## Design
 
-Dark mode only, with a monochrome palette taken straight from the Folio desktop app
+Dark mode only, with a monochrome palette taken straight from the Meety desktop app
 (`src/styles/globals.css` and `tailwind.config.ts` in the repo root): near-black
-surfaces, white and gray foreground, no accent color. The logo is Folio's own app
+surfaces, white and gray foreground, no accent color. The logo is Meety's own app
 mark, and the wordmark is set in Spectral. Body and headings use the system font
 stack (SF Pro on macOS), matching the app.
 
 ## Deploy
 
-Deployed on Vercel at **[folio.chele.bi](https://folio.chele.bi)**. A standard Next.js
+Deployed on Vercel at **[meety.app](https://meety.app)**. A standard Next.js
 App Router project: the Vercel project root is set to `website/`, the build command is
 the default `next build`, and Bun is detected from `bun.lock`.
 
 ## Code style
 
-No source comments, per the Folio convention. Code is kept self-explanatory through
+No source comments, per the Meety convention. Code is kept self-explanatory through
 naming and small components. Prose belongs in the docs, not in the source.

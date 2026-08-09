@@ -208,7 +208,7 @@ function AutoAgentsCard({
             </span>
           </Label>
           <p className="max-w-md text-xs text-muted-foreground">
-            After each recording, Folio automatically runs the Summarize, Extract Tasks,
+            After each recording, Meety automatically runs the Summarize, Extract Tasks,
             and Extract Memories agents in parallel. Expand below to disable individual
             agents.
           </p>

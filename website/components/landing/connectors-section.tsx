@@ -39,7 +39,7 @@ export function ConnectorsSection() {
                     <SectionHeading
                         eyebrow="Connectors"
                         title="Your transcripts, available to your agents"
-                        description="Folio ships a local MCP server. Any MCP-aware tool gets read-only access to your transcripts, tasks, and memory over stdio — no cloud, no proxy."
+                        description="Meety ships a local MCP server. Any MCP-aware tool gets read-only access to your transcripts, tasks, and memory over stdio — no cloud, no proxy."
                     />
                     <ul className="flex flex-col gap-3 text-ms-15 leading-relaxed text-muted-foreground">
                         <li>Search past meetings without leaving your editor.</li>

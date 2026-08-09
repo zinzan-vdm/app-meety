@@ -150,7 +150,7 @@ export function SectionStorage({ settings, onChange }: Props) {
     try {
       const dest = await showSaveDialog({
         defaultPath: defaultSnapshotName(),
-        filters: [{ name: "Folio snapshot", extensions: ["zip"] }],
+        filters: [{ name: "Meety snapshot", extensions: ["zip"] }],
       });
       if (!dest) return;
       const summary = await exportVaultSnapshot(dest);
@@ -240,7 +240,7 @@ export function SectionStorage({ settings, onChange }: Props) {
             <p className="text-sm font-medium">Multi-machine sync via git</p>
             <p className="mt-0.5 text-xs text-muted-foreground">
               {isRepo
-                ? "Your memory dir is a git repo. Sync runs git pull --rebase, commits any local changes, and pushes — no Folio cloud."
+                ? "Your memory dir is a git repo. Sync runs git pull --rebase, commits any local changes, and pushes — no Meety cloud."
                 : "Your memory dir is not (yet) a git repo. Run `git init` + add a remote inside it to enable sync."}
             </p>
           </div>
@@ -274,7 +274,7 @@ export function SectionStorage({ settings, onChange }: Props) {
             <p className="mt-0.5 text-xs text-muted-foreground">
               Writes a markdown summary of the last 7 days to{" "}
               <code className="rounded bg-muted px-1 py-0.5 text-2xs">
-                ~/Documents/Folio/Digests/
+                ~/Documents/Meety/Digests/
               </code>
               : meetings, tasks aging more than a week, and new memories. Designed to
               drop into Obsidian or skim from your dock. Background scheduling (Sunday
@@ -312,7 +312,7 @@ export function SectionStorage({ settings, onChange }: Props) {
               Bundles your settings, tasks, recordings, and memory into a single zip you
               can drop into iCloud, Dropbox, or a USB stick. Plain{" "}
               <code className="rounded bg-muted px-1 py-0.5 text-2xs">unzip</code> works
-              without our binary, so the export is recoverable without Folio installed.
+              without our binary, so the export is recoverable without Meety installed.
             </p>
           </div>
         </div>

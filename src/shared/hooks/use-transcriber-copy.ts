@@ -27,9 +27,9 @@ export function useTranscriberCopy(): TranscriberCopy {
     return {
       isCloud: true,
       progressLabel: "Processing on your server…",
-      triggerTooltip: "Upload to your Folio Server and sync the transcript back.",
+      triggerTooltip: "Upload to your Meety Server and sync the transcript back.",
       emptyStateHint:
-        "Audio uploads to your Folio Server for GPU transcription, then the transcript syncs back to this Mac. Manage the connection in Account.",
+        "Audio uploads to your Meety Server for GPU transcription, then the transcript syncs back to this Mac. Manage the connection in Account.",
     };
   }
 

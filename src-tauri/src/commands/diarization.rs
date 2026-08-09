@@ -1,4 +1,4 @@
-use folio_core::diarization::{DiarizationModel, DiarizationModelStatus, DiarizationModelStore};
+use meety_core::diarization::{DiarizationModel, DiarizationModelStatus, DiarizationModelStore};
 use serde::Serialize;
 use tauri::{AppHandle, Emitter};
 

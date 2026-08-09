@@ -1,4 +1,4 @@
-# Folio — rules for AI coding agents
+# Meety — rules for AI coding agents
 
 Binding rules for every AI coding session in this repository. Read before
 making any change.

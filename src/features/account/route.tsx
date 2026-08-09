@@ -71,7 +71,7 @@ export default function Account() {
       <header data-drag="" className="select-none">
         <h1 className="font-serif text-3xl font-medium tracking-tight">Account</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Your Folio Server — remote GPU transcription, sync, and sign-in.
+          Your Meety Server — remote GPU transcription, sync, and sign-in.
         </p>
       </header>
 
@@ -166,7 +166,7 @@ function ServerCard({
     <SectionCard
       icon={Server}
       title="Server"
-      description="The self-hosted Folio Server this Mac uploads to."
+      description="The self-hosted Meety Server this Mac uploads to."
     >
       <div className="space-y-3">
         <div className="space-y-2">

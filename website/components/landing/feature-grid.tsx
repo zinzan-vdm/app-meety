@@ -61,7 +61,7 @@ export function FeatureGrid() {
             <SectionHeading
                 eyebrow="What it does"
                 title="A meeting recorder that respects your machine"
-                description="Folio sits in the menu bar, watches your calendar and audio devices, and turns each conversation into a note you actually own."
+                description="Meety sits in the menu bar, watches your calendar and audio devices, and turns each conversation into a note you actually own."
             />
 
             <div className="mt-14 grid gap-4 lg:grid-cols-3">

@@ -1,6 +1,6 @@
 use tauri::State;
 
-use folio_core::recipes::UserRecipe;
+use meety_core::recipes::UserRecipe;
 
 use crate::app::AppState;
 
@@ -11,5 +11,5 @@ pub fn list_recipes(state: State<'_, AppState>) -> Vec<UserRecipe> {
         .parent()
         .map(|p| p.to_path_buf())
         .unwrap_or(output_dir);
-    folio_core::recipes::load(&vault_root)
+    meety_core::recipes::load(&vault_root)
 }

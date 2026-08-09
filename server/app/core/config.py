@@ -10,7 +10,7 @@ class Settings(BaseSettings):
         env_prefix="FOLIO_", env_file=".env", extra="ignore"
     )
 
-    app_name: str = "Folio Server"
+    app_name: str = "Meety Server"
     version: str = "0.1.0"
     environment: str = "development"
 

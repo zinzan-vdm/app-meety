@@ -28,7 +28,7 @@ export function PrivacySection() {
                     <SectionHeading
                         eyebrow="Privacy"
                         title="The network is opt-in, not the default"
-                        description="Folio is built so the private path is the easy path. You can run an entire meeting end-to-end with Wi-Fi off."
+                        description="Meety is built so the private path is the easy path. You can run an entire meeting end-to-end with Wi-Fi off."
                     />
                     <ul className="flex flex-col gap-3">
                         {guarantees.map((item) => (

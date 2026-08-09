@@ -1,12 +1,12 @@
-# Folio Symbol Logo Prompts
+# Meety Symbol Logo Prompts
 
 Use these for image generation passes where the goal is a memorable app icon, not a lettermark.
 
 ## Master Board Prompt
 
-Create a premium app icon concept board for a macOS app named Folio.
+Create a premium app icon concept board for a macOS app named Meety.
 
-Product context: Folio is a local-first meeting transcription app. It privately captures conversations, turns audio into notes, and keeps meetings searchable on the user's own machine.
+Product context: Meety is a local-first meeting transcription app. It privately captures conversations, turns audio into notes, and keeps meetings searchable on the user's own machine.
 
 Design goal: Do not make a letter F. Do not make anything Facebook-like. Create memorable symbol-first icons with an ownable silhouette.
 
@@ -27,11 +27,11 @@ Avoid generic microphones, plain headphones, plain documents, letters, initials,
 
 ## More Logo-Like Board Prompt
 
-Create a second premium logo/icon concept board for a macOS app named Folio.
+Create a second premium logo/icon concept board for a macOS app named Meety.
 
 Product context: local-first meeting transcription and private meeting memory.
 
-This pass should be more logo-like and less 3D illustration. Make 8 memorable symbol-first app icon alternatives in a 4x2 grid. No letter F, no word Folio, no Facebook-like lettermark, no generic microphone, no plain document.
+This pass should be more logo-like and less 3D illustration. Make 8 memorable symbol-first app icon alternatives in a 4x2 grid. No letter F, no word Meety, no Facebook-like lettermark, no generic microphone, no plain document.
 
 Use simple ownable silhouettes, strong negative space, and Codex-like blue, violet, lavender gradients on white or near-black rounded-square tiles.
 
@@ -50,7 +50,7 @@ Keep each icon extremely simple, clean, and recognizable at 32 px. Professional,
 
 ## Direction A, Listening Notebook Creature
 
-Create one premium macOS app icon for Folio, a local-first meeting transcription app.
+Create one premium macOS app icon for Meety, a local-first meeting transcription app.
 
 Icon concept: a small friendly listening notebook creature. The creature is a soft blue-violet blob gently holding a compact notebook or transcript card. The notebook suggests meeting notes, while the creature suggests attentive listening and private memory.
 
@@ -58,7 +58,7 @@ Make it memorable, simple, mascot-like, and professional. Rounded-square white a
 
 ## Direction B, Folded Waveform Page
 
-Create one premium macOS app icon for Folio, a local-first meeting transcription app.
+Create one premium macOS app icon for Meety, a local-first meeting transcription app.
 
 Icon concept: a folded page with a horizontal waveform embedded inside the lower half. The page should feel like audio becoming notes. The silhouette must be simple and ownable, not a generic document.
 
@@ -66,7 +66,7 @@ Use a soft Codex-like blue, violet, lavender gradient, white paper, gentle shado
 
 ## Direction C, Private Audio Vault
 
-Create one premium macOS app icon for Folio, a local-first meeting transcription app.
+Create one premium macOS app icon for Meety, a local-first meeting transcription app.
 
 Icon concept: a small friendly vault or safe with a waveform seal on the door. It should communicate private meeting memory, local-first storage, and audio capture.
 
@@ -74,7 +74,7 @@ Use blue, violet, lavender gradients, a polished white rounded-square app tile, 
 
 ## Direction D, Transcript Blob
 
-Create one premium macOS app icon for Folio, a local-first meeting transcription app.
+Create one premium macOS app icon for Meety, a local-first meeting transcription app.
 
 Icon concept: a soft transcript blob, like a friendly speech cloud made of notes. It has a tiny face and three clean note lines, suggesting conversations turned into readable summaries.
 
@@ -82,7 +82,7 @@ Use a deep navy or white rounded-square tile, Codex-like blue and violet gradien
 
 ## Direction H, Sealed Note With Waveform Smile
 
-Create one premium macOS app icon for Folio, a local-first meeting transcription app.
+Create one premium macOS app icon for Meety, a local-first meeting transcription app.
 
 Icon concept: a sealed private note or envelope with a circular waveform seal and a subtle smile-like curve. It should feel secure, calm, and friendly.
 

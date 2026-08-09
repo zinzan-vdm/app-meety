@@ -45,7 +45,7 @@ export function SectionPreferences({ onChange }: SectionPreferencesProps) {
         <SelectRow
           icon={Palette}
           title="Theme"
-          description="Choose how Folio looks. Matches your OS by default."
+          description="Choose how Meety looks. Matches your OS by default."
           value={theme}
           onChange={(v) => {
             onChange("theme", v);
@@ -146,14 +146,14 @@ function PrivacyRedLineNotice() {
     <div
       className="mx-3 my-1 rounded-md border border-emerald-500/30 bg-emerald-500/5 px-4 py-3 text-2xs text-emerald-900 dark:text-emerald-200"
       role="note"
-      aria-label="Folio privacy stance"
+      aria-label="Meety privacy stance"
     >
       <p className="flex items-center gap-1.5 font-medium">
         <Bell className="h-3.5 w-3.5" />
         <span>What you won&apos;t see here</span>
       </p>
       <p className="mt-1.5 leading-relaxed">
-        Folio does not collect transcripts to train models — there is no opt-out toggle
+        Meety does not collect transcripts to train models — there is no opt-out toggle
         because there is no collection.{" "}
         <span className="italic">
           Your meetings stay on your Mac unless you explicitly share them.

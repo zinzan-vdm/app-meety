@@ -116,14 +116,14 @@ pub fn install<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
     let stop = MenuItem::with_id(app, MENU_STOP, "Stop Recording", true, None::<&str>)?;
     let open = MenuItem::with_id(app, MENU_OPEN, "Open Library", true, None::<&str>)?;
     let separator = PredefinedMenuItem::separator(app)?;
-    let quit = MenuItem::with_id(app, MENU_QUIT, "Quit Folio", true, Some("CmdOrCtrl+Q"))?;
+    let quit = MenuItem::with_id(app, MENU_QUIT, "Quit Meety", true, Some("CmdOrCtrl+Q"))?;
 
     let menu = Menu::with_items(app, &[&start, &stop, &separator, &open, &separator, &quit])?;
 
     let _tray = TrayIconBuilder::with_id(TRAY_ID)
         .menu(&menu)
         .show_menu_on_left_click(true)
-        .tooltip("Folio — idle")
+        .tooltip("Meety — idle")
         .icon(make_image(idle_icon_rgba()))
         .icon_as_template(false)
         .on_menu_event(|app, event| match event.id.as_ref() {
@@ -163,21 +163,21 @@ pub fn set_tray_state<R: Runtime>(app: &AppHandle<R>, state: TrayState) {
     };
 
     let (tooltip, title, rgba, is_template) = match state {
-        TrayState::Idle => ("Folio — idle".to_string(), None, idle_icon_rgba(), false),
+        TrayState::Idle => ("Meety — idle".to_string(), None, idle_icon_rgba(), false),
         TrayState::Recording(secs) => (
-            format!("Folio — recording {}", format_elapsed(secs)),
+            format!("Meety — recording {}", format_elapsed(secs)),
             Some(format_elapsed(secs)),
             recording_icon_rgba(),
             false,
         ),
         TrayState::Paused(secs) => (
-            format!("Folio — paused {}", format_elapsed(secs)),
+            format!("Meety — paused {}", format_elapsed(secs)),
             Some(format_elapsed(secs)),
             paused_icon_rgba(),
             false,
         ),
         TrayState::Airgapped => (
-            "Folio — Privacy Mode on".to_string(),
+            "Meety — Privacy Mode on".to_string(),
             None,
             airgap_icon_rgba(),
             true,

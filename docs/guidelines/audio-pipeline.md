@@ -1,4 +1,4 @@
-# Audio pipeline — Folio guidelines
+# Audio pipeline — Meety guidelines
 
 Source-cited guidance for the Rust audio capture and processing stack: CoreAudio VoiceProcessingIO + cpal + ScreenCaptureKit on the producer side, `rubato` for sample-rate conversion, `hound` for WAV writing, feeding a Whisper transcriber that wants 16 kHz mono Float32.
 
@@ -10,7 +10,7 @@ Source-cited guidance for the Rust audio capture and processing stack: CoreAudio
 2. **`ringbuf::HeapRb<f32>` or `rtrb::RingBuffer<f32>` for callback → consumer.** Never `crossbeam::ArrayQueue` on the audio thread (CAS spin under contention).
 3. **Resample on the consumer thread, not the callback.** `rubato::FftFixedIn` is the sweet spot for Whisper paths.
 4. **Let the AudioUnit pick its sample rate; query and adapt.** Coercing format usually fails with `kAudioUnitErr_FormatNotSupported` or silent stream death.
-5. **Pick the louder of mic vs system per frame, don't mix.** Already what Folio does in `b6f3fb0` for transcription clarity.
+5. **Pick the louder of mic vs system per frame, don't mix.** Already what Meety does in `b6f3fb0` for transcription clarity.
 6. **`hound::WavWriter::finalize` must be called explicitly.** Drop-finalize silently swallows errors.
 7. **Test through a `Sink` trait with fixture WAVs and RMS-bounded assertions.** Hardware-dependent tests are flaky-or-fake.
 
@@ -118,11 +118,11 @@ let resampler = FftFixedIn::<f32>::new(
 )?;
 ```
 
-This is exactly the pattern Folio's `VoiceProcessingMicCapture` uses — see `crates/folio-core/src/audio/voice_processing_capture.rs`. CPAL takes the same philosophy: `SupportedStreamConfig` returns what the device can actually do, never what you wished it could do.
+This is exactly the pattern Meety's `VoiceProcessingMicCapture` uses — see `crates/folio-core/src/audio/voice_processing_capture.rs`. CPAL takes the same philosophy: `SupportedStreamConfig` returns what the device can actually do, never what you wished it could do.
 
 **Channel handling.** VPIO is typically mono-in. ScreenCaptureKit is stereo by default. Downmix stereo → mono on the consumer thread with `(L + R) * 0.5` — Whisper does not benefit from sophisticated downmixing.
 
-**Louder-track selection** (Folio-specific, from `b6f3fb0`): when both mic and system tracks are present, pick the louder one per frame instead of mixing. Preserves SNR for whoever is actually talking and is what Folio already does. Document this in any pipeline diagram so it doesn't get "improved" into a sum mixer.
+**Louder-track selection** (Meety-specific, from `b6f3fb0`): when both mic and system tracks are present, pick the louder one per frame instead of mixing. Preserves SNR for whoever is actually talking and is what Meety already does. Document this in any pipeline diagram so it doesn't get "improved" into a sum mixer.
 
 ## §5 WAV writing under streaming load
 
@@ -143,7 +143,7 @@ Use `hound` ([docs.rs](https://docs.rs/hound)). It is the boring, correct choice
 1. **Owned by the writer thread.** The writer thread owns the `WavWriter` outright. Other threads send commands ("stop", "rotate file") via `mpsc::channel`. The writer thread calls `finalize` on the owned writer when it processes "stop".
 2. **`Option<WavWriter>` inside a `Mutex` only on the control thread.** The audio path never touches the mutex. When stopping, `lock.take.unwrap.finalize`.
 
-Folio's `AudioWavWriter` currently exposes a thread-safe `append(&[f32])` that locks an internal `Mutex<hound::WavWriter>`. This is shape (2) without the consume-on-finalize discipline — we rely on `Drop` to finalize, which silently discards errors. **Recommend a follow-up to add an explicit `finalize(self) -> Result<>`** and call it from `CaptureSession::stop`.
+Meety's `AudioWavWriter` currently exposes a thread-safe `append(&[f32])` that locks an internal `Mutex<hound::WavWriter>`. This is shape (2) without the consume-on-finalize discipline — we rely on `Drop` to finalize, which silently discards errors. **Recommend a follow-up to add an explicit `finalize(self) -> Result<>`** and call it from `CaptureSession::stop`.
 
 **Sample alignment.** `hound::WavWriter::flush` returns `Error::UnfinishedSample` if the count is not a multiple of `channels`. Always write whole frames; mid-frame flushes produce technically-invalid files.
 
@@ -183,7 +183,7 @@ You cannot CI-test a real microphone. Decouple early.
 
 **What not to test:** Don't test that "the microphone returns audio." That's a smoke test for a human with headphones. CI cannot verify it, and flaky audio-device tests are worse than no tests. Mark such tests `#[ignore]` and document the manual procedure.
 
-## Folio-specific recommendations (priority order)
+## Meety-specific recommendations (priority order)
 
 1. **Add explicit `AudioWavWriter::finalize(self) -> Result<>`** and call it from `CaptureSession::stop`. Today the `Drop` impl silently swallows finalize errors.
 2. **Wrap the VPIO render callback in `std::panic::catch_unwind`** to prevent UB on an unwind into C. The current callback is tiny and shouldn't panic, but defense in depth is cheap.

@@ -1,7 +1,7 @@
 # Changelog
 
-All notable changes to Folio are documented here. The format follows
-[Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and Folio follows
+All notable changes to Meety are documented here. The format follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and Meety follows
 [Semantic Versioning](https://semver.org).
 
 <!--
@@ -48,7 +48,7 @@ _Nothing yet._
 
 ## [2.0.0] — 2026-08-01
 
-A deliberate stripping-back: Folio keeps the parts that record, transcribe, and
+A deliberate stripping-back: Meety keeps the parts that record, transcribe, and
 read well, and drops everything that never worked.
 
 ### Added
@@ -76,9 +76,9 @@ read well, and drops everything that never worked.
   browsing screens are gone.
 - **Spaces / folders.** The sidebar section, the editor's folder chip, folder
   filtering, the chat folder scope, and the `notes_by_folder` MCP tool.
-- **Meeting auto-detection.** Folio no longer watches for conferencing apps or
+- **Meeting auto-detection.** Meety no longer watches for conferencing apps or
   offers a "take notes?" popup when a call starts. Start recordings yourself.
-- **Notifications settings.** Folio never sent a system notification; the tab
+- **Notifications settings.** Meety never sent a system notification; the tab
   configured behaviour that did not exist.
 - **Integrations and Webhooks.** The connector cards were placeholders, and no
   webhook was ever fired for any event.
@@ -98,13 +98,13 @@ read well, and drops everything that never worked.
 
 ## [1.2.0] — 2026-07-23
 
-Remote GPU transcription: point Folio at a server you own and let it do the
+Remote GPU transcription: point Meety at a server you own and let it do the
 heavy lifting while your Mac sleeps. Local transcription stays the default.
 
 ### Added
 
 - **Remote server transcription (opt-in).** Pick "Remote server" as the
-  provider and recordings upload to a self-hosted Folio Server, transcribe on
+  provider and recordings upload to a self-hosted Meety Server, transcribe on
   its GPU with faster-whisper, and the transcript syncs straight back into
   your vault. Uploads are resumable, size-capped, and integrity-checked, and
   everything is scoped to your account on that server.
@@ -122,7 +122,7 @@ heavy lifting while your Mac sleeps. Local transcription stays the default.
 
 ### Changed
 
-- **Stopping a recording lands you on the note.** Folio navigates to the
+- **Stopping a recording lands you on the note.** Meety navigates to the
   finished note and the page updates live through upload → transcription →
   synced, instead of leaving a stale empty view behind.
 - **Status chips use sentence case** (Transcribed, Synced, On GPU, …) across
@@ -153,7 +153,7 @@ API can never crash the app.
 
 ### Removed
 
-- **macOS Calendar integration.** Folio no longer reads your calendar through
+- **macOS Calendar integration.** Meety no longer reads your calendar through
   EventKit. Removed with it: the Settings → Calendar pane, the onboarding
   calendar step, the Home "Coming up" panel, the meeting-HUD attendee brief,
   the Calendar permission, the "scheduled meeting" notification, and the Apple
@@ -175,7 +175,7 @@ API can never crash the app.
 - **Onboarding system-audio permission opens the right pane.** It now checks,
   prompts, and opens macOS Screen Recording consistently, instead of sometimes
   opening the System Audio pane on macOS 26.
-- **Apple Reminders access can no longer crash Folio.** EventKit requests run
+- **Apple Reminders access can no longer crash Meety.** EventKit requests run
   through a modern Objective-C bridge and the current-macOS access API, and any
   Objective-C exception is caught instead of aborting the process.
 

@@ -1,7 +1,9 @@
-Folio
-Copyright (c) 2026 Ege Çelebi
+Meety (fork of Folio by Ege Çelebi)
+Copyright (c) 2026 Meety Contributors
 
-Licensed under the Apache License, Version 2.0 (see LICENSE).
+Licensed under the MIT License (see LICENSE).
+Original Folio project: https://github.com/woosal1337/folio
+Original copyright (c) 2026 Ege Çelebi, Apache-2.0.
 
 This product bundles or links against the following third-party software.
 The full text of each license is available from each project's repository
@@ -34,7 +36,7 @@ Rust dependencies (bundled at compile time)
 - voice_activity_detector (MIT) — Silero-VAD wrapper used for
   voice-activity gating before transcription. Embeds the Silero VAD
   ONNX model (MIT, © Silero Team) compiled into the binary via
-  `include_bytes!`, so that model is redistributed inside Folio.
+  `include_bytes!`, so that model is redistributed inside Meety.
   https://github.com/nkeenan38/voice_activity_detector
   Model: https://github.com/snakers4/silero-vad
 - nnnoiseless (BSD-3-Clause) — Rust port of Xiph RNNoise for
@@ -102,7 +104,7 @@ Machine-learning models (downloaded at first run, not redistributed)
 --------------------------------------------------------------------
 
 With one exception (the Silero VAD model, which is compiled into the
-binary — see voice_activity_detector above), Folio does not bundle model
+binary — see voice_activity_detector above), Meety does not bundle model
 weights in the .dmg or the Homebrew cask. The following pre-trained models
 are fetched on demand from the URLs below into the user's
 application-support directory the first time a feature that needs them is
@@ -114,7 +116,7 @@ egress guard like any other request.
   https://huggingface.co/ggerganov/whisper.cpp
 - pyannote segmentation-3.0 (MIT, gated) — speaker-segmentation model
   by Hervé Bredin. Access is gated on Hugging Face; review the upstream
-  model card before commercial deployment. Folio downloads the ONNX
+  model card before commercial deployment. Meety downloads the ONNX
   export re-hosted by the sherpa-onnx project.
   https://huggingface.co/csukuangfj/sherpa-onnx-pyannote-segmentation-3-0
   Upstream: https://huggingface.co/pyannote/segmentation-3.0
@@ -143,7 +145,7 @@ See each font's `LICENSE` inside its `@fontsource/<name>` package.
 Apple platform frameworks
 -------------------------
 
-Folio calls into Apple's AVFoundation, AudioToolbox, ScreenCaptureKit,
+Meety calls into Apple's AVFoundation, AudioToolbox, ScreenCaptureKit,
 EventKit, AppKit, Cocoa, and CoreFoundation frameworks via FFI. Those
 frameworks are part of macOS and are not redistributed; their license is
 the Apple SDK License Agreement.
@@ -151,7 +153,7 @@ the Apple SDK License Agreement.
 Reporting an attribution miss
 -----------------------------
 
-If you ship Folio source or binaries and notice an attribution gap, file
+If you ship Meety source or binaries and notice an attribution gap, file
 an issue at https://github.com/woosal1337/folio/issues with the
 dependency name and license text. We update this file alongside the
 dependency change.

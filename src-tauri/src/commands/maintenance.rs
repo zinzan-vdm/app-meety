@@ -1,12 +1,12 @@
 use std::path::PathBuf;
 
-use folio_core::llm::AgentRunStore;
-use folio_core::storage::digest::{
+use meety_core::llm::AgentRunStore;
+use meety_core::storage::digest::{
     default_digests_dir, generate as generate_digest_impl, DigestPaths, DigestResult,
 };
-use folio_core::storage::git_sync::{is_git_repo, sync as git_sync_impl, GitSyncSummary};
-use folio_core::storage::retention::{purge_old_wavs, PurgeSummary};
-use folio_core::storage::snapshot::{
+use meety_core::storage::git_sync::{is_git_repo, sync as git_sync_impl, GitSyncSummary};
+use meety_core::storage::retention::{purge_old_wavs, PurgeSummary};
+use meety_core::storage::snapshot::{
     export as export_snapshot_impl, SnapshotPaths, SnapshotSummary,
 };
 use tauri::State;
@@ -23,7 +23,7 @@ pub async fn clear_recording_artifacts(
 ) -> Result<(), String> {
     let output_dir = state.settings.lock().output_dir.clone();
     tauri::async_runtime::spawn_blocking(move || -> Result<(), String> {
-        let dir = folio_core::paths::canonicalize_under(&output_dir, &session_dir)
+        let dir = meety_core::paths::canonicalize_under(&output_dir, &session_dir)
             .map_err(|e| e.to_string())?;
         for filename in [TRANSCRIPT_FILENAME, "transcript.json.zst"] {
             let transcript_path = dir.join(filename);

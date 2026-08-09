@@ -32,7 +32,7 @@ export function CloudCostConfirmDialog() {
             Upload this recording to OpenAI Whisper?
           </DialogTitle>
           <DialogDescription>
-            Folio is about to send the recording&apos;s audio to{" "}
+            Meety is about to send the recording&apos;s audio to{" "}
             <code>api.openai.com</code>. Confirm before the upload starts.
           </DialogDescription>
         </DialogHeader>

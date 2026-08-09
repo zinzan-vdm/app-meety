@@ -1,4 +1,4 @@
-# Contributing to Folio
+# Contributing to Meety
 
 Thanks for considering a contribution. This document covers setup, conventions, and the review process.
 
@@ -47,7 +47,7 @@ The authoritative style contract lives at [`docs/CODE_STYLE.md`](docs/CODE_STYLE
 
 ### Rust
 
-- Typed errors via `thiserror`. New variants go in `crates/folio-core/src/error.rs` (`FolioError`).
+- Typed errors via `thiserror`. New variants go in `crates/folio-core/src/error.rs` (`MeetyError`).
 - No `unwrap` outside `#[cfg(test)]`. `expect("reason")` is acceptable for invariants.
 - All `unsafe` blocks need a `// SAFETY:` justification comment.
 - Logging via `tracing`, never `println!`.

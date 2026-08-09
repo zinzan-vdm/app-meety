@@ -13,7 +13,7 @@ import {
 export const metadata: Metadata = {
     title: "Architecture",
     description:
-        "How Folio is built, from the Rust core through the Tauri shell to the data flow that moves a meeting from microphone to markdown.",
+        "How Meety is built, from the Rust core through the Tauri shell to the data flow that moves a meeting from microphone to markdown.",
 };
 
 const repositoryLayout = `folio/
@@ -106,7 +106,7 @@ export default function ArchitecturePage() {
             </FieldList>
             <Prose>
                 <p>
-                    A few rules hold across the core. <code>FolioError</code> is the
+                    A few rules hold across the core. <code>MeetyError</code> is the
                     single public error type, so callers handle one shape instead of a
                     dozen. Logging goes through the <code>tracing</code> crate, never{" "}
                     <code>println</code>, and audio callbacks are alloc-free hot paths

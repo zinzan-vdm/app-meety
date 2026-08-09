@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/lib/site-config";
 
-export function FolioMark({ className }: { className?: string }) {
+export function MeetyMark({ className }: { className?: string }) {
     return (
         <svg
             viewBox="0 0 1024 1024"
@@ -126,7 +126,7 @@ export function Logo({
 }) {
     return (
         <span className={cn("inline-flex items-center gap-2.5", className)}>
-            <FolioMark className="h-7 w-7 shrink-0" />
+            <MeetyMark className="h-7 w-7 shrink-0" />
             {showWordmark && (
                 <span className="font-wordmark text-2xl font-medium leading-none tracking-tight">
                     {siteConfig.wordmark}

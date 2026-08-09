@@ -1,6 +1,6 @@
-use folio_core::llm::provider::LlmProvider;
-use folio_core::llm::types::{ModelInfo, ProviderStatus};
-use folio_core::llm::{KeyStore, OpenAiProvider, ProviderId};
+use meety_core::llm::provider::LlmProvider;
+use meety_core::llm::types::{ModelInfo, ProviderStatus};
+use meety_core::llm::{KeyStore, OpenAiProvider, ProviderId};
 use tracing::{debug, info};
 
 #[tauri::command]

@@ -1,9 +1,9 @@
 use std::path::Path;
 
-use folio_core::llm::provider::LlmProvider;
-use folio_core::llm::{ChatMessage, ChatRequest, ChatRole, KeyStore, OpenAiProvider, ProviderId};
-use folio_core::storage::{scan_recordings, TaskStatus, TaskStore};
-use folio_core::transcription::SessionTranscript;
+use meety_core::llm::provider::LlmProvider;
+use meety_core::llm::{ChatMessage, ChatRequest, ChatRole, KeyStore, OpenAiProvider, ProviderId};
+use meety_core::storage::{scan_recordings, TaskStatus, TaskStore};
+use meety_core::transcription::SessionTranscript;
 use serde::{Deserialize, Serialize};
 use tauri::State;
 use tracing::info;
@@ -77,7 +77,7 @@ pub async fn ask_note(
         let root = output_dir.clone();
         let target = std::path::PathBuf::from(&session_dir);
         tauri::async_runtime::spawn_blocking(move || {
-            folio_core::paths::canonicalize_under(&root, &target).map_err(|e| e.to_string())
+            meety_core::paths::canonicalize_under(&root, &target).map_err(|e| e.to_string())
         })
         .await
         .map_err(|e| format!("canonicalize task panicked: {e}"))??
@@ -149,7 +149,7 @@ fn build_note_context(dir: &Path) -> String {
         if !text.is_empty() {
             out.push_str("## Transcript\n");
             if text.len() > TRANSCRIPT_CHAR_CAP {
-                out.push_str(folio_core::text::truncate_on_char_boundary(
+                out.push_str(meety_core::text::truncate_on_char_boundary(
                     &text,
                     TRANSCRIPT_CHAR_CAP,
                 ));
@@ -171,7 +171,7 @@ fn build_note_context(dir: &Path) -> String {
         }
     }
 
-    if let Ok(runs) = folio_core::llm::AgentRunStore::list(dir) {
+    if let Ok(runs) = meety_core::llm::AgentRunStore::list(dir) {
         for run in runs {
             if run.response.trim().is_empty() {
                 continue;
@@ -186,7 +186,7 @@ fn build_note_context(dir: &Path) -> String {
 }
 
 fn flatten_with_timestamps(session_dir: &Path, transcript: &SessionTranscript) -> String {
-    let names = folio_core::diarization::SessionSpeakers::read(session_dir)
+    let names = meety_core::diarization::SessionSpeakers::read(session_dir)
         .ok()
         .flatten()
         .map(|s| s.name_map())
@@ -285,7 +285,7 @@ pub async fn ask_library(
 fn build_library_context(
     output_dir: &Path,
     tasks_path: &Path,
-    memory_store: &folio_core::memory::MemoryStore,
+    memory_store: &meety_core::memory::MemoryStore,
     query: &str,
 ) -> (String, CoverageNote) {
     let mut out = String::new();
@@ -319,7 +319,7 @@ fn build_library_context(
         out.push('\n');
     }
 
-    use folio_core::llm::retrieval;
+    use meety_core::llm::retrieval;
 
     let query_tokens_owned = retrieval::tokenize_query(query);
     let query_tokens: Vec<&str> = query_tokens_owned.iter().map(String::as_str).collect();
@@ -328,11 +328,11 @@ fn build_library_context(
     let mut recordings = scan_recordings(output_dir);
     let notes_total = recordings.len();
 
-    let mut scored: Vec<(f32, &folio_core::storage::RecordingSummary, String)> = recordings
+    let mut scored: Vec<(f32, &meety_core::storage::RecordingSummary, String)> = recordings
         .iter()
         .filter_map(|r| {
             let dir = Path::new(&r.session_dir);
-            let summary = folio_core::llm::AgentRunStore::list(dir)
+            let summary = meety_core::llm::AgentRunStore::list(dir)
                 .ok()
                 .and_then(|runs| runs.into_iter().find(|run| run.agent_id == "summarize"))
                 .map(|run| run.response)?;
@@ -419,7 +419,7 @@ mod tests {
 
     #[test]
     fn flatten_labels_speakers_and_prefixes_timestamps() {
-        use folio_core::transcription::{ChannelTranscript, TranscriptSegment};
+        use meety_core::transcription::{ChannelTranscript, TranscriptSegment};
         let t = SessionTranscript {
             channels: vec![ChannelTranscript {
                 channel: "mic".into(),

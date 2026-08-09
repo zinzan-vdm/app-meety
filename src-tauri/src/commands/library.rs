@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
-use folio_core::storage::search::{search_notes, NoteSearchHit};
-use folio_core::storage::{scan_recordings, RecordingSummary};
+use meety_core::storage::search::{search_notes, NoteSearchHit};
+use meety_core::storage::{scan_recordings, RecordingSummary};
 use tauri::State;
 #[cfg(not(target_os = "macos"))]
 use tracing::warn;
@@ -50,9 +50,9 @@ pub async fn export_note_markdown(
     let output_dir = state.settings.lock().output_dir.clone();
     let session = PathBuf::from(&session_dir);
     tauri::async_runtime::spawn_blocking(move || -> Result<String, String> {
-        let canon = folio_core::paths::canonicalize_under(&output_dir, &session)
+        let canon = meety_core::paths::canonicalize_under(&output_dir, &session)
             .map_err(|e| e.to_string())?;
-        let path = folio_core::storage::note_export::write_markdown(&output_dir, &canon)
+        let path = meety_core::storage::note_export::write_markdown(&output_dir, &canon)
             .map_err(|e| e.to_string())?;
         Ok(path.to_string_lossy().into_owned())
     })
@@ -128,7 +128,7 @@ pub async fn reveal_in_finder(state: State<'_, AppState>, path: PathBuf) -> Resu
     let output_dir = state.settings.lock().output_dir.clone();
     tauri::async_runtime::spawn_blocking(move || -> Result<(), String> {
         let canon =
-            folio_core::paths::canonicalize_under(&output_dir, &path).map_err(|e| e.to_string())?;
+            meety_core::paths::canonicalize_under(&output_dir, &path).map_err(|e| e.to_string())?;
         #[cfg(target_os = "macos")]
         {
             std::process::Command::new("open")
@@ -159,7 +159,7 @@ pub async fn share_paths(
     let mut canon_paths: Vec<PathBuf> = Vec::with_capacity(paths.len());
     for p in &paths {
         let canon =
-            folio_core::paths::canonicalize_under(&output_dir, p).map_err(|e| e.to_string())?;
+            meety_core::paths::canonicalize_under(&output_dir, p).map_err(|e| e.to_string())?;
         canon_paths.push(canon);
     }
     let (tx, rx) = tokio::sync::oneshot::channel();

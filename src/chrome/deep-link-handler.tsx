@@ -45,7 +45,7 @@ function handle(urls: string[]) {
     switch (verdict.kind) {
       case "allowed-folio-route":
         bridgeNavigate(verdict.route);
-        toast.message("Folio deep link", {
+        toast.message("Meety deep link", {
           description: `${verdict.route}${formatParams(verdict.params)}`,
         });
         break;

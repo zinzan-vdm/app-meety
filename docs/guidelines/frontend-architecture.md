@@ -1,4 +1,4 @@
-# Frontend architecture — Folio guidelines
+# Frontend architecture — Meety guidelines
 
 Source-cited guidance for the React + TypeScript frontend. Stack: React 18+, Vite, Bun, Zustand, shadcn-style primitives, `ts-rs` for cross-language types. Targets the `src/` tree.
 
@@ -16,7 +16,7 @@ Source-cited guidance for the React + TypeScript frontend. Stack: React 18+, Vit
 
 The current `src/` layout (`features/`, `shared/`, plus `chrome/` + entries) is a relaxed [Feature-Sliced Design (FSD)](https://feature-sliced.design/docs/get-started/overview). Knowing the canonical layers helps reason about where new code belongs even when not all are enforced.
 
-| Layer                      | Purpose                                                      | Folio today                                               |
+| Layer                      | Purpose                                                      | Meety today                                               |
 | -------------------------- | ------------------------------------------------------------ | --------------------------------------------------------- |
 | `app/`                     | Entrypoints, providers, routing, global styles               | Implicit at `src/main.tsx`, `src/App.tsx`                 |
 | `processes/`               | Cross-page flows (deprecated by FSD itself)                  | Not used. Don't adopt.                                    |
@@ -25,7 +25,7 @@ The current `src/` layout (`features/`, `shared/`, plus `chrome/` + entries) is 
 | `features/`                | User-facing capabilities with business value                 | `src/features/{editor,library,recording,settings,tasks}/` |
 | `entities/`                | Domain models (`session`, `transcript`) and their store/UI   | Partial — domain types live in `shared/types/`            |
 | `shared/`                  | Reusable, business-agnostic code (UI primitives, IPC, utils) | `src/shared/{lib,stores,types,ui,hooks}/`                 |
-| `chrome/` (Folio-specific) | Persistent app chrome (sidebar, drag strip)                  | `src/chrome/`                                             |
+| `chrome/` (Meety-specific) | Persistent app chrome (sidebar, drag strip)                  | `src/chrome/`                                             |
 
 ### The one rule that matters
 
@@ -35,7 +35,7 @@ From [FSD](https://feature-sliced.design/docs/get-started/overview):
 
 > "Slices cannot use other slices on the same layer."
 
-Concretely for Folio:
+Concretely for Meety:
 
 - `features/editor/` must **not** import from `features/settings/`. If they need to share, the shared piece moves down into `shared/` or `entities/`.
 - `shared/ui/button.tsx` must **not** import anything from `features/*`.
@@ -47,7 +47,7 @@ From the [Mastering FSD: Lessons from Real Projects](https://dev.to/arjunsanthos
 
 > "For small apps or prototypes, FSD is simply too much... Starting with the basics (App, Pages, Widgets, and Shared) gives you a solid foundation, and then you can gradually add the more complex layers like Features and Entities when your project is ready for them."
 
-**Folio's stance:** keep `app` (implicit) + `features` + `shared` + `chrome`. Add an `entities/` layer the first time two features want to render or mutate the same domain object (today, `Session` and `TranscriptSegment` are the most likely candidates). Add `pages/` if routing grows past three top-level screens. Skip `widgets/` and `processes/` indefinitely.
+**Meety's stance:** keep `app` (implicit) + `features` + `shared` + `chrome`. Add an `entities/` layer the first time two features want to render or mutate the same domain object (today, `Session` and `TranscriptSegment` are the most likely candidates). Add `pages/` if routing grows past three top-level screens. Skip `widgets/` and `processes/` indefinitely.
 
 **Enforcement:** add `eslint-plugin-boundaries` or `eslint-plugin-import` with `no-restricted-paths` to make the import-direction rule a lint error, not a convention. Without ESLint enforcement, the rule rots within a quarter.
 
@@ -80,7 +80,7 @@ From [shadcn/ui Dark Mode](https://ui.shadcn.com/docs/dark-mode):
 
 > "Dark mode works by overriding the same tokens inside a `.dark` selector."
 
-Rules for Folio:
+Rules for Meety:
 
 - All color comes from CSS variables (semantic `--background` / `--foreground` pairs). Never hard-code Tailwind colors like `bg-zinc-900`.
 - Light/dark live in `:root` and `.dark` inside `src/styles/`.
@@ -94,7 +94,7 @@ Rules for Folio:
 For a Tauri desktop app, the "server" is the Rust backend.
 
 - **Zustand** for client state (UI mode, current selection, settings draft, in-progress transcription buffer, modal open/close).
-- **TanStack Query** only if you grow list/detail screens that re-fetch from Rust frequently and benefit from caching/pagination/optimistic updates. Today Folio is below that threshold — keep IPC results in Zustand or component state.
+- **TanStack Query** only if you grow list/detail screens that re-fetch from Rust frequently and benefit from caching/pagination/optimistic updates. Today Meety is below that threshold — keep IPC results in Zustand or component state.
 
 ### Slice pattern
 
@@ -160,7 +160,7 @@ beforeEach(() => useStore.setState(initialState, true));
 
 ### Typed command wrappers
 
-Folio's `src/shared/lib/ipc.ts` is the **only** file that should import from `@tauri-apps/api/core`. Every command gets a typed wrapper:
+Meety's `src/shared/lib/ipc.ts` is the **only** file that should import from `@tauri-apps/api/core`. Every command gets a typed wrapper:
 
 ```ts
 export async function startTranscription(
@@ -174,7 +174,7 @@ export async function startTranscription(
 
 ### `ts-rs` vs `tauri-specta`
 
-Folio currently uses `ts-rs`. It works for one-type-at-a-time exports but has limits:
+Meety currently uses `ts-rs`. It works for one-type-at-a-time exports but has limits:
 
 - No recursive dependent-type export.
 - No typed event support.
@@ -243,7 +243,7 @@ Use Suspense for code-split routes (`React.lazy`). For data, only adopt Suspense
 
 > "By letting urgent updates (typing, clicks, drags) happen instantly while heavier work (filters, charts, big renders) runs 'in the background,' concurrency makes your UI buttery-smooth." — [React 19 Concurrency Deep Dive](https://dev.to/a1guy/react-19-concurrency-deep-dive-mastering-usetransition-and-starttransition-for-smoother-uis-51eo)
 
-Concrete Folio cases:
+Concrete Meety cases:
 
 - Filtering a long transcript list as the user types in search → wrap the search-state setter in `startTransition`.
 - Re-rendering the waveform when zoom changes → ditto.
@@ -256,7 +256,7 @@ From [Naming Conventions in React](https://www.sufle.io/blog/naming-conventions-
 
 > "For React components, the PascalCase convention is recommended."
 
-Folio convention:
+Meety convention:
 
 - Files: **kebab-case** (`transcript-editor.tsx`, `use-tauri-event.ts`).
 - Exports: **PascalCase** components, **camelCase** hooks/functions/values, **UPPER_SNAKE** constants, **PascalCase** types/interfaces.
@@ -309,7 +309,7 @@ From [web.dev: Accessibility audit with react-axe and eslint-plugin-jsx-a11y](ht
 | Persist whitelisted keys via Tauri Store    | Persist whole store to localStorage                       |
 | Use semantic CSS variables for colors       | Hard-code Tailwind color shades                           |
 
-## Folio-specific refactor candidates
+## Meety-specific refactor candidates
 
 - **`src/features/editor/agent-panel.tsx` (418 lines)** — extract sub-components (message list, composer, tool-output rendering) into `features/editor/components/`.
 - **`src/features/editor/route.tsx` (360 lines)** — extract toolbar, segment list, and bottom bar into separate components.

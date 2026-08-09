@@ -1,6 +1,6 @@
-# Rust async & concurrency — Folio guidelines
+# Rust async & concurrency — Meety guidelines
 
-Source-cited guidance for writing async code in Folio's Tauri 2 shell and the underlying `folio-core` library. Covers Tokio patterns, `Send`/`Sync` boundaries for FFI handles, the audio realtime callback rules, and cancellation safety.
+Source-cited guidance for writing async code in Meety's Tauri 2 shell and the underlying `folio-core` library. Covers Tokio patterns, `Send`/`Sync` boundaries for FFI handles, the audio realtime callback rules, and cancellation safety.
 
 ## TL;DR — the rules
 
@@ -93,7 +93,7 @@ From the [Tokio tutorial](https://tokio.rs/tokio/tutorial/shared-state):
 
 > "When you do want shared access to an IO resource, it is often better to spawn a task to manage the IO resource, and to use message passing to communicate with that task."
 
-This is the standard pattern for Folio's `WavWriter` and `LocalWhisperTranscriber` — a dedicated worker task owns the resource; commands and event handlers send work to it via mpsc.
+This is the standard pattern for Meety's `WavWriter` and `LocalWhisperTranscriber` — a dedicated worker task owns the resource; commands and event handlers send work to it via mpsc.
 
 ## `spawn_blocking` for CPU / blocking work
 
@@ -101,7 +101,7 @@ From [users.rust-lang.org](https://users.rust-lang.org/t/tokio-from-async-to-syn
 
 > "If you find yourself in an asynchronous execution context and needing to call some (synchronous) function which performs blocking operations, then consider wrapping that call inside `spawn_blocking`."
 
-Folio candidates:
+Meety candidates:
 
 - Whisper inference (`whisper_rs::FullParams::full(...)`)
 - Large file I/O (model loading, big WAV reads)
@@ -205,7 +205,7 @@ pub async fn start_transcription(
 
 `state.transcription` returns a `&TranscriptionEngine` that owns the worker task; `enqueue` is a quick channel send. The command returns in milliseconds. Progress + completion arrive via emitted events.
 
-## Folio-specific async pitfalls observed
+## Meety-specific async pitfalls observed
 
 - The CLI `folio-cli` currently uses `std::thread::sleep(Duration::from_secs(args.seconds))` from sync `main` — fine for a CLI test harness, but don't copy this pattern into the Tauri shell.
 - `CaptureSession` uses `unsafe impl Send` (in `crates/folio-core/src/audio/capture.rs`) with a `// SAFETY:` justification noting that the cpal `Stream` is Send-via-Mutex-discipline. This is acceptable; the alternative would be a major restructure to keep the stream pinned to one owner thread (per the [Send/Sync](#send--sync-for-ffi-handles) guidance above). Revisit in a future refactor.

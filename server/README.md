@@ -1,11 +1,11 @@
-# Folio remote transcription server
+# Meety remote transcription server
 
 A self-hostable, GPU-accelerated transcription backend for
-[Folio](https://folio.chele.bi). Folio uploads a recording, this server
+[Meety](https://folio.chele.bi). Meety uploads a recording, this server
 transcribes it (faster-whisper / CTranslate2 on the GPU), and the transcript
 syncs back to the desktop app — so your Mac can sleep while the GPU does the work.
 
-Local transcription stays the default in Folio; this server is an opt-in remote
+Local transcription stays the default in Meety; this server is an opt-in remote
 backend you point the app at. See [`../docs/REMOTE_SERVER.md`](../docs/REMOTE_SERVER.md)
 for the architecture and API contract.
 
@@ -23,7 +23,7 @@ deployed:
      api + worker); nothing to paste.
 3. Enable **GPU** for the resource (GPU-capable Coolify server + NVIDIA Container
    Toolkit). The worker reserves an NVIDIA device by default.
-4. **Deploy.** In Folio open **Account** in the sidebar, set the endpoint to
+4. **Deploy.** In Meety open **Account** in the sidebar, set the endpoint to
    `https://your-domain`, hit **Test** (it should report `faster_whisper` and
    GPU), create your account, then pick **Remote server** as the provider under
    _Settings → Transcription_ — or use **Make default** on the Account page.

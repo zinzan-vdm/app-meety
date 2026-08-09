@@ -22,7 +22,7 @@ import {
 export const metadata: Metadata = {
     title: "How to use",
     description:
-        "Go from first launch to a searchable vault of meeting notes with Folio, the local-first meeting transcription app for macOS.",
+        "Go from first launch to a searchable vault of meeting notes with Meety, the local-first meeting transcription app for macOS.",
 };
 
 const exampleFrontmatter = `---
@@ -37,8 +37,8 @@ export default function HowToUsePage() {
         <>
             <DocHeader
                 eyebrow="Getting started"
-                title="Using Folio"
-                description="Folio runs from the menu bar, records each meeting on your machine, and writes one markdown note per meeting to a vault you control. This page walks from first launch to a vault of notes you can search, edit, and trust."
+                title="Using Meety"
+                description="Meety runs from the menu bar, records each meeting on your machine, and writes one markdown note per meeting to a vault you control. This page walks from first launch to a vault of notes you can search, edit, and trust."
             />
 
             <DocH2 id="first-launch">First launch</DocH2>
@@ -91,7 +91,7 @@ export default function HowToUsePage() {
                 </p>
             </Prose>
             <Steps>
-                <Step n={1} title="Folio notices the meeting">
+                <Step n={1} title="Meety notices the meeting">
                     <p>
                         {siteConfig.name} watches your calendar and audio devices through
                         EventKit. When a meeting begins, it has the context it needs to
@@ -260,7 +260,7 @@ export default function HowToUsePage() {
             </Prose>
             <CommandLine command={siteConfig.install.installCommand} />
             <CardGrid>
-                <LinkCard href="/docs/installation" title="Install Folio">
+                <LinkCard href="/docs/installation" title="Install Meety">
                     Set up {siteConfig.name} on {siteConfig.platform} with Homebrew or a
                     direct download.
                 </LinkCard>

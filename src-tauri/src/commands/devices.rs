@@ -1,5 +1,5 @@
-use folio_core::audio::devices::{list_input_devices as core_list_input_devices, DeviceInfo};
-use folio_core::audio::mic_monitor::MicMonitor;
+use meety_core::audio::devices::{list_input_devices as core_list_input_devices, DeviceInfo};
+use meety_core::audio::mic_monitor::MicMonitor;
 use tauri::State;
 use tracing::{debug, info};
 

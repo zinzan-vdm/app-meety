@@ -30,7 +30,7 @@ export const metadata: Metadata = {
         "markdown notes",
         "MCP",
     ],
-    authors: [{ name: "Folio" }],
+    authors: [{ name: "Meety" }],
     openGraph: {
         type: "website",
         title: `${siteConfig.name} — ${siteConfig.tagline}`,

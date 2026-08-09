@@ -8,7 +8,7 @@ const steps = [
         step: "01",
         title: "It notices the meeting",
         description:
-            "Folio watches your calendar and audio devices through EventKit. No Google OAuth, no Microsoft Graph, no meeting bots.",
+            "Meety watches your calendar and audio devices through EventKit. No Google OAuth, no Microsoft Graph, no meeting bots.",
     },
     {
         icon: Mic,

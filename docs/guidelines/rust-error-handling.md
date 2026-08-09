@@ -1,11 +1,11 @@
-# Rust error handling — Folio guidelines
+# Rust error handling — Meety guidelines
 
-Source-cited synthesis for the Folio codebase. Targets `folio-core`, `folio-cli`, and the `src-tauri` shell. Use this doc when adding new error variants, designing fallible APIs, or wiring an error across the Tauri IPC boundary.
+Source-cited synthesis for the Meety codebase. Targets `folio-core`, `folio-cli`, and the `src-tauri` shell. Use this doc when adding new error variants, designing fallible APIs, or wiring an error across the Tauri IPC boundary.
 
 ## TL;DR — the rules
 
 1. **`thiserror` inside crates that other code matches on. `anyhow` at the application boundary (`main`, Tauri commands).** Most production Rust uses both. ([Palmieri](https://www.lpalmieri.com/posts/error-handling-rust/), [OneUptime](https://oneuptime.com/blog/post/2026-01-25-error-types-thiserror-anyhow-rust/view))
-2. **One error enum per subsystem, not one mega-enum per crate.** `AudioError`, `TranscriptionError`, `StorageError`, `LlmError` — not a single `FolioError` that mixes I/O, Whisper, and Keychain failures.
+2. **One error enum per subsystem, not one mega-enum per crate.** `AudioError`, `TranscriptionError`, `StorageError`, `LlmError` — not a single `MeetyError` that mixes I/O, Whisper, and Keychain failures.
 3. **`#[non_exhaustive]` on public error enums** so adding a variant isn't a SemVer break. Skip it on crate-private enums. ([RFC 2008](https://rust-lang.github.io/rfcs/2008-non-exhaustive.html))
 4. **Always preserve the source chain** via `#[source]` or `#[from]`. Never collapse to a string and lose context.
 5. **`.with_context(||...)` lazy — `.context("…")` eager.** Use `with_context` whenever the message requires allocation. ([anyhow::Context](https://docs.rs/anyhow/latest/anyhow/trait.Context.html))
@@ -93,7 +93,7 @@ let cfg = std::fs::read_to_string(&path)
 
 > "Since the return type must implement `serde::Serialize`, most errors don't work directly... The `thiserror` + tagged enum pattern is the correct default. Set it up on day one." — [dev.to](https://dev.to/hiyoyok/rust-error-handling-in-tauri-commands-the-pattern-that-actually-works-35le)
 
-Pattern Folio should adopt (todo):
+Pattern Meety should adopt (todo):
 
 ```rust
 // src-tauri/src/error.rs
@@ -179,13 +179,13 @@ tracing::warn!(error = %err, file = ?path, "transcription failed");
 
 - **`tracing-error::SpanTrace`** carries span context into the error, so the Tauri command boundary can log the full chain once and serialize only `{ kind, message }` to JS.
 
-## Practical migration notes for Folio
+## Practical migration notes for Meety
 
-Current state: single `FolioError` enum at `crates/folio-core/src/error.rs`, ~15 variants.
+Current state: single `MeetyError` enum at `crates/folio-core/src/error.rs`, ~15 variants.
 
 Recommended changes (priority order):
 
-1. **Split `FolioError` into per-subsystem enums** (`AudioError`, `TranscriptionError`, `StorageError`, `LlmError`). Keep a top-level `FolioError` that wraps them via `#[from]` if you want a single re-export. Tag all public enums `#[non_exhaustive]`.
+1. **Split `MeetyError` into per-subsystem enums** (`AudioError`, `TranscriptionError`, `StorageError`, `LlmError`). Keep a top-level `MeetyError` that wraps them via `#[from]` if you want a single re-export. Tag all public enums `#[non_exhaustive]`.
 2. **Add a Tauri-side `CommandError`** with a `Serialize` impl that emits `{ kind, message }`. Update commands to return `Result<T, CommandError>` instead of `Result<T, String>`.
 3. **Replace `format!("…: {e}")` in error variants** with `#[source]` chains. Don't lose source by serializing it into a string field.
 4. **Audit `.unwrap` / `.expect` for messages** — every `.expect` should explain the invariant in one sentence.

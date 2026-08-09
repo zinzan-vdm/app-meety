@@ -62,7 +62,7 @@ export function SiteFooter() {
                         Audio stays on your machine.
                     </p>
                     <p className="font-mono text-2xs uppercase tracking-[0.14em]">
-                        Folio v{siteConfig.version}
+                        Meety v{siteConfig.version}
                     </p>
                 </div>
             </div>

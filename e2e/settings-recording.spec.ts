@@ -70,7 +70,7 @@ test("Transcription — enabling live transcription persists live_transcript_ena
 
 test("Storage — sections render the configured paths", async ({ page }) => {
   await page.getByRole("button", { name: /^storage$/i }).click();
-  await expect(page.getByText("/tmp/Folio").first()).toBeVisible();
+  await expect(page.getByText("/tmp/Meety").first()).toBeVisible();
 });
 
 test("Privacy — section renders the privacy mode toggle", async ({ page }) => {
@@ -89,5 +89,5 @@ test("Storage — Save button writes settings back via IPC", async ({ page }) =>
   await page.getByRole("button", { name: /^storage$/i }).click();
   await page.getByRole("button", { name: /^save$/i }).click();
   const saved = await readSettings(page);
-  expect(saved.output_dir).toBe("/tmp/Folio");
+  expect(saved.output_dir).toBe("/tmp/Meety");
 });

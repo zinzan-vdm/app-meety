@@ -14,7 +14,7 @@ export function SectionPrivacy({ settings, onChange }: Props) {
       <div>
         <h2 className="font-serif text-2xl font-medium">Privacy</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Everything Folio does stays on your Mac unless you opt in here. Toggles
+          Everything Meety does stays on your Mac unless you opt in here. Toggles
           default OFF.
         </p>
       </div>

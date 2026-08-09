@@ -1,4 +1,4 @@
-# Agent Conventions for Folio
+# Agent Conventions for Meety
 
 Guidance for AI agents (Claude Code, Codex, etc.) working in this repo.
 Mirrors the human-facing CONTRIBUTING.md.
@@ -31,7 +31,7 @@ git hygiene.
 
 - 4-space indent for Rust, 100-char width (`rustfmt.toml` enforces).
 - Errors via `thiserror` enums in `crates/folio-core/src/error.rs`.
-  `FolioError` is the public error type; new variants get added there,
+  `MeetyError` is the public error type; new variants get added there,
   not invented per-module.
 - Logging via `tracing`, never `println!`.
 - No `unwrap()` outside tests. `expect("<reason>")` is acceptable for
