@@ -95,10 +95,10 @@ objc2-core-audio = { version = "0.3", features = [
 whisper-rs = { workspace = true, features = ["metal"] }
 
 [target.'cfg(not(target_os = "macos"))'.dependencies]
-# Non-macOS targets get whisper-rs without Metal (CPU only). The app
+# Non-macOS targets get whisper-rs with Vulkan GPU support (falls back to CPU gracefully). The app
 # is macOS-first for v0, but the workspace still builds elsewhere so
 # `cargo check --workspace` works on Linux CI runners for cargo-deny.
-whisper-rs = { workspace = true }
+whisper-rs = { workspace = true, features = ["vulkan"] }
 
 [lints]
 workspace = true
