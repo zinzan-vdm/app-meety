@@ -105,19 +105,23 @@ export default function Editor() {
   React.useEffect(() => {
     if (isRemoteProvider && account === null) void refreshAccount();
   }, [isRemoteProvider, account, refreshAccount]);
-  const [livePreview, setLivePreview] = React.useState("");
+  const [liveMicText, setLiveMicText] = React.useState("");
+  const [liveSysText, setLiveSysText] = React.useState("");
   const liveSessionDir = recState.liveSessionDir;
   const isCapturingThis =
     (recState.recording || recState.paused) &&
     liveSessionDir === recording?.session_dir;
   React.useEffect(() => {
     if (!isCapturingThis) {
-      setLivePreview("");
+      setLiveMicText("");
+      setLiveSysText("");
       return;
     }
     let unlisten: (() => void) | undefined;
     void onLiveTranscript((p) => {
-      if (p.session_dir === recording?.session_dir) setLivePreview(p.text);
+      if (p.session_dir !== recording?.session_dir) return;
+      if (p.channel === "mic") setLiveMicText(p.text);
+      else if (p.channel === "system") setLiveSysText(p.text);
     }).then((fn) => {
       unlisten = fn;
     });
@@ -766,7 +770,8 @@ export default function Editor() {
         locked={isProcessing}
         liveTranscript={liveTranscriptEnabled}
         elapsedLabel={dockElapsedLabel}
-        livePreview={isCapturingThis ? livePreview : ""}
+        liveMicText={isCapturingThis ? liveMicText : ""}
+        liveSysText={isCapturingThis ? liveSysText : ""}
         busy={recState.busy}
         canAsk={recording.has_transcript}
         onAsk={() => setChatOpen(true)}
@@ -792,7 +797,8 @@ function RecordDock({
   locked,
   liveTranscript,
   elapsedLabel,
-  livePreview,
+  liveMicText,
+  liveSysText,
   busy,
   canAsk,
   onAsk,
@@ -809,7 +815,8 @@ function RecordDock({
 
   liveTranscript: boolean;
   elapsedLabel: string;
-  livePreview: string;
+  liveMicText: string;
+  liveSysText: string;
   busy: boolean;
   canAsk: boolean;
   onAsk: () => void;
@@ -839,11 +846,22 @@ function RecordDock({
           className="pointer-events-auto max-w-xl rounded-2xl border border-border bg-popover/95 px-4 py-2 text-sm leading-relaxed text-muted-foreground shadow-lg backdrop-blur"
           aria-live="polite"
         >
-          {livePreview ? (
-            <span className="line-clamp-3">
-              {livePreview}
-              <span className="ml-0.5 animate-pulse">▍</span>
-            </span>
+          {(liveMicText || liveSysText) ? (
+            <div className="flex flex-col gap-1">
+              {liveMicText ? (
+                <span className="line-clamp-2">
+                  <span className="font-medium text-blue-400">You:</span>{" "}
+                  {liveMicText}
+                </span>
+              ) : null}
+              {liveSysText ? (
+                <span className="line-clamp-2">
+                  <span className="font-medium text-amber-400">Others:</span>{" "}
+                  {liveSysText}
+                </span>
+              ) : null}
+              <span className="animate-pulse">▍</span>
+            </div>
           ) : (
             <span className="italic">Listening… live transcript will appear here.</span>
           )}

@@ -403,6 +403,7 @@ export async function onRecordingBarResume(handler: () => void): Promise<Unliste
 
 export interface LiveTranscript {
   session_dir: string;
+  channel: string;
   text: string;
 }
 
