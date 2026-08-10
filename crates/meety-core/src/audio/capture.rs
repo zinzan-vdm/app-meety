@@ -9,7 +9,7 @@ use ts_rs::TS;
 
 use crate::audio::devices::default_input_sample_rate;
 use crate::audio::mic::MicCapture;
-use crate::audio::system::SystemCapture;
+use crate::audio::sys_audio::{start_system_capture, SystemAudioCapture};
 #[cfg(target_os = "macos")]
 use crate::audio::voice_processing_capture::VoiceProcessingMicCapture;
 use crate::audio::wav_writer::AudioWavWriter;
@@ -83,7 +83,7 @@ pub struct CaptureSession {
     started_at: DateTime<Utc>,
     session_dir: PathBuf,
     mic: Option<MicHandle>,
-    system: Option<SystemCapture>,
+    system: Option<Box<dyn SystemAudioCapture>>,
     system_started: bool,
 }
 
@@ -175,7 +175,7 @@ impl CaptureSession {
             let sys_rate = config.target_sample_rate.unwrap_or(SYSTEM_NATIVE_RATE);
             let path = session_dir.join("system.wav");
             let writer = Arc::new(AudioWavWriter::create(&path, sys_rate)?);
-            match SystemCapture::start(writer.clone(), sys_rate) {
+            match start_system_capture(writer.clone(), sys_rate) {
                 Ok(c) => {
                     info!(path = %path.display(), rate = sys_rate, "system audio capture started");
                     system_started = true;

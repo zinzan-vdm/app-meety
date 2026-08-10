@@ -7,6 +7,7 @@ pub mod mic_monitor;
 #[cfg(target_os = "macos")]
 pub mod process_tap;
 pub mod resampler;
+pub mod sys_audio;
 pub mod system;
 pub mod vad;
 pub mod vad_filter;

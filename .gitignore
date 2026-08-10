@@ -101,3 +101,4 @@ e2e/fixtures/audio/*.wav
 src-tauri/binaries/
 
 e2e/remote-settings.png
+.hermes/

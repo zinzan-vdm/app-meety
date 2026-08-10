@@ -1743,34 +1743,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77ce24cb58228fbb8aa041425bb1050850ac19177686ea6e0f41a70416f56fdb"
 
 [[package]]
-name = "folio-cli"
-version = "0.1.0-alpha"
-dependencies = [
- "anyhow",
- "chrono",
- "clap 4.6.1",
- "hound",
- "meety-core",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "whisper-rs",
-]
-
-[[package]]
-name = "folio-mcp"
-version = "0.1.0-alpha"
-dependencies = [
- "anyhow",
- "chrono",
- "meety-core",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "foreign-types"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3087,7 +3059,7 @@ dependencies = [
 
 [[package]]
 name = "meety-app"
-version = "0.1.0-alpha"
+version = "2.0.0"
 dependencies = [
  "block",
  "block2",
@@ -3117,8 +3089,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "meety-cli"
+version = "2.0.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap 4.6.1",
+ "hound",
+ "meety-core",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "whisper-rs",
+]
+
+[[package]]
 name = "meety-core"
-version = "0.1.0-alpha"
+version = "2.0.0"
 dependencies = [
  "aes-gcm",
  "argon2",
@@ -3160,6 +3149,17 @@ dependencies = [
  "zerocopy 0.7.35",
  "zip 2.4.2",
  "zstd",
+]
+
+[[package]]
+name = "meety-mcp"
+version = "2.0.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "meety-core",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
