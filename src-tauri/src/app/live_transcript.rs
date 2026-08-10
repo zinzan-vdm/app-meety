@@ -3,6 +3,8 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 
+use meety_core::audio::resampler::StreamingResampler;
+use meety_core::audio::vad::silero::{self, SileroParams};
 use meety_core::transcription::{LocalWhisperTranscriber, Transcriber};
 use serde::Serialize;
 use tauri::{AppHandle, Emitter, Runtime};
@@ -16,10 +18,14 @@ const WINDOW_SECS: usize = 12;
 
 const WAV_HEADER_BYTES: u64 = 44;
 
-#[derive(Debug, Clone, Serialize)]
-pub struct LiveTranscript {
-    pub session_dir: String,
+const VAD_SAMPLE_RATE: u32 = 16_000;
 
+const RMS_FLOOR: f32 = 0.005;
+
+#[derive(Debug, Clone, Serialize)]
+pub struct LiveTranscriptEvent {
+    pub session_dir: String,
+    pub channel: String,
     pub text: String,
 }
 
@@ -34,9 +40,13 @@ pub fn spawn<R: Runtime>(
         .name("live-transcript".into())
         .spawn(move || {
             let transcriber = LocalWhisperTranscriber::new(model_path);
-            let mic_path = session_dir.join("mic.wav");
             let session_id = session_dir.to_string_lossy().into_owned();
-            let mut last_emitted = String::new();
+            let mut last_mic = String::new();
+            let mut last_sys = String::new();
+            let tmp = std::env::temp_dir().join(format!(
+                "meety-live-{}.wav",
+                std::process::id()
+            ));
 
             while !stop.load(Ordering::Relaxed) {
                 for _ in 0..POLL_INTERVAL.as_secs() {
@@ -46,41 +56,102 @@ pub fn spawn<R: Runtime>(
                     std::thread::sleep(Duration::from_secs(1));
                 }
 
-                let Some((rate, samples)) = read_wav_tail_mono(&mic_path, WINDOW_SECS) else {
-                    continue;
-                };
-                if samples.len() < rate as usize {
-                    continue;
-                }
-
-                let tmp =
-                    std::env::temp_dir().join(format!("folio-live-{}.wav", std::process::id()));
-                if write_mono_wav(&tmp, rate, &samples).is_err() {
-                    continue;
-                }
-                let text = match transcriber.transcribe(&tmp, language.as_deref()) {
-                    Ok(t) => t.full_text().trim().to_string(),
-                    Err(e) => {
-                        debug!(error = %e, "live transcript pass failed");
-                        continue;
+                let mic_path = session_dir.join("mic.wav");
+                if let Some((rate, samples)) = read_wav_tail_mono(&mic_path, WINDOW_SECS) {
+                    if samples.len() >= rate as usize && has_speech(&samples, rate) {
+                        if write_mono_wav(&tmp, rate, &samples).is_ok() {
+                            let text = match transcriber.transcribe(&tmp, language.as_deref()) {
+                                Ok(t) => t.full_text().trim().to_string(),
+                                Err(e) => {
+                                    debug!(error = %e, "live mic transcript failed");
+                                    let _ = std::fs::remove_file(&tmp);
+                                    continue;
+                                }
+                            };
+                            let _ = std::fs::remove_file(&tmp);
+                            if !text.is_empty() && text != last_mic {
+                                last_mic = text.clone();
+                                let _ = app.emit(
+                                    LIVE_TRANSCRIPT_EVENT,
+                                    LiveTranscriptEvent {
+                                        session_dir: session_id.clone(),
+                                        channel: "mic".into(),
+                                        text,
+                                    },
+                                );
+                            }
+                        }
                     }
-                };
-                let _ = std::fs::remove_file(&tmp);
-
-                if text.is_empty() || text == last_emitted {
-                    continue;
                 }
-                last_emitted = text.clone();
-                let _ = app.emit(
-                    LIVE_TRANSCRIPT_EVENT,
-                    LiveTranscript {
-                        session_dir: session_id.clone(),
-                        text,
-                    },
-                );
+
+                let sys_path = session_dir.join("system.wav");
+                if sys_path.exists() {
+                    if let Some((rate, samples)) = read_wav_tail_mono(&sys_path, WINDOW_SECS) {
+                        if samples.len() >= rate as usize && has_speech(&samples, rate) {
+                            if write_mono_wav(&tmp, rate, &samples).is_ok() {
+                                let text = match transcriber.transcribe(&tmp, language.as_deref()) {
+                                    Ok(t) => t.full_text().trim().to_string(),
+                                    Err(e) => {
+                                        debug!(error = %e, "live system transcript failed");
+                                        let _ = std::fs::remove_file(&tmp);
+                                        continue;
+                                    }
+                                };
+                                let _ = std::fs::remove_file(&tmp);
+                                if !text.is_empty() && text != last_sys {
+                                    last_sys = text.clone();
+                                    let _ = app.emit(
+                                        LIVE_TRANSCRIPT_EVENT,
+                                        LiveTranscriptEvent {
+                                            session_dir: session_id.clone(),
+                                            channel: "system".into(),
+                                            text,
+                                        },
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
             }
         })
         .expect("spawn live-transcript thread")
+}
+
+fn has_speech(samples: &[i16], rate: u32) -> bool {
+    if samples.is_empty() || rate == 0 {
+        return false;
+    }
+
+    let sum_sq: f64 = samples
+        .iter()
+        .map(|&s| (s as f64 / i16::MAX as f64).powi(2))
+        .sum();
+    let rms = (sum_sq / samples.len() as f64).sqrt() as f32;
+    if rms < RMS_FLOOR {
+        return false;
+    }
+
+    let f32_samples: Vec<f32> = samples.iter().map(|&s| s as f32 / i16::MAX as f32).collect();
+    let mono_vad = if rate == VAD_SAMPLE_RATE {
+        f32_samples
+    } else {
+        let Ok(mut resampler) = StreamingResampler::new(rate, 1, VAD_SAMPLE_RATE) else {
+            return true;
+        };
+        let Ok(mut out) = resampler.process(&f32_samples) else {
+            return true;
+        };
+        if let Ok(flushed) = resampler.flush() {
+            out.extend(flushed);
+        }
+        out
+    };
+
+    match silero::detect(&mono_vad, SileroParams::default()) {
+        Ok(segments) => !segments.is_empty(),
+        Err(_) => true,
+    }
 }
 
 pub fn read_wav_tail_mono(path: &Path, window_secs: usize) -> Option<(u32, Vec<i16>)> {
@@ -109,7 +180,6 @@ pub fn read_wav_tail_mono(path: &Path, window_secs: usize) -> Option<(u32, Vec<i
     let mut out = Vec::with_capacity(take_frames);
     for f in start_frame..total_frames {
         let base = f * frame_bytes;
-
         let mut acc: i32 = 0;
         for c in 0..channels as usize {
             let o = base + c * 2;
@@ -204,5 +274,16 @@ mod tests {
         assert_eq!(rate, 16_000);
         assert_eq!(read.len(), samples.len());
         assert_eq!(read, samples);
+    }
+
+    #[test]
+    fn silent_audio_has_no_speech() {
+        let silent = vec![0i16; VAD_SAMPLE_RATE as usize * 3];
+        assert!(!has_speech(&silent, VAD_SAMPLE_RATE));
+
+        let loud: Vec<i16> = (0..VAD_SAMPLE_RATE as usize * 3)
+            .map(|i| ((i as f32 * 0.1).sin() * 8000.0) as i16)
+            .collect();
+        assert!(has_speech(&loud, VAD_SAMPLE_RATE));
     }
 }
