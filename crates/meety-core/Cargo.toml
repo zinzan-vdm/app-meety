@@ -105,6 +105,7 @@ pulse = { workspace = true }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 # Windows: CPU-only whisper (no Vulkan SDK on CI, no Metal available).
+whisper-rs = { workspace = true }
 
 [lints]
 workspace = true
