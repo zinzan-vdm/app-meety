@@ -63,7 +63,7 @@ export default [
         navigator: "readonly",
         location: "readonly",
         history: "readonly",
-        __FOLIO_VERSION__: "readonly",
+        __Meety_VERSION__: "readonly",
       },
     },
     plugins: {

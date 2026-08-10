@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
+import { isMac, thisDevice } from "@/shared/lib/platform";
 import { useTheme } from "@/shared/hooks/use-theme";
 import { useSidebarCollapsed } from "@/shared/hooks/use-sidebar-collapsed";
 import { useRemoteAccountStore } from "@/shared/stores/remote-account-store";
@@ -206,8 +207,8 @@ export function Sidebar({ onOpenSettings }: SidebarProps) {
         </Button>
         {!collapsed && (
           <div className="mt-2 px-3 pb-1 text-2xs text-muted-foreground">
-            v{__FOLIO_VERSION__} ·{" "}
-            {remoteActive ? "synced to your server" : "audio stays on this Mac"}
+            v{__Meety_VERSION__} ·{" "}
+            {remoteActive ? "synced to your server" : `audio stays on ${thisDevice()}`}
           </div>
         )}
       </div>

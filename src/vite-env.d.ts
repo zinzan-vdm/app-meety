@@ -15,4 +15,4 @@ declare module "*.jpg" {
   export default src;
 }
 
-declare const __FOLIO_VERSION__: string;
+declare const __Meety_VERSION__: string;
