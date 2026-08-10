@@ -43,10 +43,7 @@ pub fn spawn<R: Runtime>(
             let session_id = session_dir.to_string_lossy().into_owned();
             let mut last_mic = String::new();
             let mut last_sys = String::new();
-            let tmp = std::env::temp_dir().join(format!(
-                "meety-live-{}.wav",
-                std::process::id()
-            ));
+            let tmp = std::env::temp_dir().join(format!("meety-live-{}.wav", std::process::id()));
 
             while !stop.load(Ordering::Relaxed) {
                 for _ in 0..POLL_INTERVAL.as_secs() {

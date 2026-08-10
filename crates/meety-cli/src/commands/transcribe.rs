@@ -3,9 +3,9 @@ use std::process::Command;
 use std::time::SystemTime;
 
 use anyhow::{anyhow, bail, Result};
+use hound::WavReader;
 use meety_core::transcription::hallucination_filter::filter_segments;
 use meety_core::transcription::{LocalWhisperTranscriber, Transcriber, TranscriptSegment};
-use hound::WavReader;
 use whisper_rs::{FullParams, SamplingStrategy, WhisperContext, WhisperContextParameters};
 
 use crate::cli::TranscribeArgs;

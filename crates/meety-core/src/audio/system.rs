@@ -6,6 +6,7 @@ use parking_lot::Mutex;
 use tracing::{debug, error, info, warn};
 
 use crate::audio::resampler::StreamingResampler;
+use crate::audio::sys_audio::SystemAudioCapture;
 use crate::audio::wav_writer::AudioWavWriter;
 use crate::error::{MeetyError, Result};
 #[cfg(target_os = "macos")]
@@ -14,7 +15,13 @@ use crate::qos::{set_thread_qos, QosClass};
 #[cfg(target_os = "macos")]
 pub use macos_impl::SystemCapture;
 
-#[cfg(not(target_os = "macos"))]
+#[cfg(target_os = "windows")]
+pub use windows_impl::SystemCapture;
+
+#[cfg(target_os = "linux")]
+pub use linux_impl::SystemCapture;
+
+#[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]
 pub use stub_impl::SystemCapture;
 
 const SCK_SAMPLE_RATE: u32 = 48_000;
@@ -23,6 +30,36 @@ const SCK_CHANNEL_COUNT: u8 = 1;
 const SILENCE_RMS_THRESHOLD: f32 = 0.002;
 
 const SILENCE_PAUSE_AFTER_MS: u64 = 30_000;
+
+/// Start system audio capture, dispatching to the platform-specific backend.
+///
+/// Returns a `Box<dyn SystemAudioCapture>` that the caller owns. The
+/// concrete type is resolved at compile time via `#[cfg]`.
+pub fn dispatch_start(
+    writer: Arc<AudioWavWriter>,
+    target_sample_rate: u32,
+) -> Result<Box<dyn SystemAudioCapture>> {
+    #[cfg(target_os = "macos")]
+    {
+        let cap = macos_impl::SystemCapture::start(writer, target_sample_rate)?;
+        return Ok(Box::new(cap));
+    }
+    #[cfg(target_os = "windows")]
+    {
+        let cap = windows_impl::SystemCapture::start(writer, target_sample_rate)?;
+        return Ok(Box::new(cap));
+    }
+    #[cfg(target_os = "linux")]
+    {
+        let cap = linux_impl::SystemCapture::start(writer, target_sample_rate)?;
+        return Ok(Box::new(cap));
+    }
+    #[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]
+    {
+        let cap = stub_impl::SystemCapture::start(writer, target_sample_rate)?;
+        Ok(Box::new(cap))
+    }
+}
 
 #[cfg(target_os = "macos")]
 mod macos_impl {
@@ -336,9 +373,304 @@ mod macos_impl {
             Ok(())
         }
     }
+
+    impl SystemAudioCapture for SystemCapture {
+        fn stop(self: Box<Self>) -> Result<()> {
+            let inner = *self;
+            inner.stop()
+        }
+    }
 }
 
-#[cfg(not(target_os = "macos"))]
+#[cfg(target_os = "windows")]
+mod windows_impl {
+    use super::*;
+
+    use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
+    use cpal::{Sample, SampleFormat, Stream, StreamConfig};
+
+    fn build_loopback_stream(
+        device: &cpal::Device,
+        config: &StreamConfig,
+        sample_format: SampleFormat,
+        writer: Arc<AudioWavWriter>,
+        resampler: Arc<Mutex<StreamingResampler>>,
+        stopped: Arc<AtomicBool>,
+    ) -> Result<Stream> {
+        let err_fn = |err| error!(?err, "WASAPI loopback stream error");
+        match sample_format {
+            SampleFormat::F32 => device
+                .build_input_stream(
+                    config,
+                    move |data: &[f32], _| {
+                        if stopped.load(Ordering::SeqCst) {
+                            return;
+                        }
+                        handle_loopback_samples(data, &writer, &resampler, &stopped);
+                    },
+                    err_fn,
+                    None,
+                )
+                .map_err(|e| MeetyError::StreamBuild(format!("WASAPI loopback f32: {e}")))?,
+            SampleFormat::I16 => {
+                let writer = writer.clone();
+                let resampler = resampler.clone();
+                let stopped = stopped.clone();
+                device
+                    .build_input_stream(
+                        config,
+                        move |data: &[i16], _| {
+                            if stopped.load(Ordering::SeqCst) {
+                                return;
+                            }
+                            let floats: Vec<f32> =
+                                data.iter().map(|s| s.to_float_sample()).collect();
+                            handle_loopback_samples(&floats, &writer, &resampler, &stopped);
+                        },
+                        err_fn,
+                        None,
+                    )
+                    .map_err(|e| MeetyError::StreamBuild(format!("WASAPI loopback i16: {e}")))?
+            }
+            SampleFormat::U16 => {
+                let writer = writer.clone();
+                let resampler = resampler.clone();
+                let stopped = stopped.clone();
+                device
+                    .build_input_stream(
+                        config,
+                        move |data: &[u16], _| {
+                            if stopped.load(Ordering::SeqCst) {
+                                return;
+                            }
+                            let floats: Vec<f32> =
+                                data.iter().map(|s| s.to_float_sample()).collect();
+                            handle_loopback_samples(&floats, &writer, &resampler, &stopped);
+                        },
+                        err_fn,
+                        None,
+                    )
+                    .map_err(|e| MeetyError::StreamBuild(format!("WASAPI loopback u16: {e}")))?
+            }
+            other => {
+                warn!(?other, "unsupported WASAPI loopback sample format");
+                return Err(MeetyError::AudioDevice(format!(
+                    "unsupported WASAPI loopback sample format: {other:?}"
+                )));
+            }
+        }
+    }
+
+    fn handle_loopback_samples(
+        data: &[f32],
+        writer: &Arc<AudioWavWriter>,
+        resampler: &Arc<Mutex<StreamingResampler>>,
+        stopped: &Arc<AtomicBool>,
+    ) {
+        if stopped.load(Ordering::SeqCst) {
+            return;
+        }
+        let resampled = {
+            let mut guard = resampler.lock();
+            match guard.process(data) {
+                Ok(out) => out,
+                Err(e) => {
+                    error!(error = %e, "WASAPI loopback resampler failed");
+                    return;
+                }
+            }
+        };
+        if let Err(e) = writer.append(&resampled) {
+            error!(error = %e, "WASAPI loopback wav append failed");
+        }
+    }
+
+    pub struct SystemCapture {
+        stream: Option<Stream>,
+        writer: Arc<AudioWavWriter>,
+        stopped: Arc<AtomicBool>,
+    }
+
+    impl SystemCapture {
+        pub fn start(writer: Arc<AudioWavWriter>, target_sample_rate: u32) -> Result<Self> {
+            let host = cpal::host_from_id(cpal::HostId::WASAPI)
+                .map_err(|e| MeetyError::SystemAudio(format!("WASAPI host unavailable: {e}")))?;
+
+            let device = host
+                .default_output_device()
+                .ok_or_else(|| MeetyError::SystemAudio("no default output device for WASAPI loopback".into()))?;
+
+            let device_name = device.name().unwrap_or_else(|_| "<unknown>".to_string());
+            info!(device = %device_name, "WASAPI loopback device selected");
+
+            let supported_config = device
+                .default_output_config()
+                .map_err(|e| MeetyError::SystemAudio(format!("default_output_config: {e}")))?;
+            let sample_format = supported_config.sample_format();
+            let input_sample_rate = supported_config.sample_rate().0;
+            let input_channels = supported_config.channels();
+            let config: StreamConfig = supported_config.into();
+
+            info!(
+                sample_rate = input_sample_rate,
+                channels = input_channels,
+                ?sample_format,
+                "WASAPI loopback capture config",
+            );
+
+            let resampler = Arc::new(Mutex::new(StreamingResampler::new(
+                input_sample_rate,
+                input_channels.max(1),
+                target_sample_rate,
+            )?));
+
+            let stopped = Arc::new(AtomicBool::new(false));
+
+            let stream = build_loopback_stream(
+                &device,
+                &config,
+                sample_format,
+                writer.clone(),
+                resampler,
+                stopped.clone(),
+            )?;
+
+            stream
+                .play()
+                .map_err(|e| MeetyError::StreamPlay(format!("WASAPI loopback play: {e}")))?;
+
+            info!("WASAPI loopback capture started");
+
+            Ok(Self {
+                stream: Some(stream),
+                writer,
+                stopped,
+            })
+        }
+
+        pub fn stop(mut self) -> Result<()> {
+            self.stopped.store(true, Ordering::SeqCst);
+            if let Some(stream) = self.stream.take() {
+                drop(stream);
+            }
+            self.writer.finalize()?;
+            debug!(
+                samples = self.writer.samples_written(),
+                "WASAPI loopback capture finalized"
+            );
+            Ok(())
+        }
+    }
+
+    impl SystemAudioCapture for SystemCapture {
+        fn stop(self: Box<Self>) -> Result<()> {
+            let inner = *self;
+            inner.stop()
+        }
+    }
+}
+
+#[cfg(target_os = "linux")]
+mod linux_impl {
+    use super::*;
+    use std::thread;
+
+    pub struct SystemCapture {
+        writer: Arc<AudioWavWriter>,
+        stopped: Arc<AtomicBool>,
+        handle: Option<thread::JoinHandle<()>>,
+    }
+
+    impl SystemCapture {
+        pub fn start(writer: Arc<AudioWavWriter>, target_sample_rate: u32) -> Result<Self> {
+            let stopped = Arc::new(AtomicBool::new(false));
+            let s = stopped.clone();
+            let w = writer.clone();
+
+            let handle = thread::Builder::new()
+                .name("meety-pulse".into())
+                .spawn(move || {
+                    let spec = pulse::sample::Spec::new(
+                        pulse::sample::Format::F32LE,
+                        1,
+                        target_sample_rate,
+                    );
+                    let mut pulse = match pulse::simple::Simple::new(
+                        None,
+                        "Meety",
+                        pulse::stream::Direction::Record,
+                        Some("@DEFAULT_MONITOR@"),
+                        "meety-system-capture",
+                        &spec,
+                        None,
+                        None,
+                    ) {
+                        Ok(p) => p,
+                        Err(e) => {
+                            error!(error = %e, "pulseaudio: failed to connect to @DEFAULT_MONITOR@");
+                            return;
+                        }
+                    };
+
+                    info!("pulseaudio monitor source capture started");
+                    loop {
+                        if s.load(Ordering::Relaxed) {
+                            break;
+                        }
+                        let data = match pulse.read() {
+                            Ok(d) => d,
+                            Err(e) => {
+                                error!(error = %e, "pulseaudio: read failed");
+                                break;
+                            }
+                        };
+                        if data.is_empty() {
+                            continue;
+                        }
+                        let floats: Vec<f32> = data
+                            .chunks_exact(4)
+                            .map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]]))
+                            .collect();
+                        if let Err(e) = w.append(&floats) {
+                            error!(error = %e, "pulseaudio: wav append failed");
+                            break;
+                        }
+                    }
+                    if let Err(e) = w.finalize() {
+                        error!(error = %e, "pulseaudio: wav finalize failed");
+                    }
+                })
+                .map_err(|e| MeetyError::SystemAudio(format!("thread spawn: {e}")))?;
+
+            Ok(Self {
+                writer,
+                stopped,
+                handle: Some(handle),
+            })
+        }
+
+        pub fn stop(mut self) -> Result<()> {
+            self.stopped.store(true, Ordering::Relaxed);
+            if let Some(h) = self.handle.take() {
+                let _ = h.join();
+            }
+            debug!(
+                samples = self.writer.samples_written(),
+                "linux system audio capture finalized"
+            );
+            Ok(())
+        }
+    }
+
+    impl SystemAudioCapture for SystemCapture {
+        fn stop(self: Box<Self>) -> Result<()> {
+            let inner = *self;
+            inner.stop()
+        }
+    }
+}
+
+#[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]
 mod stub_impl {
     use super::*;
 
@@ -353,6 +685,13 @@ mod stub_impl {
 
         pub fn stop(self) -> Result<()> {
             self.writer.finalize()
+        }
+    }
+
+    impl SystemAudioCapture for SystemCapture {
+        fn stop(self: Box<Self>) -> Result<()> {
+            let inner = *self;
+            inner.stop()
         }
     }
 }
@@ -388,6 +727,16 @@ mod tests {
             .collect();
         assert!(rms_local(&pcm) > 0.5);
     }
+
+    #[allow(dead_code)]
+    fn _api_present() {
+        let _ = std::mem::size_of::<SystemCapture>();
+    }
+}
+
+#[cfg(all(test, target_os = "windows"))]
+mod tests {
+    use super::windows_impl::*;
 
     #[allow(dead_code)]
     fn _api_present() {
