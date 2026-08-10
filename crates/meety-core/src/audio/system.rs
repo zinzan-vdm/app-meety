@@ -1,7 +1,7 @@
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::Arc;
 #[cfg(target_os = "macos")]
 use std::sync::atomic::AtomicU64;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
 #[cfg(target_os = "macos")]
 use std::time::{SystemTime, UNIX_EPOCH};
 
