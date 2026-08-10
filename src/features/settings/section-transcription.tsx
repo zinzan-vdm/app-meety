@@ -35,12 +35,16 @@ const PROVIDERS: { id: string; label: string; desc: string }[] = [
   {
     id: "local_whisper",
     label: "Local Whisper",
-    get desc() { return `Runs on ${thisDevice()} via whisper.cpp · no audio leaves your machine`; },
+    get desc() {
+      return `Runs on ${thisDevice()} via whisper.cpp · no audio leaves your machine`;
+    },
   },
   {
     id: "remote_server",
     label: "Remote server",
-    get desc() { return `Uploads to your GPU server · frees ${thisDevice()} · syncs the transcript back`; },
+    get desc() {
+      return `Uploads to your GPU server · frees ${thisDevice()} · syncs the transcript back`;
+    },
   },
 ];
 

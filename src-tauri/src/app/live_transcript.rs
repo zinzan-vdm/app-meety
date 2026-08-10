@@ -129,7 +129,10 @@ fn has_speech(samples: &[i16], rate: u32) -> bool {
         return false;
     }
 
-    let f32_samples: Vec<f32> = samples.iter().map(|&s| s as f32 / i16::MAX as f32).collect();
+    let f32_samples: Vec<f32> = samples
+        .iter()
+        .map(|&s| s as f32 / i16::MAX as f32)
+        .collect();
     let mono_vad = if rate == VAD_SAMPLE_RATE {
         f32_samples
     } else {

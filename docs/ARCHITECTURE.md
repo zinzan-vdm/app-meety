@@ -288,9 +288,9 @@ gates run on every commit, well before CI sees the branch.
 
 This project tracks work in three places that round-trip:
 
-| Layer                           | What lives there                                                                        |
-| ------------------------------- | --------------------------------------------------------------------------------------- |
-| **Issue tracker**               | Status, priority, assignment. The live source of truth. Issues are `GET-<n>` (e.g. ``). |
+| Layer                               | What lives there                                                                        |
+| ----------------------------------- | --------------------------------------------------------------------------------------- |
+| **Issue tracker**                   | Status, priority, assignment. The live source of truth. Issues are `GET-<n>` (e.g. ``). |
 | **GitHub** (`zinzan-vdm/app-meety`) | Code, issues, and pull requests.                                                        |
 
 ### Workflow for a new feature

@@ -104,8 +104,8 @@ export function SectionAudio({ settings, onChange }: Props) {
         ) : (
           <p className="text-xs text-muted-foreground">
             Click <strong>Test mic</strong> to hear your microphone played back through
-            your output — adjust input volume in {audioInputSettingsPath()} until
-            it sounds clear.
+            your output — adjust input volume in {audioInputSettingsPath()} until it
+            sounds clear.
           </p>
         )}
 
@@ -126,29 +126,30 @@ export function SectionAudio({ settings, onChange }: Props) {
             </Label>
             <p className="max-w-md text-xs text-muted-foreground">
               {isMac() ? (
-              <>
-                Routes the mic through Apple&apos;s Voice Processing IO AudioUnit — acoustic echo
-                cancellation, noise suppression, and automatic gain control. Stops the
-                mic from picking up system audio when you are not wearing headphones.
-                Same technology Zoom, FaceTime, and Discord use on macOS.{" "}
-                <strong className="text-foreground">
-                  Leave this off if your mic records nothing
-                </strong>{" "}
-                — on some Macs this path captures silence; plain capture is the reliable
-                default.
-              </>
-            ) : (
-              <>
-                Routes the mic through the system acoustic echo cancellation (AEC) and
-                noise suppression pipeline. Stops the mic from picking up system audio
-                when you are not wearing headphones.{" "}
-                <strong className="text-foreground">
-                  Leave this off if your mic records nothing
-                </strong>{" "}
-                — on some systems this path captures silence; plain capture is the
-                reliable default.
-              </>
-            )}
+                <>
+                  Routes the mic through Apple&apos;s Voice Processing IO AudioUnit —
+                  acoustic echo cancellation, noise suppression, and automatic gain
+                  control. Stops the mic from picking up system audio when you are not
+                  wearing headphones. Same technology Zoom, FaceTime, and Discord use on
+                  macOS.{" "}
+                  <strong className="text-foreground">
+                    Leave this off if your mic records nothing
+                  </strong>{" "}
+                  — on some Macs this path captures silence; plain capture is the
+                  reliable default.
+                </>
+              ) : (
+                <>
+                  Routes the mic through the system acoustic echo cancellation (AEC) and
+                  noise suppression pipeline. Stops the mic from picking up system audio
+                  when you are not wearing headphones.{" "}
+                  <strong className="text-foreground">
+                    Leave this off if your mic records nothing
+                  </strong>{" "}
+                  — on some systems this path captures silence; plain capture is the
+                  reliable default.
+                </>
+              )}
             </p>
           </div>
           <Switch

@@ -156,7 +156,10 @@ pub async fn reveal_in_finder(state: State<'_, AppState>, path: PathBuf) -> Resu
                     .map(|_| ())
                     .map_err(|e| e.to_string())
             } else {
-                warn!("reveal_in_finder: no parent directory for {}", canon.display());
+                warn!(
+                    "reveal_in_finder: no parent directory for {}",
+                    canon.display()
+                );
                 Ok(())
             }
         }

@@ -496,9 +496,9 @@ mod windows_impl {
             let host = cpal::host_from_id(cpal::HostId::WASAPI)
                 .map_err(|e| MeetyError::SystemAudio(format!("WASAPI host unavailable: {e}")))?;
 
-            let device = host
-                .default_output_device()
-                .ok_or_else(|| MeetyError::SystemAudio("no default output device for WASAPI loopback".into()))?;
+            let device = host.default_output_device().ok_or_else(|| {
+                MeetyError::SystemAudio("no default output device for WASAPI loopback".into())
+            })?;
 
             let device_name = device.name().unwrap_or_else(|_| "<unknown>".to_string());
             info!(device = %device_name, "WASAPI loopback device selected");

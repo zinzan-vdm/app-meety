@@ -29,8 +29,7 @@ export function useTranscriberCopy(): TranscriberCopy {
       isCloud: true,
       progressLabel: "Processing on your server…",
       triggerTooltip: "Upload to your Meety Server and sync the transcript back.",
-      emptyStateHint:
-        `Audio uploads to your Meety Server for GPU transcription, then the transcript syncs back to ${thisDevice()}. Manage the connection in Account.`,
+      emptyStateHint: `Audio uploads to your Meety Server for GPU transcription, then the transcript syncs back to ${thisDevice()}. Manage the connection in Account.`,
     };
   }
 
@@ -38,7 +37,6 @@ export function useTranscriberCopy(): TranscriberCopy {
     isCloud: false,
     progressLabel: "Transcribing locally with Whisper…",
     triggerTooltip: `Transcribe locally with whisper.cpp on ${thisDevice()}.`,
-    emptyStateHint:
-      `Runs on ${thisDevice()} via whisper.cpp. No audio leaves your machine. Switch backend in Settings → Transcription.`,
+    emptyStateHint: `Runs on ${thisDevice()} via whisper.cpp. No audio leaves your machine. Switch backend in Settings → Transcription.`,
   };
 }

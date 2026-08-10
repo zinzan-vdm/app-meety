@@ -846,12 +846,11 @@ function RecordDock({
           className="pointer-events-auto max-w-xl rounded-2xl border border-border bg-popover/95 px-4 py-2 text-sm leading-relaxed text-muted-foreground shadow-lg backdrop-blur"
           aria-live="polite"
         >
-          {(liveMicText || liveSysText) ? (
+          {liveMicText || liveSysText ? (
             <div className="flex flex-col gap-1">
               {liveMicText ? (
                 <span className="line-clamp-2">
-                  <span className="font-medium text-blue-400">You:</span>{" "}
-                  {liveMicText}
+                  <span className="font-medium text-blue-400">You:</span> {liveMicText}
                 </span>
               ) : null}
               {liveSysText ? (

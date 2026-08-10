@@ -3,7 +3,7 @@ export const siteConfig = {
     wordmark: "Meety",
     tagline: "Local-first meeting notes for macOS, Windows, and Linux",
     description:
-            "Meety captures system audio and your microphone, transcribes on-device, and writes a markdown note per meeting to your own vault. Audio never leaves your machine.",
+        "Meety captures system audio and your microphone, transcribes on-device, and writes a markdown note per meeting to your own vault. Audio never leaves your machine.",
     url: "https://meety.app",
     version: "0.1.0-alpha",
     license: "Apache-2.0",
