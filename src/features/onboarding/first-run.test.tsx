@@ -101,7 +101,7 @@ describe("FirstRunConductor — local-only setup", () => {
     await user.click(await screen.findByRole("button", { name: /continue/i }));
 
     expect(
-      await screen.findByRole("heading", { name: /welcome to folio/i })
+      await screen.findByRole("heading", { name: /welcome to meety/i })
     ).toBeTruthy();
     await user.click(screen.getByRole("button", { name: /i.?m ready/i }));
 
