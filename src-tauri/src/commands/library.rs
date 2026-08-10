@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use meety_core::storage::search::{search_notes, NoteSearchHit};
 use meety_core::storage::{scan_recordings, RecordingSummary};
 use tauri::State;
-#[cfg(not(target_os = "macos"))]
+#[cfg(target_os = "linux")]
 use tracing::warn;
 use tracing::{debug, info};
 
@@ -137,11 +137,28 @@ pub async fn reveal_in_finder(state: State<'_, AppState>, path: PathBuf) -> Resu
                 .map(|_| ())
                 .map_err(|e| e.to_string())
         }
-        #[cfg(not(target_os = "macos"))]
+        #[cfg(target_os = "windows")]
         {
-            let _ = canon;
-            warn!("reveal_in_finder not implemented on this platform");
-            Ok(())
+            std::process::Command::new("explorer")
+                .arg("/select,")
+                .arg(&canon)
+                .spawn()
+                .map(|_| ())
+                .map_err(|e| e.to_string())
+        }
+        #[cfg(target_os = "linux")]
+        {
+            // Use xdg-open on the parent directory to reveal the file
+            if let Some(parent) = canon.parent() {
+                std::process::Command::new("xdg-open")
+                    .arg(parent)
+                    .spawn()
+                    .map(|_| ())
+                    .map_err(|e| e.to_string())
+            } else {
+                warn!("reveal_in_finder: no parent directory for {}", canon.display());
+                Ok(())
+            }
         }
     })
     .await
