@@ -28,7 +28,7 @@ pub trait SystemAudioCapture: Send {
 /// Dispatches to the platform-specific backend:
 /// - macOS: Process Tap (14.4+) → ScreenCaptureKit fallback
 /// - Windows: WASAPI loopback via cpal
-/// - Linux: Returns `SystemAudioUnsupported` (PipeWire backend TBD)
+/// - Linux: PulseAudio monitor source (@DEFAULT_MONITOR@) via pulse crate
 pub fn start_system_capture(
     writer: Arc<AudioWavWriter>,
     target_sample_rate: u32,

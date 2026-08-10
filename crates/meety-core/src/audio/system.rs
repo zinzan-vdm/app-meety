@@ -18,7 +18,10 @@ pub use macos_impl::SystemCapture;
 #[cfg(target_os = "windows")]
 pub use windows_impl::SystemCapture;
 
-#[cfg(not(any(target_os = "macos", target_os = "windows")))]
+#[cfg(target_os = "linux")]
+pub use linux_impl::SystemCapture;
+
+#[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]
 pub use stub_impl::SystemCapture;
 
 const SCK_SAMPLE_RATE: u32 = 48_000;
@@ -46,7 +49,12 @@ pub fn dispatch_start(
         let cap = windows_impl::SystemCapture::start(writer, target_sample_rate)?;
         return Ok(Box::new(cap));
     }
-    #[cfg(not(any(target_os = "macos", target_os = "windows")))]
+    #[cfg(target_os = "linux")]
+    {
+        let cap = linux_impl::SystemCapture::start(writer, target_sample_rate)?;
+        return Ok(Box::new(cap));
+    }
+    #[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]
     {
         let cap = stub_impl::SystemCapture::start(writer, target_sample_rate)?;
         Ok(Box::new(cap))
@@ -562,7 +570,107 @@ mod windows_impl {
     }
 }
 
-#[cfg(not(any(target_os = "macos", target_os = "windows")))]
+#[cfg(target_os = "linux")]
+mod linux_impl {
+    use super::*;
+    use std::thread;
+
+    pub struct SystemCapture {
+        writer: Arc<AudioWavWriter>,
+        stopped: Arc<AtomicBool>,
+        handle: Option<thread::JoinHandle<()>>,
+    }
+
+    impl SystemCapture {
+        pub fn start(writer: Arc<AudioWavWriter>, target_sample_rate: u32) -> Result<Self> {
+            let stopped = Arc::new(AtomicBool::new(false));
+            let s = stopped.clone();
+            let w = writer.clone();
+
+            let handle = thread::Builder::new()
+                .name("meety-pulse".into())
+                .spawn(move || {
+                    let spec = pulse::sample::Spec::new(
+                        pulse::sample::Format::F32LE,
+                        1,
+                        target_sample_rate,
+                    );
+                    let mut pulse = match pulse::simple::Simple::new(
+                        None,
+                        "Meety",
+                        pulse::stream::Direction::Record,
+                        Some("@DEFAULT_MONITOR@"),
+                        "meety-system-capture",
+                        &spec,
+                        None,
+                        None,
+                    ) {
+                        Ok(p) => p,
+                        Err(e) => {
+                            error!(error = %e, "pulseaudio: failed to connect to @DEFAULT_MONITOR@");
+                            return;
+                        }
+                    };
+
+                    info!("pulseaudio monitor source capture started");
+                    loop {
+                        if s.load(Ordering::Relaxed) {
+                            break;
+                        }
+                        let data = match pulse.read() {
+                            Ok(d) => d,
+                            Err(e) => {
+                                error!(error = %e, "pulseaudio: read failed");
+                                break;
+                            }
+                        };
+                        if data.is_empty() {
+                            continue;
+                        }
+                        let floats: Vec<f32> = data
+                            .chunks_exact(4)
+                            .map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]]))
+                            .collect();
+                        if let Err(e) = w.append(&floats) {
+                            error!(error = %e, "pulseaudio: wav append failed");
+                            break;
+                        }
+                    }
+                    if let Err(e) = w.finalize() {
+                        error!(error = %e, "pulseaudio: wav finalize failed");
+                    }
+                })
+                .map_err(|e| MeetyError::SystemAudio(format!("thread spawn: {e}")))?;
+
+            Ok(Self {
+                writer,
+                stopped,
+                handle: Some(handle),
+            })
+        }
+
+        pub fn stop(mut self) -> Result<()> {
+            self.stopped.store(true, Ordering::Relaxed);
+            if let Some(h) = self.handle.take() {
+                let _ = h.join();
+            }
+            debug!(
+                samples = self.writer.samples_written(),
+                "linux system audio capture finalized"
+            );
+            Ok(())
+        }
+    }
+
+    impl SystemAudioCapture for SystemCapture {
+        fn stop(self: Box<Self>) -> Result<()> {
+            let inner = *self;
+            inner.stop()
+        }
+    }
+}
+
+#[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]
 mod stub_impl {
     use super::*;
 

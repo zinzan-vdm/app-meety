@@ -152,6 +152,11 @@ toml = "0.8"
 aes-gcm = "0.10"
 argon2 = "0.5"
 
+# PulseAudio client library — used on Linux for capture from the
+# default sink's monitor source (@DEFAULT_MONITOR@), the canonical
+# way to grab system audio on PulseAudio (and PipeWire via pipewire-pulse).
+pulse = "0.5"
+
 # Tiny URL-encoder for window URL fragments (GET-48 multi-window).
 urlencoding = "2"
 

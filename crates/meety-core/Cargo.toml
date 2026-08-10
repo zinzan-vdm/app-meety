@@ -100,6 +100,12 @@ whisper-rs = { workspace = true, features = ["metal"] }
 # `cargo check --workspace` works on Linux CI runners for cargo-deny.
 whisper-rs = { workspace = true, features = ["vulkan"] }
 
+[target.'cfg(target_os = "linux")'.dependencies]
+# PulseAudio Simple API — capture from the default sink's monitor source
+# (@DEFAULT_MONITOR@). Works on both native PulseAudio and PipeWire
+# (via pipewire-pulse). Zero-config: no ALSA loopback module needed.
+pulse = { workspace = true }
+
 [lints]
 workspace = true
 
