@@ -5,9 +5,13 @@ use std::sync::Arc;
 #[cfg(target_os = "macos")]
 use std::time::{SystemTime, UNIX_EPOCH};
 
+#[cfg(any(target_os = "macos", target_os = "windows"))]
 use parking_lot::Mutex;
+#[cfg(any(target_os = "macos", target_os = "windows"))]
 use tracing::{debug, error, info, warn};
-
+#[cfg(not(any(target_os = "macos", target_os = "windows")))]
+use tracing::{debug, error, info};
+#[cfg(any(target_os = "macos", target_os = "windows"))]
 use crate::audio::resampler::StreamingResampler;
 use crate::audio::sys_audio::SystemAudioCapture;
 use crate::audio::wav_writer::AudioWavWriter;

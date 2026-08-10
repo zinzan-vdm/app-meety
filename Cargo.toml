@@ -156,6 +156,9 @@ argon2 = "0.5"
 # default sink's monitor source (@DEFAULT_MONITOR@), the canonical
 # way to grab system audio on PulseAudio (and PipeWire via pipewire-pulse).
 pulse = "0.5"
+# PulseAudio Rust bindings for Linux system audio capture.
+libpulse-binding = "2"
+libpulse-simple-binding = "2"
 
 # Tiny URL-encoder for window URL fragments (GET-48 multi-window).
 urlencoding = "2"
