@@ -10,7 +10,7 @@ authors.workspace = true
 
 [lib]
 crate-type = ["lib"]
-name = "folio_core"
+name = "meety_core"
 
 [dependencies]
 thiserror = { workspace = true }
