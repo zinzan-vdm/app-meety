@@ -3,8 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
-      - "v[0-9]+.[0-9]+.[0-9]+-*"
+      - "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].R*"
 
 permissions:
   contents: write
@@ -34,6 +33,16 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Cache bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            bun-${{ runner.os }}-
+
       - run: bun install --frozen-lockfile
 
       - name: Build meety-mcp sidecar
@@ -55,7 +64,7 @@ jobs:
           releaseBody: |
             See CHANGELOG.md for the entries that landed in this release.
           releaseDraft: true
-          prerelease: ${{ contains(github.ref_name, '-') }}
+          prerelease: false
           args: --target ${{ matrix.platform.target }}
 
       - name: Build Tauri app (Linux + Windows)
@@ -69,5 +78,5 @@ jobs:
           releaseBody: |
             See CHANGELOG.md for the entries that landed in this release.
           releaseDraft: true
-          prerelease: ${{ contains(github.ref_name, '-') }}
+          prerelease: false
           args: --target ${{ matrix.platform.target }}
