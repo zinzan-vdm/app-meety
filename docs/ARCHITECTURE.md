@@ -28,13 +28,13 @@ folio/
 │   ├── ISSUE_TEMPLATE/, PULL_REQUEST_TEMPLATE.md
 │   ├── CODEOWNERS, dependabot.yml
 ├── crates/
-│   ├── folio-core/                 # the library — see § folio-core
-│   └── folio-cli/                  # test harness binary
+│   ├── meety-core/                 # the library — see § meety-core
+│   └── meety-cli/                  # test harness binary
 ├── src-tauri/                       # the Tauri desktop binary
 └── src/                             # the React frontend
 ```
 
-## folio-core (`crates/folio-core/`)
+## meety-core (`crates/meety-core/`)
 
 The framework-agnostic library. Talks to the OS for audio capture;
 produces WAV files on disk; runs local Whisper for transcription;
@@ -74,7 +74,7 @@ src/
 │   ├── provider.rs / providers/openai.rs / rate_limit.rs / router.rs
 │   ├── run_card.rs / skills.rs / templates.rs / types.rs
 ├── mcp_client.rs         # .folio/mcp.toml client config
-├── mcp_server.rs         # folio-mcp tool surface
+├── mcp_server.rs         # meety-mcp tool surface
 ├── memory/               # Camp-2 context-substrate memory layer
 │   ├── dream_loop.rs / embed.rs / embedding_cache.rs / embedding_provider.rs
 │   ├── git_commit.rs / index.rs / page.rs / store.rs / types.rs / watcher.rs
@@ -115,7 +115,7 @@ test` regenerates the bindings; CI catches drift.
 
 ## src-tauri (`src-tauri/`)
 
-The Tauri 2 desktop binary. Thin wrapper: imports `folio-core`,
+The Tauri 2 desktop binary. Thin wrapper: imports `meety-core`,
 exposes commands to the React frontend, and owns macOS-specific
 window glue (Dock icon).
 
@@ -162,7 +162,7 @@ Add new URL schemes via the relevant capability file's
 
 Every `#[tauri::command]` is the contract with the frontend. Command
 names and argument shapes are stable; renaming one is a breaking
-change. Argument and return types are defined in `folio-core` and
+change. Argument and return types are defined in `meety-core` and
 generated as TypeScript by `ts-rs`. Browse `src/shared/lib/ipc.ts`
 for the authoritative list; `cargo test` regenerates the bindings.
 
@@ -224,7 +224,7 @@ src/
 ### Rules
 
 - `@/shared/types/*` is the single source of truth for IPC types.
-  Never define a Tauri-side type by hand in TS; add it to `folio-core`
+  Never define a Tauri-side type by hand in TS; add it to `meety-core`
   with a `TS` derive and re-run `cargo test`.
 - Cross-route state lives in Zustand stores under `shared/stores/`.
   Page-local state stays in `useState` inside the feature.
@@ -253,12 +253,12 @@ src/
                      ▼
 ┌─────────────────────────────────────────────────────────┐
 │              src-tauri/                                 │
-│  commands/* — app/state.rs — folio-core re-exports     │
+│  commands/* — app/state.rs — meety-core re-exports     │
 └────────────────────┬────────────────────────────────────┘
                      │ direct fn calls
                      ▼
 ┌─────────────────────────────────────────────────────────┐
-│              folio-core                                │
+│              meety-core                                │
 │  audio:: — llm:: — memory:: — storage:: — transcription:: │
 └────────────────────┬────────────────────────────────────┘
                      │ OS APIs + OpenAI + whisper.cpp + SQLite
@@ -365,7 +365,7 @@ condensed cheat sheet.
   one-line comment explaining why, never workspace-wide unless
   there's a known false positive.
 - **Errors**: return `Result<T, MeetyError>`. New error categories
-  go on the public enum in `folio-core/src/error.rs`; never invent
+  go on the public enum in `meety-core/src/error.rs`; never invent
   per-module error types.
 - **Async**: prefer `tauri::async_runtime::spawn_blocking` for any
   IPC command that touches the filesystem, SQLite, or whisper.cpp —
@@ -431,7 +431,7 @@ Use this when starting work on any Linear issue.
 [ ] Linear issue: GET-<n> moved Todo → In Progress (mcp__linear-server__save_issue)
 [ ] Read the relevant docs/guidelines/*.md
 [ ] Branch from main: <type>/get-<n>-<slug>
-[ ] If the type crosses IPC: add to folio-core with ts_rs derive; run `cargo test`
+[ ] If the type crosses IPC: add to meety-core with ts_rs derive; run `cargo test`
 [ ] If the type adds a Tauri command: register it in src-tauri/src/lib.rs invoke_handler
 [ ] Add a typed wrapper in src/shared/lib/ipc.ts
 [ ] Component / store / hook lives under shared/ or features/ per FSD

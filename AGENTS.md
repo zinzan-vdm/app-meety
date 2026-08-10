@@ -15,7 +15,7 @@ live in `docs/ARCHITECTURE.md`; coding standards live in
 - Lint: `cargo clippy --workspace --all-targets -- -D warnings`
 - Test: `cargo test --workspace`
 - Build all: `cargo build --workspace --release`
-- Run CLI: `cargo run -p folio-cli --release -- <subcommand>`
+- Run CLI: `cargo run -p meety-cli --release -- <subcommand>`
 - Frontend: `bun install`, `bun run typecheck`, `bun run lint`, `bun run test`
 
 ## Style
@@ -30,7 +30,7 @@ naming, errors, logging, tests, concurrency, performance, security, and
 git hygiene.
 
 - 4-space indent for Rust, 100-char width (`rustfmt.toml` enforces).
-- Errors via `thiserror` enums in `crates/folio-core/src/error.rs`.
+- Errors via `thiserror` enums in `crates/meety-core/src/error.rs`.
   `MeetyError` is the public error type; new variants get added there,
   not invented per-module.
 - Logging via `tracing`, never `println!`.
@@ -39,7 +39,7 @@ git hygiene.
 
 ## Architecture rules
 
-- The crate boundary matters. `folio-core` is the library; `folio-cli`
+- The crate boundary matters. `meety-core` is the library; `meety-cli`
   and the Tauri app (`src-tauri`) consume it. Do not let app- or
   CLI-specific code leak into core.
 - Audio thread code must not allocate on hot paths. Use pre-allocated

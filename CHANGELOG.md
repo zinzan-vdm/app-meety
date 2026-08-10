@@ -46,6 +46,49 @@ All notable changes to Meety are documented here. The format follows
 
 _Nothing yet._
 
+## [2026-08-10.R0] — 2026-08-10
+
+Cross-platform fork of Folio. Extends the local-first meeting transcription
+pipeline from macOS-only to Windows and Linux.
+
+### Added
+
+- **Windows system audio capture.** The app captures the default output
+  device through the WASAPI loopback API.
+- **Linux system audio capture.** The app captures the default PulseAudio
+  monitor source (@DEFAULT_MONITOR@). Works with PipeWire through
+  pipewire-pulse.
+- **Vulkan GPU acceleration for Whisper.** whisper-rs uses Vulkan on
+  Windows and Linux, Metal on macOS. CPU fallback when no GPU backend is
+  available.
+- **Live transcript with VAD gating.** Silero VAD detects speech before
+  Whisper transcription. The backend reads both microphone and system
+  audio channels.
+- **Live transcript UI.** The editor shows real-time text for the
+  microphone (You) and system audio (Others) during recording.
+- **Cross-platform system tray.** Menu bar icon and controls work on
+  macOS, Windows, and Linux.
+- **Cross-platform reveal in Finder.** Opens the file location with
+  explorer on Windows and xdg-open on Linux.
+- **Platform-aware UI text.** Copy adapts to each OS: thisDevice(),
+  yourDevice(), keychainName(), audioInputSettingsPath().
+- **CI/CD pipeline for three platforms.** GitHub Actions builds and tests
+  on macOS, Windows, and Linux. Tagged releases produce binaries for all
+  three.
+
+### Changed
+
+- **License changed from Apache-2.0 to MIT.** New code is MIT. The
+  original Folio code remains Apache-2.0.
+- **Version format changed to calendar-based.** The format is
+  YYYY-MM-DD.R<revision>. See `Cargo.toml` for the current version.
+- **Project renamed to Meety.** All source code, identifiers, and
+  documentation use the new name.
+- **Deep-link scheme changed to `meety://`.** The old `folio://` scheme
+  no longer works.
+- **Info.plist bundle identifiers and permission descriptions** now
+  refer to Meety instead of Folio.
+
 ## [2.0.0] — 2026-08-01
 
 A deliberate stripping-back: Meety keeps the parts that record, transcribe, and
