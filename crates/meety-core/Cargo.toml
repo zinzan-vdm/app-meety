@@ -94,15 +94,17 @@ objc2-core-audio = { version = "0.3", features = [
 # compiles whisper.cpp from source (~5 min on a cold machine).
 whisper-rs = { workspace = true, features = ["metal"] }
 
-[target.'cfg(not(target_os = "macos"))'.dependencies]
-# Non-macOS targets get whisper-rs with Vulkan GPU support (falls back to CPU gracefully).
+[target.'cfg(target_os = "linux")'.dependencies]
+# Linux: whisper with Vulkan GPU support (falls back to CPU gracefully).
 whisper-rs = { workspace = true, features = ["vulkan"] }
 
-[target.'cfg(target_os = "linux")'.dependencies]
 # PulseAudio Simple API — capture from the default sink's monitor source
 # (@DEFAULT_MONITOR@). Works on both native PulseAudio and PipeWire
 # (via pipewire-pulse). Zero-config: no ALSA loopback module needed.
 pulse = { workspace = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+# Windows: CPU-only whisper (no Vulkan SDK on CI, no Metal available).
 
 [lints]
 workspace = true
