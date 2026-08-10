@@ -2,6 +2,7 @@ import { ShieldCheck } from "lucide-react";
 
 import { Switch } from "@/shared/ui/switch";
 import type { Settings } from "@/shared/types/Settings";
+import { yourDevice } from "@/shared/lib/platform";
 
 interface Props {
   settings: Settings;
@@ -14,7 +15,7 @@ export function SectionPrivacy({ settings, onChange }: Props) {
       <div>
         <h2 className="font-serif text-2xl font-medium">Privacy</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Everything Meety does stays on your Mac unless you opt in here. Toggles
+          Everything Meety does stays on {yourDevice()} unless you opt in here. Toggles
           default OFF.
         </p>
       </div>

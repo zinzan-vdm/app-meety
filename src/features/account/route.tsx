@@ -18,6 +18,7 @@ import { toast } from "sonner";
 
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
+import { thisDevice, keychainName } from "@/shared/lib/platform";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { Switch } from "@/shared/ui/switch";
@@ -166,7 +167,7 @@ function ServerCard({
     <SectionCard
       icon={Server}
       title="Server"
-      description="The self-hosted Meety Server this Mac uploads to."
+      description={`The self-hosted Meety Server ${thisDevice()} uploads to.`}
     >
       <div className="space-y-3">
         <div className="space-y-2">
@@ -242,7 +243,7 @@ function ServerCard({
 
         <p className="text-xs text-muted-foreground">
           Recordings upload to this server for GPU transcription and the transcript
-          syncs back to this Mac. Deploy your own with the one-click stack in{" "}
+          syncs back to {thisDevice()}. Deploy your own with the one-click stack in{" "}
           <code className="rounded bg-muted px-1 py-0.5 text-2xs">server/</code>.
         </p>
       </div>
@@ -406,7 +407,7 @@ function SignInCard({
             </p>
           ) : null}
           <p className="text-xs text-muted-foreground">
-            Tokens are stored in the macOS Keychain and refreshed automatically —
+            Tokens are stored in the {keychainName()} and refreshed automatically —
             passwords never touch the disk.
           </p>
         </div>
@@ -432,7 +433,7 @@ function SyncCard({
     <SectionCard
       icon={Cloud}
       title="Sync"
-      description="How recordings flow between this Mac and your server."
+      description={`How recordings flow between ${thisDevice()} and your server.`}
     >
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between gap-4">

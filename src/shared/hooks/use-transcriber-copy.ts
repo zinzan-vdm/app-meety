@@ -1,4 +1,5 @@
 import { useSettingsStore } from "@/shared/stores/settings-store";
+import { thisDevice } from "@/shared/lib/platform";
 
 export interface TranscriberCopy {
   isCloud: boolean;
@@ -29,15 +30,15 @@ export function useTranscriberCopy(): TranscriberCopy {
       progressLabel: "Processing on your server…",
       triggerTooltip: "Upload to your Meety Server and sync the transcript back.",
       emptyStateHint:
-        "Audio uploads to your Meety Server for GPU transcription, then the transcript syncs back to this Mac. Manage the connection in Account.",
+        `Audio uploads to your Meety Server for GPU transcription, then the transcript syncs back to ${thisDevice()}. Manage the connection in Account.`,
     };
   }
 
   return {
     isCloud: false,
     progressLabel: "Transcribing locally with Whisper…",
-    triggerTooltip: "Transcribe locally with whisper.cpp on this Mac.",
+    triggerTooltip: `Transcribe locally with whisper.cpp on ${thisDevice()}.`,
     emptyStateHint:
-      "Runs on this Mac via whisper.cpp. No audio leaves your machine. Switch backend in Settings → Transcription.",
+      `Runs on ${thisDevice()} via whisper.cpp. No audio leaves your machine. Switch backend in Settings → Transcription.`,
   };
 }

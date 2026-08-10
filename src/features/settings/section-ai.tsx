@@ -18,6 +18,7 @@ import {
 import type { ProviderId } from "@/shared/types/ProviderId";
 import type { ProviderStatus } from "@/shared/types/ProviderStatus";
 import type { Settings } from "@/shared/types/Settings";
+import { keychainName } from "@/shared/lib/platform";
 
 interface SectionAiProps {
   settings: Settings;
@@ -124,7 +125,7 @@ export function SectionAi({ settings, onChange }: SectionAiProps) {
       <header className="space-y-1">
         <h2 className="font-serif text-2xl font-medium">AI providers</h2>
         <p className="text-sm text-muted-foreground">
-          Bring your own API key. Stored in the macOS Keychain on this machine only.
+          {`Bring your own API key. Stored in the ${keychainName()} on this machine only.`}
           Used to summarise meetings, extract tasks, and chat with transcripts.
         </p>
       </header>

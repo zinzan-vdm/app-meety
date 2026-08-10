@@ -11,6 +11,7 @@ import {
   type ReadingSize,
 } from "@/shared/hooks/use-reading-controls";
 import type { Settings } from "@/shared/types/Settings";
+import { yourDevice } from "@/shared/lib/platform";
 
 interface SectionPreferencesProps {
   onChange: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
@@ -156,7 +157,7 @@ function PrivacyRedLineNotice() {
         Meety does not collect transcripts to train models — there is no opt-out toggle
         because there is no collection.{" "}
         <span className="italic">
-          Your meetings stay on your Mac unless you explicitly share them.
+          Your meetings stay on {yourDevice()} unless you explicitly share them.
         </span>
       </p>
     </div>

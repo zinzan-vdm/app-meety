@@ -6,7 +6,8 @@ import { listMemories, listRecordings, listTasks } from "@/shared/lib/ipc";
 import { humanizeError } from "@/shared/lib/errors";
 import type { Memory } from "@/shared/types/Memory";
 import type { RecordingSummary } from "@/shared/types/RecordingSummary";
-import type { Task } from "@/shared/types/Task";
+import type { Settings } from "@/shared/types/Settings";
+import { thisDevice } from "@/shared/lib/platform";
 
 type Range = "7d" | "30d" | "90d" | "all";
 
@@ -83,7 +84,7 @@ export function SectionAnalytics() {
       <header className="space-y-1">
         <h2 className="font-serif text-2xl font-medium">Analytics</h2>
         <p className="text-sm text-muted-foreground">
-          Your own activity totals, computed on this Mac. No surveillance — we
+          {`Your own activity totals, computed on ${thisDevice()}. No surveillance — we`}
           don&apos;t score attention, engagement, or talk-time.
         </p>
       </header>

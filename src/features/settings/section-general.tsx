@@ -7,6 +7,7 @@ import { Switch } from "@/shared/ui/switch";
 import { playFeedback } from "@/shared/lib/feedback";
 import type { DeviceInfo } from "@/shared/types/DeviceInfo";
 import type { Settings } from "@/shared/types/Settings";
+import { isMac } from "@/shared/lib/platform";
 
 interface Props {
   settings: Settings;
@@ -50,8 +51,9 @@ export function SectionGeneral({ settings, devices, onChange }: Props) {
         <div>
           <h3 className="font-medium">Capture system audio</h3>
           <p className="mt-1 max-w-md text-xs text-muted-foreground">
-            Records what comes out of your speakers via ScreenCaptureKit. macOS prompts
-            for Screen Recording permission the first time. Audio only — no video.
+            {isMac()
+              ? "Records what comes out of your speakers via ScreenCaptureKit. macOS prompts for Screen Recording permission the first time. Audio only — no video."
+              : "Records what comes out of your speakers. System audio capture works via the default loopback device on Windows and PipeWire on Linux."}
           </p>
         </div>
         <Switch

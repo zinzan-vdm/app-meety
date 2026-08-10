@@ -19,6 +19,7 @@ import type { WhisperModelStatus } from "@/shared/types/WhisperModelStatus";
 
 import { LocalWhisperSection } from "./local-whisper-section";
 import { SpeakerDiarizationSection } from "./speaker-diarization-section";
+import { keychainName, thisDevice } from "@/shared/lib/platform";
 
 interface Props {
   settings: Settings;
@@ -34,12 +35,12 @@ const PROVIDERS: { id: string; label: string; desc: string }[] = [
   {
     id: "local_whisper",
     label: "Local Whisper",
-    desc: "Runs on this Mac via whisper.cpp · no audio leaves your machine",
+    get desc() { return `Runs on ${thisDevice()} via whisper.cpp · no audio leaves your machine`; },
   },
   {
     id: "remote_server",
     label: "Remote server",
-    desc: "Uploads to your GPU server · frees this Mac · syncs the transcript back",
+    get desc() { return `Uploads to your GPU server · frees ${thisDevice()} · syncs the transcript back`; },
   },
 ];
 
@@ -344,7 +345,7 @@ function OpenAiKeySection() {
         </Button>
       </div>
       <p className="text-xs text-muted-foreground">
-        Stored in the macOS Keychain. Never persisted to disk; never logged. Sent only
+        {`Stored in the ${keychainName()}. Never persisted to disk; never logged. Sent only`}
         to api.openai.com when transcribing.
       </p>
     </section>
@@ -429,7 +430,7 @@ function RemoteServerSection({
 
       <p className="text-xs text-muted-foreground">
         Audio is uploaded to your server and processed there. Tokens are stored in the
-        macOS Keychain. Disabled entirely in Privacy Mode.
+        {keychainName()}. Disabled entirely in Privacy Mode.
       </p>
     </section>
   );

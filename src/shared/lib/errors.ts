@@ -15,7 +15,7 @@ const NETWORK_HINTS = [
 const FRIENDLY_PATTERNS: { match: RegExp; message: string }[] = [
   {
     match: /keychain|secitem|errsec|osstatus/i,
-    message: "Couldn't reach the macOS Keychain. Try again, or re-enter your key.",
+    message: "Couldn't reach the system keychain. Try again, or re-enter your key.",
   },
 ];
 

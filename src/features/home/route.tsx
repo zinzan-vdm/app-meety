@@ -328,7 +328,7 @@ function NoteRow({
       ) : (
         <Lock
           className="h-3 w-3 shrink-0 text-muted-foreground"
-          aria-label="Stored only on this Mac"
+          aria-label="Stored only on this device"
         />
       )}
 

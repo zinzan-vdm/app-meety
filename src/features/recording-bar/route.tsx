@@ -9,6 +9,7 @@ import {
   recordingStatus,
   startWindowDrag,
 } from "@/shared/lib/ipc";
+import { audioInputSettingsPath } from "@/shared/lib/platform";
 
 const POLL_MS = 500;
 
@@ -152,7 +153,7 @@ export default function RecordingBar() {
       {micSilent ? (
         <span
           className="h-2 w-2 shrink-0 rounded-full bg-amber-400"
-          title="Mic level is very low — check that your microphone isn't muted and its input gain is up in System Settings → Sound → Input."
+          title={`Mic level is very low — check that your microphone isn't muted and its input gain is up in ${audioInputSettingsPath()}.`}
           aria-label="Mic silent warning"
         />
       ) : null}

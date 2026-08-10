@@ -378,7 +378,7 @@ export const useRecording = create<RecordingState>((set, get) => {
         playFeedback("error");
         toast.error("Whisper model not downloaded", {
           description:
-            "Download the local transcription model to transcribe on this Mac.",
+            "Download the local transcription model to transcribe on this device.",
           action: {
             label: "Open Settings",
             onClick: openTranscriptionSettings,

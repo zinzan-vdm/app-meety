@@ -15,6 +15,7 @@ import { cn } from "@/shared/lib/utils";
 import { humanizeError } from "@/shared/lib/errors";
 import { setProviderKey } from "@/shared/lib/ipc";
 import { useSettingsStore } from "@/shared/stores/settings-store";
+import { keychainName } from "@/shared/lib/platform";
 import { PermissionsScreen } from "./permissions-screen";
 
 type Transcriber = "local_whisper" | "openai";
@@ -94,7 +95,7 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
               onClick={() => setTranscriber("local_whisper")}
               icon={ShieldCheck}
               title="Local Whisper"
-              detail="Runs on your Mac. Free. No network. Slower on first run while the model downloads."
+              detail="Runs on your device. Free. No network. Slower on first run while the model downloads."
             />
             <TranscriberChoice
               selected={transcriber === "openai"}
@@ -107,7 +108,7 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
           {transcriber === "openai" ? (
             <label className="flex flex-col gap-1.5 text-sm">
               <span className="text-xs text-muted-foreground">
-                OpenAI API key (stored in macOS Keychain, never on disk in plain text)
+                OpenAI API key (stored in {keychainName()}, never on disk in plain text)
               </span>
               <input
                 type="password"
