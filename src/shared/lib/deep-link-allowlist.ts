@@ -1,5 +1,5 @@
 export type DeepLinkVerdict =
-  | { kind: "allowed-folio-route"; route: string; params: Record<string, string> }
+  | { kind: "allowed-meety-route"; route: string; params: Record<string, string> }
   | { kind: "allowed-audio-file"; path: string }
   | { kind: "rejected"; reason: string; url: string };
 
@@ -58,7 +58,7 @@ export function classifyDeepLink(url: string): DeepLinkVerdict {
   if (segments.length > 1) {
     params.label = decodeURIComponent(segments.slice(1).join("/"));
   }
-  return { kind: "allowed-folio-route", route, params };
+  return { kind: "allowed-meety-route", route, params };
 }
 
 function looksLikeAudio(url: string): boolean {

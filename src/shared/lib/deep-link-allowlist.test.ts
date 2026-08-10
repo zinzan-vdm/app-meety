@@ -5,16 +5,16 @@ import { classifyDeepLink } from "./deep-link-allowlist";
 describe("classifyDeepLink", () => {
   it("classifies an allowed folio:// route", () => {
     const verdict = classifyDeepLink("meety://library");
-    expect(verdict.kind).toBe("allowed-folio-route");
-    if (verdict.kind === "allowed-folio-route") {
+    expect(verdict.kind).toBe("allowed-meety-route");
+    if (verdict.kind === "allowed-meety-route") {
       expect(verdict.route).toBe("library");
     }
   });
 
   it("preserves the allowlisted autoStart query param", () => {
     const verdict = classifyDeepLink("meety://library?autoStart=1");
-    expect(verdict.kind).toBe("allowed-folio-route");
-    if (verdict.kind === "allowed-folio-route") {
+    expect(verdict.kind).toBe("allowed-meety-route");
+    if (verdict.kind === "allowed-meety-route") {
       expect(verdict.params.autoStart).toBe("1");
     }
   });
@@ -28,8 +28,8 @@ describe("classifyDeepLink", () => {
 
   it("treats trailing path as the label param for editor", () => {
     const verdict = classifyDeepLink("meety://editor/2026-05-26-meeting");
-    expect(verdict.kind).toBe("allowed-folio-route");
-    if (verdict.kind === "allowed-folio-route") {
+    expect(verdict.kind).toBe("allowed-meety-route");
+    if (verdict.kind === "allowed-meety-route") {
       expect(verdict.route).toBe("editor");
       expect(verdict.params.label).toBe("2026-05-26-meeting");
     }
@@ -77,8 +77,8 @@ describe("classifyDeepLink", () => {
 
   it("URL-decodes allowed param values", () => {
     const verdict = classifyDeepLink("meety://editor?label=2026-05-26%2010%3A00");
-    expect(verdict.kind).toBe("allowed-folio-route");
-    if (verdict.kind === "allowed-folio-route") {
+    expect(verdict.kind).toBe("allowed-meety-route");
+    if (verdict.kind === "allowed-meety-route") {
       expect(verdict.params.label).toBe("2026-05-26 10:00");
     }
   });

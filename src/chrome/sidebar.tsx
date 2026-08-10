@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
-import { isMac, thisDevice } from "@/shared/lib/platform";
+import { thisDevice } from "@/shared/lib/platform";
 import { useTheme } from "@/shared/hooks/use-theme";
 import { useSidebarCollapsed } from "@/shared/hooks/use-sidebar-collapsed";
 import { useRemoteAccountStore } from "@/shared/stores/remote-account-store";

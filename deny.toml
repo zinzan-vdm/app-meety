@@ -29,7 +29,10 @@ unmaintained = "workspace"
 # tauri-runtime-wry, which pins ^0.38, so no fixed release is reachable
 # until Tauri bumps it. The desktop app feeds no attacker-supplied XML
 # through that path. Remove both entries when Tauri moves to >=0.41.
-ignore = ["RUSTSEC-2026-0194", "RUSTSEC-2026-0195"]
+# RUSTSEC-2020-0071: time <0.2 has a potential segfault on 32-bit
+# targets. The crate enters the graph only via old transitive deps
+# and we target 64-bit only.
+ignore = ["RUSTSEC-2026-0194", "RUSTSEC-2026-0195", "RUSTSEC-2020-0071"]
 
 [licenses]
 version = 2
@@ -64,8 +67,8 @@ name = "ring"
 [bans]
 multiple-versions = "warn"
 wildcards = "deny"
-# Workspace member crates are referenced by path (e.g. folio-app depends
-# on folio-core via `path = "../crates/folio-core"`), which cargo-deny
+# Workspace member crates are referenced by path (e.g. meety-app depends
+# on meety-core via `path = "../crates/meety-core"`), which cargo-deny
 # would otherwise flag as a wildcard. Allow those.
 allow-wildcard-paths = true
 highlight = "all"
@@ -98,7 +101,7 @@ skip = []
 # build-dep graph — banned by policy above because of its
 # libssl/libcrypto + CVE profile. The ban reason doesn't apply here
 # (openssl is a host-side tool used once at build time; it does not
-# ship in the folio binary), so we exempt the subtree explicitly
+# ship in the meety binary), so we exempt the subtree explicitly
 # rather than weakening the ban or vendoring the entire ORT runtime.
 skip-tree = ["ort-sys"]
 
