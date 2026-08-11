@@ -7,21 +7,21 @@ Centralises every cryptographic choice the codebase makes. Cited from
 
 | Use case                                         | Algorithm                                   | Crate                             | Module                                               |
 | ------------------------------------------------ | ------------------------------------------- | --------------------------------- | ---------------------------------------------------- |
-| Per-recording encryption at rest                 | AES-256-GCM with a random 12-byte nonce     | `aes-gcm = "0.10"`                | `folio_core::encryption`                             |
-| Key derivation for the above                     | Argon2id (m=64 MiB, t=3, p=1) → 32-byte key | `argon2 = "0.5"`                  | `folio_core::encryption::derive_key`                 |
-| Webhook signing                                  | HMAC-SHA256                                 | `hmac = "0.12"` + `sha2 = "0.10"` | `folio_core::webhooks::sign`                         |
-| Embedding cache keys                             | SHA-256 of `model_id \0 content`            | `sha2 = "0.10"`                   | `folio_core::memory::embedding_cache::cache_key`     |
+| Per-recording encryption at rest                 | AES-256-GCM with a random 12-byte nonce     | `aes-gcm = "0.10"`                | `meety_core::encryption`                             |
+| Key derivation for the above                     | Argon2id (m=64 MiB, t=3, p=1) → 32-byte key | `argon2 = "0.5"`                  | `meety_core::encryption::derive_key`                 |
+| Webhook signing                                  | HMAC-SHA256                                 | `hmac = "0.12"` + `sha2 = "0.10"` | `meety_core::webhooks::sign`                         |
+| Embedding cache keys                             | SHA-256 of `model_id \0 content`            | `sha2 = "0.10"`                   | `meety_core::memory::embedding_cache::cache_key`     |
 | Updater bundle signatures (#020 / Tauri Updater) | Ed25519 over the bundle bytes               | `tauri-plugin-updater = "2"`      | `src-tauri/tauri.conf.json` `plugins.updater.pubkey` |
 | TLS                                              | rustls (no openssl in the workspace)        | `reqwest = "*"` with `rustls-tls` | enforced in `deny.toml`                              |
-| Macros + bundle hashes (audit trail)             | SHA-256                                     | `sha2 = "0.10"`                   | `folio_core::storage::digest`                        |
+| Macros + bundle hashes (audit trail)             | SHA-256                                     | `sha2 = "0.10"`                   | `meety_core::storage::digest`                        |
 
 ## Where keys live
 
 | Key                                          | Storage                                                                   | Module                                                                           |
 | -------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| OpenAI / Anthropic / model-provider API keys | macOS Keychain via the `keyring` crate                                    | `folio_core::llm::KeyStore`                                                      |
-| Per-recording encryption passphrase          | macOS Keychain (one entry per recording slug)                             | `folio_core::llm::KeyStore` (`ProviderId::EncryptionPassphrase` slot, follow-up) |
-| Webhook signing secret                       | macOS Keychain (one entry per webhook subscription)                       | `folio_core::llm::KeyStore` (`webhook:<id>` slot)                                |
+| OpenAI / Anthropic / model-provider API keys | macOS Keychain via the `keyring` crate                                    | `meety_core::llm::KeyStore`                                                      |
+| Per-recording encryption passphrase          | macOS Keychain (one entry per recording slug)                             | `meety_core::llm::KeyStore` (`ProviderId::EncryptionPassphrase` slot, follow-up) |
+| Webhook signing secret                       | macOS Keychain (one entry per webhook subscription)                       | `meety_core::llm::KeyStore` (`webhook:<id>` slot)                                |
 | Tauri-updater private key                    | GitHub Secrets (`TAURI_SIGNING_PRIVATE_KEY`)                              | `.github/workflows/release.yml`                                                  |
 | Tauri-updater public key                     | Source-controlled in `src-tauri/tauri.conf.json` `plugins.updater.pubkey` | rotates per `docs/guidelines/release-engineering.md` §key-rotation               |
 
