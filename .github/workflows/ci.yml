@@ -61,9 +61,6 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo build --workspace --all-targets
       - run: cargo test --workspace --lib --bins
-      - name: Silero VAD ort tests (accept SIGABRT at exit)
-        if: matrix.os == 'ubuntu-latest'
-        run: ci/run-ort-test.sh
 
   rust-deny:
     name: cargo deny

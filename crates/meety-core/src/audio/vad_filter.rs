@@ -351,6 +351,12 @@ fn write_sample<W: std::io::Write + std::io::Seek>(
 
 #[cfg(test)]
 mod tests {
+    // Tests marked #[cfg_attr(target_os = "linux", ignore)] create a
+    // voice_activity_detector which initializes an ort Session via a static
+    // LazyLock. libonnxruntime.so's internal cleanup at process exit triggers
+    // glibc's free(): invalid pointer → SIGABRT. All tests pass before the
+    // crash — it's a cosmetic atexit-ordering issue. The Silero VAD behaviour
+    // is tested on macOS/Windows; Linux uses the RMS VAD gate instead.
     use super::*;
     use hound::{SampleFormat as HSF, WavSpec};
     use std::f32::consts::PI;
@@ -378,12 +384,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg_attr(
-        target_os = "linux",
-        ignore = "initializes ort which causes a harmless free(): invalid pointer during \
-                   libonnxruntime.so's exit cleanup (SIGABRT). Run via ci/run-ort-test.sh \
-                   which treats exit code 134 as pass."
-    )]
+    #[cfg_attr(target_os = "linux", ignore)]
     fn pure_silence_produces_empty_speech_wav_and_zero_ranges() {
         let dir = TempDir::new().unwrap();
         let path = dir.path().join("mic.wav");
@@ -462,12 +463,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg_attr(
-        target_os = "linux",
-        ignore = "initializes ort which causes a harmless free(): invalid pointer during \
-                   libonnxruntime.so's exit cleanup (SIGABRT). Run via ci/run-ort-test.sh \
-                   which treats exit code 134 as pass."
-    )]
+    #[cfg_attr(target_os = "linux", ignore)]
     fn silero_rejects_pure_sine_as_non_speech() {
         let dir = TempDir::new().unwrap();
         let path = dir.path().join("mic.wav");

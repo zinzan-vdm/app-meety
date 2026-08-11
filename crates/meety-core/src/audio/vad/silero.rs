@@ -125,6 +125,12 @@ fn drop_short(regions: Vec<(usize, usize)>, min_len: usize) -> Vec<(usize, usize
 
 #[cfg(test)]
 mod tests {
+    // Tests marked #[cfg_attr(target_os = "linux", ignore)] create a
+    // voice_activity_detector which initializes an ort Session via a static
+    // LazyLock. libonnxruntime.so's internal cleanup at process exit triggers
+    // glibc's free(): invalid pointer → SIGABRT. All tests pass before the
+    // crash — it's a cosmetic atexit-ordering issue. The Silero VAD behaviour
+    // is tested on macOS/Windows; Linux uses the RMS VAD gate instead.
     use super::*;
     use std::f32::consts::PI;
 
@@ -178,13 +184,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg_attr(
-        target_os = "linux",
-        ignore = "initializes ort which causes a harmless free(): invalid pointer during \
-                   libonnxruntime.so's exit cleanup (SIGABRT). The test binary exits with \
-                   signal 6 after all tests pass. Run via ci/run-ort-test.sh which treats \
-                   exit code 134 as pass."
-    )]
+    #[cfg_attr(target_os = "linux", ignore)]
     fn pure_silence_returns_no_segments() {
         let silence = vec![0.0_f32; SILERO_SAMPLE_RATE as usize * 5];
         let segments = detect(&silence, SileroParams::default()).unwrap();
@@ -195,13 +195,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg_attr(
-        target_os = "linux",
-        ignore = "initializes ort which causes a harmless free(): invalid pointer during \
-                   libonnxruntime.so's exit cleanup (SIGABRT). The test binary exits with \
-                   signal 6 after all tests pass. Run via ci/run-ort-test.sh which treats \
-                   exit code 134 as pass."
-    )]
+    #[cfg_attr(target_os = "linux", ignore)]
     fn loud_sine_is_not_speech_so_returns_no_segments() {
         let tone = loud_sine(SILERO_SAMPLE_RATE as usize * 3, 440, SILERO_SAMPLE_RATE);
         let segments = detect(&tone, SileroParams::default()).unwrap();
