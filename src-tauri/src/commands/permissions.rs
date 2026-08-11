@@ -197,6 +197,7 @@ pub fn open_permission_settings(
     open_url(&app, url)
 }
 
+#[cfg(target_os = "macos")]
 #[tauri::command]
 pub fn request_calendar_access(app: tauri::AppHandle) -> Result<(), String> {
     #[cfg(target_os = "macos")]

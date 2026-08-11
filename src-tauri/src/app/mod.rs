@@ -1,4 +1,5 @@
 pub mod dock_icon;
+#[cfg(target_os = "macos")]
 pub mod event_kit;
 pub mod live_transcript;
 pub mod share_sheet;
