@@ -15,7 +15,7 @@ live in `docs/ARCHITECTURE.md`; coding standards live in
 - Lint: `cargo clippy --workspace --all-targets -- -D warnings`
 - Test: `cargo test --workspace`
 - Build all: `cargo build --workspace --release`
-- Run CLI: `cargo run -p meety-cli --release -- <subcommand>`
+- Run CLI: `cargo run -p folio-cli --release -- <subcommand>`
 - Frontend: `bun install`, `bun run typecheck`, `bun run lint`, `bun run test`
 
 ## Style
@@ -39,7 +39,7 @@ git hygiene.
 
 ## Architecture rules
 
-- The crate boundary matters. `meety-core` is the library; `meety-cli`
+- The crate boundary matters. `meety-core` is the library; `folio-cli`
   and the Tauri app (`src-tauri`) consume it. Do not let app- or
   CLI-specific code leak into core.
 - Audio thread code must not allocate on hot paths. Use pre-allocated
@@ -54,6 +54,9 @@ git hygiene.
 - Audio code tests use synthetic signals (sine waves, silence, white
   noise) rather than real audio files where possible.
 - Tests that need a real audio device are marked `#[ignore]`.
+- On Linux, tests that initialize an ONNX Runtime session (Silero VAD,
+  diarization) are skipped: ONNX Runtime's cleanup aborts the process
+  during teardown on Linux. See `crates/meety-core/src/audio/vad/silero.rs`.
 
 ## When you do not know
 

@@ -4,7 +4,7 @@
 
 Please **do not** open a public GitHub issue for security reports. Two private channels are available:
 
-- **GitHub private vulnerability advisory** (preferred): <https://github.com/woosal1337/folio/security/advisories/new>
+- **GitHub private vulnerability advisory** (preferred): <https://github.com/zinzan-vdm/app-meety/security/advisories/new>
 - Email: the maintainer's contact listed in the repository profile.
 
 Include:
@@ -36,10 +36,6 @@ Out of scope:
 - Fix or mitigation plan within 14 days for high / critical issues.
 - Public disclosure coordinated with the reporter; CVE assigned via GitHub when applicable.
 
-## Supported versions
-
-For the `1.0.x` line, the latest patch release receives security fixes. When a new minor (`1.x.0`) ships, the previous minor receives security fixes for 90 days.
-
 ## Privacy and data
 
 Meety is local-first by design.
@@ -51,7 +47,7 @@ Meety is local-first by design.
   - `https://huggingface.co` and `https://github.com` (k2-fsa/sherpa-onnx releases) — one-time download of the local Whisper and diarization models. The voice-activity-detection model is compiled into the binary and is never downloaded.
   - Any webhook URL the user configures in Settings.
 - Privacy Mode (Settings → Privacy) blocks every outbound request except `localhost`, including the model downloads above.
-- API keys are stored in the macOS Keychain, never in a plaintext settings file, and are never logged.
+- API keys are stored in the OS keychain, never in a plaintext settings file, and are never logged.
 
 ## Hall of fame
 
