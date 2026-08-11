@@ -378,6 +378,12 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(
+        target_os = "linux",
+        ignore = "initializes ort which causes a harmless free(): invalid pointer during \
+                   libonnxruntime.so's exit cleanup (SIGABRT). Run via ci/run-ort-test.sh \
+                   which treats exit code 134 as pass."
+    )]
     fn pure_silence_produces_empty_speech_wav_and_zero_ranges() {
         let dir = TempDir::new().unwrap();
         let path = dir.path().join("mic.wav");
@@ -456,6 +462,12 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(
+        target_os = "linux",
+        ignore = "initializes ort which causes a harmless free(): invalid pointer during \
+                   libonnxruntime.so's exit cleanup (SIGABRT). Run via ci/run-ort-test.sh \
+                   which treats exit code 134 as pass."
+    )]
     fn silero_rejects_pure_sine_as_non_speech() {
         let dir = TempDir::new().unwrap();
         let path = dir.path().join("mic.wav");
