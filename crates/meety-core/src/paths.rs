@@ -59,6 +59,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn rejects_symlink_escape() {
         let root = tempfile::tempdir().unwrap();
         let outside = tempfile::tempdir().unwrap();
