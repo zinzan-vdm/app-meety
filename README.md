@@ -123,6 +123,23 @@ bun run test
 The pre-commit hooks run the relevant checks on each commit.
 The full suite also runs in `.github/workflows/ci.yml`.
 
+### Build notes
+
+**AppImage.** The release pipeline does not build the AppImage format.
+The linuxdeploy AppImage was compiled against an older glibc version.
+It can not run on Ubuntu 26.04 which ships with glibc 2.41.
+We wait for the linuxdeploy project to release a binary that supports
+this glibc version. Until then, the deb and rpm bundles are the
+supported formats for Linux.
+
+**Windows runner.** The release pipeline uses the `windows-2022` runner.
+The `windows-latest` runner has Visual Studio 2026 installed.
+The `whisper-rs-sys` crate tries to use Visual Studio 18 2026 as the
+CMake generator. This generator can not find the C compiler.
+We wait for the `whisper-rs-sys` crate to add support for Visual
+Studio 2026. Until then, we build on `windows-2022` which has Visual
+Studio 2022 with a working C compiler.
+
 ## Repository layout
 
 ```

@@ -6,6 +6,7 @@
     }
   },
   "bundle": {
-    "externalBin": ["binaries/meety-mcp"]
+    "externalBin": ["binaries/meety-mcp"],
+    "targets": ["deb", "rpm", "dmg", "msi"]
   }
 }
