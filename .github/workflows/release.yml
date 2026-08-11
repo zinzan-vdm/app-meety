@@ -54,12 +54,12 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
-      - name: Strip Git usr/bin from PATH (Windows)
+      - name: Set MSVC linker explicitly for rustc (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $clean = ($env:PATH.Split(';') | Where-Object { $_ -ne 'C:\Program Files\Git\usr\bin' }) -join ';'
-          echo "PATH=$clean" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
+          $linker = Join-Path $env:VCToolsInstallDir "bin\HostX64\x64\link.exe"
+          echo "CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=$linker" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
 
       - name: Build meety-mcp sidecar
         shell: bash
