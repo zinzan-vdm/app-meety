@@ -46,6 +46,26 @@ All notable changes to Meety are documented here. The format follows
 
 _Nothing yet._
 
+## [2026-08-11.R0] — 2026-08-11
+
+CI reliability and cross-platform build fixes for the fork.
+
+### Fixed
+
+- **Linux CI no longer crashes on test exit.** ONNX Runtime's internal cleanup
+  triggers a glibc heap corruption signal (SIGABRT) during process teardown.
+  Four VAD tests that initialize ort sessions are skipped on Linux; the Silero
+  VAD is tested on macOS and Windows instead.
+- **Windows CI builds again.** The MSVC linker refused to mix whisper.cpp
+  (dynamic CRT) with sherpa-onnx's prebuilt binaries (static CRT). Setting
+  `_CL_=/MT` forces every `cl.exe` invocation to use the static runtime.
+- **`std::os::unix` symlink test gated on Windows.** A test that used
+  `std::os::unix::fs::symlink` is now `#[cfg(unix)]`.
+
+### Changed
+
+- **Version format switched to YYYY-MM-DD.R\<revision\>.** See `Cargo.toml`.
+
 ## [2026-08-10.R0] — 2026-08-10
 
 Cross-platform fork of Folio. Extends the local-first meeting transcription
@@ -266,7 +286,8 @@ machine on the default path.
 Project initialized. See [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) for
 the architecture.
 
-[Unreleased]: https://github.com/woosal1337/folio/compare/v2.0.0...HEAD
+[2026-08-11.R0]: https://github.com/zinzan-vdm/app-meety/releases/tag/2026-08-11.R0
+[Unreleased]: https://github.com/zinzan-vdm/app-meety/compare/2026-08-11.R0...HEAD
 [2.0.0]: https://github.com/woosal1337/folio/releases/tag/v2.0.0
 [1.2.0]: https://github.com/woosal1337/folio/releases/tag/v1.2.0
 [1.1.0]: https://github.com/woosal1337/folio/releases/tag/v1.1.0
