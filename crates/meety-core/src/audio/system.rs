@@ -399,7 +399,14 @@ mod windows_impl {
     use super::*;
 
     use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
-    use cpal::{Sample, SampleFormat, Stream, StreamConfig};
+    use cpal::{Sample, SampleFormat, StreamConfig};
+
+    /// CPAL 0.15 deliberately makes all Stream types !Send via
+    /// NotSendSyncAcrossAllPlatforms (PhantomData<*mut ()>). Our usage
+    /// is thread-safe: streams are created and consumed on the same
+    /// thread spawned by `start()`. This wrapper restores `Send`.
+    struct SendStream(Option<cpal::Stream>);
+    unsafe impl Send for SendStream {}
 
     fn build_loopback_stream(
         device: &cpal::Device,
@@ -408,9 +415,9 @@ mod windows_impl {
         writer: Arc<AudioWavWriter>,
         resampler: Arc<Mutex<StreamingResampler>>,
         stopped: Arc<AtomicBool>,
-    ) -> Result<Stream> {
+    ) -> Result<SendStream> {
         let err_fn = |err| error!(?err, "WASAPI loopback stream error");
-        match sample_format {
+        let stream = match sample_format {
             SampleFormat::F32 => device
                 .build_input_stream(
                     config,
@@ -470,7 +477,8 @@ mod windows_impl {
                     "unsupported WASAPI loopback sample format: {other:?}"
                 )));
             }
-        }
+        };
+        stream.map(|s| SendStream(Some(s)))
     }
 
     fn handle_loopback_samples(
@@ -498,7 +506,7 @@ mod windows_impl {
     }
 
     pub struct SystemCapture {
-        stream: Option<Stream>,
+        stream: SendStream,
         writer: Arc<AudioWavWriter>,
         stopped: Arc<AtomicBool>,
     }
@@ -547,14 +555,15 @@ mod windows_impl {
                 stopped.clone(),
             )?;
 
-            stream
+            let s = stream.0.as_ref().unwrap();
+            s
                 .play()
                 .map_err(|e| MeetyError::StreamPlay(format!("WASAPI loopback play: {e}")))?;
 
             info!("WASAPI loopback capture started");
 
             Ok(Self {
-                stream: Some(stream),
+                stream,
                 writer,
                 stopped,
             })
@@ -562,9 +571,7 @@ mod windows_impl {
 
         pub fn stop(mut self) -> Result<()> {
             self.stopped.store(true, Ordering::SeqCst);
-            if let Some(stream) = self.stream.take() {
-                drop(stream);
-            }
+            self.stream.0 = None;
             self.writer.finalize()?;
             debug!(
                 samples = self.writer.samples_written(),
