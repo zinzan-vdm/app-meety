@@ -476,5 +476,8 @@ Before merging anything that touches the public README, license, install instruc
 
 ## 13. When you do not know
 
-For architecture questions, read `docs/ARCHITECTURE.md` and the remaining docs in `docs/guidelines/` (audio pipeline, cryptography, release engineering, Tauri architecture).
-For an answer this document does not cover, ask the human reviewer. Do not invent.
+For architecture questions, read `docs/ARCHITECTURE.md` and the
+guideline docs in `docs/guidelines/` (audio pipeline, cryptography,
+release engineering, Tauri architecture).
+For an answer this document does not cover, ask the human reviewer.
+Do not invent.

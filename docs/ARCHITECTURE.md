@@ -169,7 +169,7 @@ against `main`. Jobs (all required):
 
 ## Code styling — quick reference
 
-For the full source-cited guidance see `docs/CODE_STYLE.md` and
+For the full guidance see `docs/CODE_STYLE.md` and
 `docs/guidelines/`. This is the condensed cheat sheet.
 
 ### Rust
@@ -213,5 +213,5 @@ For the full source-cited guidance see `docs/CODE_STYLE.md` and
 
 ## Conventions
 
-See `docs/guidelines/` for the deep-dives, `CONTRIBUTING.md` for setup
+See `docs/CODE_STYLE.md` for the style contract, `CONTRIBUTING.md` for setup
 and PR flow, and `SECURITY.md` for vulnerability reporting.

@@ -116,7 +116,7 @@ try {
 
 > "If you use the wrong type for the `State` parameter, you will get a runtime panic instead of a compile-time error." — [Manager trait](https://docs.rs/tauri/latest/tauri/trait.Manager.html)
 
-**Mutex choice:** default to `std::sync::Mutex` or `parking_lot::Mutex`. Use `tokio::sync::Mutex` only when the guard must be held across `.await` — see [`rust-async.md`](./rust-async.md). The recording pipeline almost certainly should NOT hold a lock across `.await`; it should send frames over an `mpsc` channel and let the consumer own the buffer.
+**Mutex choice:** default to `parking_lot::Mutex`. Use `tokio::sync::Mutex` only when the guard must be held across `.await`. The recording pipeline should not hold a lock across `.await`; it should send frames over an `mpsc` channel.
 
 **Layout: one `AppState`, sub-handles per subsystem.**
 
@@ -193,21 +193,11 @@ Migration is mechanical: add `#[specta::specta]` next to `#[tauri::command]`, re
 
 ## Plugins
 
-From [Plugin Development](https://v2.tauri.app/develop/plugins/):
-
-> "By design, the Tauri core does not contain features not needed by everyone. Instead it offers a mechanism to add external functionalities into a Tauri application called plugins."
-
-Extract into a `tauri-plugin-*` when **all three** are true:
-
-1. The functionality has its own lifecycle (init/teardown), permissions, and commands.
-2. It is, or might plausibly become, useful in another Tauri app or to the community.
-3. It needs its own capability namespace and JS API package.
-
-For Meety:
-
-- **Keep in `src-tauri`**: recording control, settings, app menu, dock icon. They're app-specific glue.
-- **Candidate for an internal plugin crate**: macOS system-audio capture via ScreenCaptureKit if it grows beyond a single file. Lifecycle, permissions, OS-specific Swift package — that's plugin-shaped.
-- **Already-used official plugins**: `tauri-plugin-opener`, `tauri-plugin-dialog`, `tauri-plugin-fs`. Add `tauri-plugin-store` for persisted settings, `tauri-plugin-log` for log file rotation.
+| Plugin                                                                         | When to use                                      |
+| ------------------------------------------------------------------------------ | ------------------------------------------------ |
+| `tauri-plugin-opener`, `tauri-plugin-dialog`, `tauri-plugin-fs`                | Already used.                                    |
+| `tauri-plugin-store`                                                           | Persisted settings.                              |
+| `tauri-plugin-log`                                                             | Log file rotation.                               |
 
 ## Capabilities & permissions
 
@@ -233,9 +223,6 @@ From [Project Structure](https://v2.tauri.app/start/project-structure/):
 
 > "`src/lib.rs` contains the Rust code and the mobile entry point... `src/main.rs` is the main entry point for the desktop, and we run `app_lib::run` in `main`."
 
-Target tree for Meety (current vs target):
-
-```
 src-tauri/
   capabilities/
     core.json
@@ -248,18 +235,14 @@ src-tauri/
   build.rs
   Cargo.toml
   src/
-    main.rs                   # 3 lines: call meety_app_lib::run()
+    main.rs                   # entry: call meety_app_lib::run()
     lib.rs                    # ≤ 100 lines: Builder, manage(AppState), generate_handler!
     app/
       mod.rs
       state.rs                # AppState struct + initialize()
-      dock_icon.rs            # macOS dock icon plumbing
+      dock_icon.rs            # macOS dock icon
     error.rs                  # CommandError (thiserror + Serialize)
-    dto/                      # wire types (StartRecordingOpts, RecordingId, …)
-      mod.rs
-      recording.rs
-      transcription.rs
-    commands/                 # thin IPC handlers, grouped by domain
+    commands/                 # IPC handlers, one module per domain
       mod.rs
       recording.rs
       transcription.rs
@@ -270,21 +253,6 @@ src-tauri/
       maintenance.rs
       devices.rs
       health.rs
-    events/                   # typed event structs + name constants
-      mod.rs
-    workers/                  # background tasks owned by state subsystems
-      mod.rs
-      transcription_worker.rs
-```
-
-Current state vs target:
-
-- ✅ Per-domain command files already exist under `src-tauri/src/commands/`.
-- ✅ `lib.rs` is currently ~66 lines.
-- ❌ No `error.rs` with `CommandError` yet — commands currently return `Result<T, String>`. Add this.
-- ❌ No `dto/` directory — wire types live alongside the commands that use them. Extract once you have ≥ 3 commands sharing a DTO.
-- ❌ No `events/` directory — events emitted with bare string literals. Centralize when you have ≥ 5 event names.
-- ❌ No `workers/` directory — long-running work currently runs in-line in commands or is spawned ad-hoc. Promote to a worker when the operation has a lifecycle (pause/resume/cancel).
 
 ## Checklist for new commands
 
@@ -303,15 +271,6 @@ Current state vs target:
 - [Calling Rust from the Frontend — Tauri v2](https://v2.tauri.app/develop/calling-rust/)
 - [Calling the Frontend from Rust — Tauri v2](https://v2.tauri.app/develop/calling-frontend/)
 - [State Management — Tauri v2](https://v2.tauri.app/develop/state-management/)
-- [Plugin Development — Tauri v2](https://v2.tauri.app/develop/plugins/)
 - [Capabilities — Tauri v2](https://v2.tauri.app/security/capabilities/)
-- [Permissions — Tauri v2](https://v2.tauri.app/security/permissions/)
 - [Project Structure — Tauri v2](https://v2.tauri.app/start/project-structure/)
-- [tauri-specta on GitHub](https://github.com/specta-rs/tauri-specta)
-- [tauri/plugins-workspace](https://github.com/tauri-apps/plugins-workspace)
-- [Rust Error Handling in Tauri Commands](https://dev.to/hiyoyok/rust-error-handling-in-tauri-commands-the-pattern-that-actually-works-35le)
-- [Tauri error handling recipes](https://tbt.qkation.com/posts/tauri-error-handling/)
-- [Tauri Discussion #8538 — Share AppState between threads](https://github.com/tauri-apps/tauri/discussions/8538)
-- [Tauri Discussion #6952 — Return errors as JSON](https://github.com/tauri-apps/tauri/discussions/6952)
-- [Manage Global State in Tauri](https://tauritutorials.com/blog/manage-global-state-in-tauri)
 - [Manager trait — docs.rs](https://docs.rs/tauri/latest/tauri/trait.Manager.html)
