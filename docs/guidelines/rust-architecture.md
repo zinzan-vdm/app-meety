@@ -1,6 +1,6 @@
 # Rust workspace & module architecture — Meety guidelines
 
-Source-cited synthesis for organising the Meety workspace, drawing module boundaries, and shaping public APIs. Targets the multi-crate workspace (`meety-core`, `meety-cli`, `folio-app`) and is intended to be re-read whenever a new module, crate, or public type is added.
+Source-cited synthesis for organising the Meety workspace, drawing module boundaries, and shaping public APIs. Targets the multi-crate workspace (`meety-core`, `meety-cli`, `meety-app`) and is intended to be re-read whenever a new module, crate, or public type is added.
 
 ## TL;DR — the rules
 
@@ -22,13 +22,13 @@ meety/
   crates/
     meety-core/            # framework-agnostic library
     meety-cli/             # CLI test harness, depends on meety-core
-  src-tauri/                # Tauri shell, package name "folio-app"
+  src-tauri/                # Tauri shell, package name "meety-app"
   src/                      # React frontend
 ```
 
 Improvements to consider:
 
-- Promote `src-tauri/` into `crates/folio-shell/` so the workspace is fully flat. Tauri tooling reads `tauri.conf.json` and doesn't care about the directory name — only `bun tauri dev`/`build` looks at the convention. Test on a branch before adopting.
+- Promote `src-tauri/` into `crates/meety-shell/` so the workspace is fully flat. Tauri tooling reads `tauri.conf.json` and doesn't care about the directory name — only `bun tauri dev`/`build` looks at the convention. Test on a branch before adopting.
 - Add an `xtask/` crate for repository automation (model downloads, codegen, release packaging). Replaces shell scripts with type-checked Rust everyone on the team can already read. ([matklad](https://matklad.github.io/2021/08/22/large-rust-workspaces.html))
 
 ## When to split a crate vs add a module
@@ -38,7 +38,7 @@ Crate-splitting is not free. It slows `cargo check`, complicates visibility, and
 1. You need **a binary target** (CLI, daemon, xtask, plugin).
 2. The boundary has a **stable, narrow API** that the compiler should enforce across the line.
 3. Two pieces have **disjoint dependency closures** and splitting cuts compile time meaningfully for the smaller side.
-4. You want **independent feature flags** (e.g., a future `folio-transcribe` with `metal`, `cuda`, `cpu` variants).
+4. You want **independent feature flags** (e.g., a future `meety-transcribe` with `metal`, `cuda`, `cpu` variants).
 5. The boundary is **testable in isolation** with mocks; the seam is real.
 
 Otherwise: add a module. Modules are the cheap-to-revert tool.
@@ -91,7 +91,7 @@ pub use audio::{CaptureSession, CaptureArtifacts, CaptureConfig, Channel};
 pub use error::{MeetyError, Result};
 ```
 
-Consumers `use folio_core::CaptureSession`, not `folio_core::audio::capture::CaptureSession`. You can rename, move, or split `audio::capture` later without breaking anyone.
+Consumers `use meety_core::CaptureSession`, not `meety_core::audio::capture::CaptureSession`. You can rename, move, or split `audio::capture` later without breaking anyone.
 
 ## The Rust API Guidelines — rules most likely to bite
 

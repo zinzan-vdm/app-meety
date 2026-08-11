@@ -81,7 +81,7 @@ spctl --assess --type execute --verbose=2 "$APP"              # accepted
 #   source=Notarized Developer ID
 xcrun stapler validate "$APP"                                 # ticket stapled
 xcrun stapler validate "$DMG"
-otool -L "$APP/Contents/MacOS/folio" | grep -i onnx || echo "no onnx dylib (static, as expected)"
+otool -L "$APP/Contents/MacOS/Meety" | grep -i onnx || echo "no onnx dylib (static, as expected)"
 ```
 
 The two phrases that prove success are **`accepted`** and

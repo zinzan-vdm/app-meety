@@ -105,7 +105,7 @@ CI fails on a regenerated diff: `cargo test --workspace` must produce a zero-dif
 
 | Item                  | Convention                                              | Example                        |
 | --------------------- | ------------------------------------------------------- | ------------------------------ |
-| Module / crate        | `snake_case`                                            | `cloud_guard`, `folio_core`    |
+| Module / crate        | `snake_case`                                            | `cloud_guard`, `meety_core`    |
 | Struct / enum / trait | `UpperCamelCase`                                        | `CloudGuard`, `MemoryStore`    |
 | Function / method     | `snake_case`                                            | `enforce_cap`, `resume_offset` |
 | Constant / static     | `SCREAMING_SNAKE_CASE`                                  | `DEFAULT_DEBOUNCE`             |

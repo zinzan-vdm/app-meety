@@ -248,7 +248,7 @@ src-tauri/
   build.rs
   Cargo.toml
   src/
-    main.rs                   # 3 lines: call folio_app_lib::run()
+    main.rs                   # 3 lines: call meety_app_lib::run()
     lib.rs                    # ≤ 100 lines: Builder, manage(AppState), generate_handler!
     app/
       mod.rs
