@@ -58,27 +58,24 @@ jobs:
           sudo apt-get install -y -qq libgtk-3-dev libwebkit2gtk-4.1-dev \
             libjavascriptcoregtk-4.1-dev libglib2.0-dev libasound2-dev \
             libvulkan-dev glslc
-      - name: Force static CRT for CMake builds on Windows
+      - name: Force static CRT for whisper-rs-sys on Windows
         if: matrix.os == 'windows-latest'
         shell: pwsh
         run: |
-          $toolchain = "$env:RUNNER_TEMP\static-crt.cmake"
-          @"
-          # Force whisper-rs-sys (whisper.cpp) to use /MT (static CRT) instead of
-          # /MD (dynamic CRT) so it matches sherpa-onnx-sys's prebuilt Windows
-          # binaries, which ship compiled with /MT. Without this, the MSVC linker
-          # errors out with LNK2038 RuntimeLibrary mismatch.
-          #
-          # CMake >= 3.15 passes this variable through to MSVC as the /MT flag.
-          set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded" CACHE STRING "Use static CRT (/MT)")
-          "@ | Out-File -FilePath $toolchain -Encoding ASCII
-          echo "CMAKE_TOOLCHAIN_FILE=$toolchain" | Out-File -FilePath $env:GITHUB_ENV -Append
+          # whisper-rs-sys's build.rs forwards any CMAKE_* env var to cmake as
+          # -D flags. Setting CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded tells
+          # CMake to compile whisper.cpp with /MT (static CRT) instead of the
+          # default /MD (dynamic CRT). This must match sherpa-onnx-sys's prebuilt
+          # Windows binaries, which ship compiled with /MT. Without this, the
+          # MSVC linker errors out with LNK2038 RuntimeLibrary mismatch.
+          echo "CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded" | `
+            Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
       - uses: Swatinem/rust-cache@v2
         # Force a cache miss on Windows so whisper-rs-sys re-runs its cmake build
-        # with the static-CRT toolchain file above. The cache key suffix ensures
-        # this run doesn't restore old artifacts compiled with /MD.
+        # with the static-CRT flag above. The cache key suffix ensures this run
+        # doesn't restore old artifacts compiled with /MD.
         with:
-          key: ${{ matrix.os == 'windows-latest' && 'static-crt-v1' || '' }}
+          key: ${{ matrix.os == 'windows-latest' && 'static-crt-v2' || '' }}
       - run: cargo build --workspace --all-targets
       - run: cargo test --workspace --lib --bins
 
