@@ -2,7 +2,7 @@
 
 The contract every file in this repository follows. Reviewers will reject PRs that violate the rules in this document. AI agents (Claude Code, Codex, etc.) MUST treat these rules as overriding any default behaviour they might otherwise apply.
 
-This document is the authoritative source. The `AGENTS.md` and `CONTRIBUTING.md` files at the repo root reference it.
+This document is the authoritative source. The `CONTRIBUTING.md` file at the repo root references it.
 
 ---
 
@@ -482,5 +482,5 @@ Before merging anything that touches the public README, license, install instruc
 
 ## 14. Document history
 
-- 2026-05-26 — Initial version. Establishes Section 1 (strict no-inline-comments rule), Section 11.1 (public-release hygiene checklist), and the precedence order in Section 0. Referenced by `AGENTS.md` and `CONTRIBUTING.md`.
+- 2026-05-26 — Initial version. Establishes Section 1 (strict no-inline-comments rule), Section 11.1 (public-release hygiene checklist), and the precedence order in Section 0. Referenced by `CONTRIBUTING.md`.
 - 2026-05-26 (rev 2) — Folded in an architecture research pass. Added §1.5 (generated file headers), §2.4 (IPC names + generated-type discipline), §5.4 (test runners + accessible queries), §5.5 (required test surfaces incl. IPC command-registry test + path-traversal + drift CI), §6.3 (the canonical Tauri command shape), §7.4 (product perf budgets: <50MB idle, <100ms hotkey), §7.5 (lazy routing + virtualisation + theme tokens), §8.4 (capability scoping), §8.5 (authoritative state ownership), §8.6 (deep-link allowlist + LLM output sanitiser), §9.1 (layer dependency rule), §9.2 (Zustand for UI-only state, effect cleanup), §9.4 (IPC contract — single largest correctness surface), §9.5 (subsystem doc anchors), and 9 new public-release checklist items.

@@ -213,6 +213,5 @@ For the full source-cited guidance see `docs/CODE_STYLE.md` and
 
 ## Conventions
 
-See `docs/guidelines/` for the deep-dives, `AGENTS.md` for Rust-
-specific rules, `CONTRIBUTING.md` for the human-facing setup and PR
-flow, and `SECURITY.md` for vulnerability reporting.
+See `docs/guidelines/` for the deep-dives, `CONTRIBUTING.md` for setup
+and PR flow, and `SECURITY.md` for vulnerability reporting.

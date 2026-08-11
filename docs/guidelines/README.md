@@ -22,10 +22,9 @@ Five focused documents, each a source-cited synthesis from ~25 web searches in M
 
 When two documents seem to disagree, the most-specific one wins:
 
-1. `AGENTS.md` (project-wide AI rules, repo root) ← applies to every contribution
-2. `CONTRIBUTING.md` (human-facing process, repo root) ← applies to every PR
-3. `docs/guidelines/*` (this directory) ← applies when working in the relevant area
-4. Inline comments at the call site ← applies to the specific line
+1. `CONTRIBUTING.md` (human-facing process, repo root) ← applies to every PR
+2. `docs/guidelines/*` (this directory) ← applies when working in the relevant area
+3. Inline comments at the call site ← applies to the specific line
 
 ## What's intentionally NOT in here
 
