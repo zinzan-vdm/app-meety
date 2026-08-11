@@ -142,6 +142,7 @@ Tauri command and event names are exported constants from `src/shared/ipc/`, nev
 
 - Every error type derives from `thiserror` and lives next to its module.
 - The crate-level `MeetyError` enum in `crates/meety-core/src/error.rs` is the public surface that exits the library boundary. Module-local errors implement `From<…> for MeetyError`.
+- Mark public error enums `#[non_exhaustive]`. Adding a variant later is not a breaking change.
 - No `unwrap` outside `#[cfg(test)]`. `expect("<reason>")` is permitted for invariants that genuinely cannot fail; the reason text must explain the invariant.
 - Errors that cross IPC into Tauri commands convert to `String` at the boundary, not earlier.
 - `Result<T>` aliases the crate's `Result<T, MeetyError>`; module-local results may use `Result<T, MyError>` directly.
@@ -475,12 +476,5 @@ Before merging anything that touches the public README, license, install instruc
 
 ## 13. When you do not know
 
-- For architecture questions, read the matching doc in `docs/guidelines/` (audio pipeline, frontend architecture, Rust async, error handling, Tauri architecture).
-- For an answer this document doesn't cover, ask the human reviewer. Do not invent.
-
----
-
-## 14. Document history
-
-- 2026-05-26 — Initial version. Establishes Section 1 (strict no-inline-comments rule), Section 11.1 (public-release hygiene checklist), and the precedence order in Section 0. Referenced by `CONTRIBUTING.md`.
-- 2026-05-26 (rev 2) — Folded in an architecture research pass. Added §1.5 (generated file headers), §2.4 (IPC names + generated-type discipline), §5.4 (test runners + accessible queries), §5.5 (required test surfaces incl. IPC command-registry test + path-traversal + drift CI), §6.3 (the canonical Tauri command shape), §7.4 (product perf budgets: <50MB idle, <100ms hotkey), §7.5 (lazy routing + virtualisation + theme tokens), §8.4 (capability scoping), §8.5 (authoritative state ownership), §8.6 (deep-link allowlist + LLM output sanitiser), §9.1 (layer dependency rule), §9.2 (Zustand for UI-only state, effect cleanup), §9.4 (IPC contract — single largest correctness surface), §9.5 (subsystem doc anchors), and 9 new public-release checklist items.
+For architecture questions, read `docs/ARCHITECTURE.md` and the remaining docs in `docs/guidelines/` (audio pipeline, cryptography, release engineering, Tauri architecture).
+For an answer this document does not cover, ask the human reviewer. Do not invent.

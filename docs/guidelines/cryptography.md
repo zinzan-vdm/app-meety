@@ -1,7 +1,7 @@
 # Cryptography conventions
 
 Centralises every cryptographic choice the codebase makes. Cited from
-`docs/CODE_STYLE.md` §9.5 and `docs/refactor/PHASE-3-PUNCH-LIST.md`.
+`docs/CODE_STYLE.md` §9.5.
 
 ## Algorithms in use
 
@@ -27,8 +27,8 @@ Centralises every cryptographic choice the codebase makes. Cited from
 
 **Never** persist a key in `Settings`, `localStorage`, or a config file
 committed to git. The legacy `Settings.openai_api_key` field exists
-only as a transient read-fallback during the Phase-3 B9 migration
-(see `docs/refactor/PHASE-3-PUNCH-LIST.md`); it will be removed once a
+only as a transient read-fallback during the migration
+(see `docs/guidelines/`); it will be removed once a
 release of overlap has passed.
 
 ## Why AES-256-GCM + Argon2id

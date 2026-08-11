@@ -1,7 +1,7 @@
 # Release engineering
 
 How the signed, notarised, auto-updating Meety builds get produced.
-Cited from `docs/CODE_STYLE.md` §9.5 and `docs/refactor/PHASE-3-PUNCH-LIST.md` D1/D3.
+Cited from `docs/CODE_STYLE.md` §9.5.
 
 ## One-line summary
 
@@ -85,17 +85,7 @@ The updater plugin downloads the URL, validates the signature against the pubkey
 4. Cut a release using the new key. Users update once; their next install uses the new key end-to-end.
 5. After one release of overlap, retire the old key.
 
-## Sparkle / non-Tauri-updater fallback
+### Related
 
-Not used. The `docs/distribution/README.md` doc mentioned Sparkle by analogy; the actual auto-update plumbing is the Tauri Updater plugin. Sparkle is reserved for a hypothetical native-Swift shell, not the current Tauri build.
-
-## Mac App Store + Setapp builds
-
-`docs/distribution/README.md` describes the dual-distribution plan. Both the MAS and Setapp SKUs build from the same workspace via Cargo feature flags (`mas`, `setapp`). Each channel has its own release pipeline; this doc covers the **direct DMG** channel only.
-
-## Related
-
-- `docs/CODE_STYLE.md` §11.1 — public-release hygiene checklist that this pipeline must satisfy.
-- `docs/refactor/PHASE-3-PUNCH-LIST.md` D1, D2, D3, D11 — the audit items this doc closes.
-- `docs/distribution/README.md` — the three-channel distribution strategy.
-- `NOTICE` — third-party attribution file that ships in the bundle.
+- `docs/CODE_STYLE.md` §11.1 — public-release hygiene checklist.
+- `docs/guidelines/` — engineering guidelines.

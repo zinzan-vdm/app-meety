@@ -183,7 +183,7 @@ For the full source-cited guidance see `docs/CODE_STYLE.md` and
   go on the public enum in `meety-core/src/error.rs`.
 - **Async**: prefer `tauri::async_runtime::spawn_blocking` for any
   IPC command that touches the filesystem, SQLite, or whisper.cpp.
-  See `docs/guidelines/rust-async.md`.
+  See `docs/CODE_STYLE.md` §6 for async rules.
 - **Locks**: `parking_lot::Mutex` for sync code; `tokio::sync::Mutex`
   only when held across `.await`.
 - **Naming**: `snake_case` for modules, functions, variables;
