@@ -58,6 +58,21 @@ jobs:
           sudo apt-get install -y -qq libgtk-3-dev libwebkit2gtk-4.1-dev \
             libjavascriptcoregtk-4.1-dev libglib2.0-dev libasound2-dev \
             libvulkan-dev glslc
+      - name: Force static CRT for CMake builds on Windows
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          $toolchain = "$env:RUNNER_TEMP\static-crt.cmake"
+          @"
+          # Force whisper-rs-sys (whisper.cpp) to use /MT (static CRT) instead of
+          # /MD (dynamic CRT) so it matches sherpa-onnx-sys's prebuilt Windows
+          # binaries, which ship compiled with /MT. Without this, the MSVC linker
+          # errors out with LNK2038 RuntimeLibrary mismatch.
+          #
+          # CMake >= 3.15 passes this variable through to MSVC as the /MT flag.
+          set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded" CACHE STRING "")
+          "@ | Out-File -FilePath $toolchain -Encoding ASCII
+          echo "CMAKE_TOOLCHAIN_FILE=$toolchain" | Out-File -FilePath $env:GITHUB_ENV -Append
       - uses: Swatinem/rust-cache@v2
       - run: cargo build --workspace --all-targets
       - run: cargo test --workspace --lib --bins
