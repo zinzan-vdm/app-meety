@@ -54,12 +54,21 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
-      - name: Prepend MSVC bin dir to PATH (Windows)
+      - name: Rename Git link.exe to prevent MSVC linker conflict (Windows)
+        # The Git for Windows installation has a link.exe file in its usr/bin
+        # directory. This file is the GNU coreutils link command. It creates
+        # hard links. The MSVC linker, also named link.exe, is part of Visual
+        # Studio. When the Rust compiler searches for a linker, it can find the
+        # Git file before the MSVC file. This causes the build to fail.
+        # Rename the Git file to remove it from the search path. The MSVC
+        # linker is the only link.exe available after this change.
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $msvcBin = Join-Path $env:VCToolsInstallDir "bin\HostX64\x64"
-          echo $msvcBin | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding ASCII
+          $gitLink = "C:\Program Files\Git\usr\bin\link.exe"
+          if (Test-Path $gitLink) {
+            Rename-Item -Path $gitLink -NewName "link.exe.bak" -Force
+          }
 
       - name: Build meety-mcp sidecar
         shell: bash
