@@ -32,11 +32,15 @@ pub use linux_impl::SystemCapture;
 #[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]
 pub use stub_impl::SystemCapture;
 
+#[cfg(target_os = "macos")]
 const SCK_SAMPLE_RATE: u32 = 48_000;
+#[cfg(target_os = "macos")]
 const SCK_CHANNEL_COUNT: u8 = 1;
 
+#[cfg(target_os = "macos")]
 const SILENCE_RMS_THRESHOLD: f32 = 0.002;
 
+#[cfg(target_os = "macos")]
 const SILENCE_PAUSE_AFTER_MS: u64 = 30_000;
 
 /// Start system audio capture, dispatching to the platform-specific backend.
@@ -50,17 +54,17 @@ pub fn dispatch_start(
     #[cfg(target_os = "macos")]
     {
         let cap = macos_impl::SystemCapture::start(writer, target_sample_rate)?;
-        return Ok(Box::new(cap));
+        Ok(Box::new(cap))
     }
     #[cfg(target_os = "windows")]
     {
         let cap = windows_impl::SystemCapture::start(writer, target_sample_rate)?;
-        return Ok(Box::new(cap));
+        Ok(Box::new(cap))
     }
     #[cfg(target_os = "linux")]
     {
         let cap = linux_impl::SystemCapture::start(writer, target_sample_rate)?;
-        return Ok(Box::new(cap));
+        Ok(Box::new(cap))
     }
     #[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]
     {
@@ -602,7 +606,7 @@ mod linux_impl {
                 .name("meety-pulse".into())
                 .spawn(move || {
                     let spec = Spec { format: Format::F32le, channels: 1, rate: target_sample_rate };
-                    let mut pulse = match Simple::new(
+                    let pulse = match Simple::new(
                         None,
                         "Meety",
                         Direction::Record,
