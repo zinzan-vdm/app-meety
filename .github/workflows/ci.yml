@@ -70,10 +70,15 @@ jobs:
           # errors out with LNK2038 RuntimeLibrary mismatch.
           #
           # CMake >= 3.15 passes this variable through to MSVC as the /MT flag.
-          set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded" CACHE STRING "")
+          set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded" CACHE STRING "Use static CRT (/MT)")
           "@ | Out-File -FilePath $toolchain -Encoding ASCII
           echo "CMAKE_TOOLCHAIN_FILE=$toolchain" | Out-File -FilePath $env:GITHUB_ENV -Append
       - uses: Swatinem/rust-cache@v2
+        # Force a cache miss on Windows so whisper-rs-sys re-runs its cmake build
+        # with the static-CRT toolchain file above. The cache key suffix ensures
+        # this run doesn't restore old artifacts compiled with /MD.
+        with:
+          key: ${{ matrix.os == 'windows-latest' && 'static-crt-v1' || '' }}
       - run: cargo build --workspace --all-targets
       - run: cargo test --workspace --lib --bins
 
