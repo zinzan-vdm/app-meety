@@ -29,6 +29,7 @@ pub struct LiveTranscriptEvent {
     pub text: String,
 }
 
+#[allow(clippy::collapsible_if)]
 pub fn spawn<R: Runtime>(
     app: AppHandle<R>,
     session_dir: PathBuf,
@@ -55,10 +56,9 @@ pub fn spawn<R: Runtime>(
 
                 let mic_path = session_dir.join("mic.wav");
                 if let Some((rate, samples)) = read_wav_tail_mono(&mic_path, WINDOW_SECS) {
-                    if samples.len() >= rate as usize && has_speech(&samples, rate)
-                        && write_mono_wav(&tmp, rate, &samples).is_ok()
-                    {
-                        let text = match transcriber.transcribe(&tmp, language.as_deref()) {
+                    if samples.len() >= rate as usize && has_speech(&samples, rate) {
+                        if write_mono_wav(&tmp, rate, &samples).is_ok() {
+                            let text = match transcriber.transcribe(&tmp, language.as_deref()) {
                                 Ok(t) => t.full_text().trim().to_string(),
                                 Err(e) => {
                                     debug!(error = %e, "live mic transcript failed");
@@ -85,9 +85,8 @@ pub fn spawn<R: Runtime>(
                 let sys_path = session_dir.join("system.wav");
                 if sys_path.exists() {
                     if let Some((rate, samples)) = read_wav_tail_mono(&sys_path, WINDOW_SECS) {
-                        if samples.len() >= rate as usize && has_speech(&samples, rate)
-                            && write_mono_wav(&tmp, rate, &samples).is_ok()
-                        {
+                        if samples.len() >= rate as usize && has_speech(&samples, rate) {
+                            if write_mono_wav(&tmp, rate, &samples).is_ok() {
                                 let text = match transcriber.transcribe(&tmp, language.as_deref()) {
                                     Ok(t) => t.full_text().trim().to_string(),
                                     Err(e) => {
