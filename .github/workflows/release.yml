@@ -46,6 +46,10 @@ jobs:
         run: |
           echo "_CL_=/MT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
 
+      - name: Set up MSVC dev command prompt (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
@@ -61,6 +65,11 @@ jobs:
             bun-${{ runner.os }}-
 
       - run: bun install --frozen-lockfile
+
+      - name: Clean cached native dependencies
+        run: |
+          rm -rf target/release/build/sherpa-onnx-sys-*
+          rm -rf target/release/build/whisper-rs-sys-*
 
       - name: Build meety-mcp sidecar
         shell: bash
