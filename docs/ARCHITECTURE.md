@@ -50,7 +50,7 @@ and `label.rs` turn clusters into the speaker labels in the note.
   has a stub for non-macOS targets so the workspace still builds.
 - Types that cross the Tauri IPC boundary derive `ts_rs::TS` with
   `#[ts(export, export_to = "../../../src/shared/types/")]`. `cargo
-  test` regenerates the bindings; CI catches drift.
+test` regenerates the bindings; CI catches drift.
 - Two-phase write for any file-backed store: write the canonical
   on-disk file first (`.md` for memory, `.json` for tasks), update
   the derived index second. The index is rebuildable from files.

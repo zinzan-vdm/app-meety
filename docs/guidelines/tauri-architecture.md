@@ -193,11 +193,11 @@ Migration is mechanical: add `#[specta::specta]` next to `#[tauri::command]`, re
 
 ## Plugins
 
-| Plugin                                                                         | When to use                                      |
-| ------------------------------------------------------------------------------ | ------------------------------------------------ |
-| `tauri-plugin-opener`, `tauri-plugin-dialog`, `tauri-plugin-fs`                | Already used.                                    |
-| `tauri-plugin-store`                                                           | Persisted settings.                              |
-| `tauri-plugin-log`                                                             | Log file rotation.                               |
+| Plugin                                                          | When to use         |
+| --------------------------------------------------------------- | ------------------- |
+| `tauri-plugin-opener`, `tauri-plugin-dialog`, `tauri-plugin-fs` | Already used.       |
+| `tauri-plugin-store`                                            | Persisted settings. |
+| `tauri-plugin-log`                                              | Log file rotation.  |
 
 ## Capabilities & permissions
 
@@ -224,35 +224,35 @@ From [Project Structure](https://v2.tauri.app/start/project-structure/):
 > "`src/lib.rs` contains the Rust code and the mobile entry point... `src/main.rs` is the main entry point for the desktop, and we run `app_lib::run` in `main`."
 
 src-tauri/
-  capabilities/
-    core.json
-    recording.json
-    transcription.json
-    settings.json
-    llm.json
-  icons/
-  tauri.conf.json
-  build.rs
-  Cargo.toml
-  src/
-    main.rs                   # entry: call meety_app_lib::run()
-    lib.rs                    # ≤ 100 lines: Builder, manage(AppState), generate_handler!
-    app/
-      mod.rs
-      state.rs                # AppState struct + initialize()
-      dock_icon.rs            # macOS dock icon
-    error.rs                  # CommandError (thiserror + Serialize)
-    commands/                 # IPC handlers, one module per domain
-      mod.rs
-      recording.rs
-      transcription.rs
-      settings.rs
-      llm.rs
-      agents.rs
-      library.rs
-      maintenance.rs
-      devices.rs
-      health.rs
+capabilities/
+core.json
+recording.json
+transcription.json
+settings.json
+llm.json
+icons/
+tauri.conf.json
+build.rs
+Cargo.toml
+src/
+main.rs # entry: call meety_app_lib::run()
+lib.rs # ≤ 100 lines: Builder, manage(AppState), generate_handler!
+app/
+mod.rs
+state.rs # AppState struct + initialize()
+dock_icon.rs # macOS dock icon
+error.rs # CommandError (thiserror + Serialize)
+commands/ # IPC handlers, one module per domain
+mod.rs
+recording.rs
+transcription.rs
+settings.rs
+llm.rs
+agents.rs
+library.rs
+maintenance.rs
+devices.rs
+health.rs
 
 ## Checklist for new commands
 
