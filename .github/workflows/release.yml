@@ -70,6 +70,12 @@ jobs:
             Rename-Item -Path $gitLink -NewName "link.exe.bak" -Force
           }
 
+      - name: Force NMake generator for CMake on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          echo "CMAKE_GENERATOR=NMake Makefiles" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
+
       - name: Build meety-mcp sidecar
         shell: bash
         run: |
