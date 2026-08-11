@@ -9,17 +9,25 @@ Audio never leaves your machine on the default path.
 Meety is a cross-platform fork of [Folio](https://github.com/woosal1337/folio)
 by Ege Celebi.
 
-This fork changes the project direction in several ways:
+### Why fork
 
-- **New maintainer.** Zinzan now maintains the project.
-- **New license.** New code uses MIT. The original Folio code stays Apache-2.0.
-- **Clean documentation.** The doc set is smaller. Each file has one purpose.
-- **Stable build process.** CI tests run on every change. The release pipeline
-  builds and signs the app automatically.
-- **Linux support.** The Linux CI no longer crashes during teardown.
-- **Renamed packages.** All crate names use the `meety` prefix.
-- **Workspaces only.** The CLI and the desktop app share one workspace crate
-  (`meety-core`). There is no duplicate code.
+Folio was a good project. I forked it for four reasons.
+
+**Cross-platform.** Folio focused on macOS. Meety runs on Windows, macOS,
+and Linux with the same feature set.
+
+**VAD-gated streaming.** The original pipeline recorded a full file and
+transcribed it after the meeting stopped. Meety uses voice activity
+detection to transcribe speech as it happens. This gives near real-time
+results.
+
+**Simpler code.** The original codebase had a lot of boilerplate from
+the AI agent that maintained it. I removed what was not necessary and
+made the build and testing more opinionated. My goal is not to compete
+with Folio. It is to have a tool I control.
+
+**Maintenance control.** I want to decide when to update dependencies,
+which features to add, and how the project evolves.
 
 **Status:** `2026-08-10.R0` — Alpha. Build from source.
 
