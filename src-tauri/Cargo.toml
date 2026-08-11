@@ -35,6 +35,18 @@ reqwest = { workspace = true }
 url = "2"
 tokio = { workspace = true }
 
+# State + IO
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+chrono = { workspace = true }
+parking_lot = { workspace = true }
+uuid = { workspace = true }
+
+# Used by the library scan to read WAV headers for duration + sample rate
+hound = { workspace = true }
+
 [target.'cfg(target_os = "macos")'.dependencies]
 # Used to set the Dock icon at runtime for dev binaries that aren't
 # launched from a .app bundle. We use raw msg_send! rather than the
@@ -54,18 +66,6 @@ block2 = "0.6"
 # channel, not when the app launches. coreaudio-sys gives us the raw
 # AudioObject* API; core-foundation wraps the CFString bundle id the
 # audio server hands back.
-
-# State + IO
-serde = { workspace = true }
-serde_json = { workspace = true }
-tracing = { workspace = true }
-tracing-subscriber = { workspace = true }
-chrono = { workspace = true }
-parking_lot = { workspace = true }
-uuid = { workspace = true }
-
-# Used by the library scan to read WAV headers for duration + sample rate
-hound = { workspace = true }
 
 [dev-dependencies]
 tempfile = "3.10"
