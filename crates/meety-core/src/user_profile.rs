@@ -123,7 +123,7 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let meety_dir = dir.path().join(".meety");
         std::fs::create_dir_all(&meety_dir).unwrap();
-        let profile_path = meety_dir.join("profile.toml");
+        std::fs::write(
             meety_dir.join("profile.toml"),
             "role = \"PM\"\nfocus_areas = [\"retention\", \"growth\"]\n",
         )
