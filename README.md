@@ -9,6 +9,18 @@ Audio never leaves your machine on the default path.
 Meety is a cross-platform fork of [Folio](https://github.com/woosal1337/folio)
 by Ege Celebi.
 
+This fork changes the project direction in several ways:
+
+- **New maintainer.** Zinzan now maintains the project.
+- **New license.** New code uses MIT. The original Folio code stays Apache-2.0.
+- **Clean documentation.** The doc set is smaller. Each file has one purpose.
+- **Stable build process.** CI tests run on every change. The release pipeline
+  builds and signs the app automatically.
+- **Linux support.** The Linux CI no longer crashes during teardown.
+- **Renamed packages.** All crate names use the `meety` prefix.
+- **Workspaces only.** The CLI and the desktop app share one workspace crate
+  (`meety-core`). There is no duplicate code.
+
 **Status:** `2026-08-10.R0` — Alpha. Build from source.
 
 ## What it does
