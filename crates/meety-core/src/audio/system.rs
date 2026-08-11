@@ -15,10 +15,10 @@ use crate::qos::{set_thread_qos, QosClass};
 
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 use parking_lot::Mutex;
-#[cfg(any(target_os = "macos", target_os = "windows"))]
-use tracing::{debug, error, info, warn};
 #[cfg(not(any(target_os = "macos", target_os = "windows")))]
 use tracing::{debug, error, info};
+#[cfg(any(target_os = "macos", target_os = "windows"))]
+use tracing::{debug, error, info, warn};
 
 #[cfg(target_os = "macos")]
 pub use macos_impl::SystemCapture;
@@ -419,7 +419,7 @@ mod windows_impl {
                     err_fn,
                     None,
                 )
-                .map_err(|e| MeetyError::StreamBuild(format!("WASAPI loopback f32: {e}")))?,
+                .map_err(|e| MeetyError::StreamBuild(format!("WASAPI loopback f32: {e}"))),
             SampleFormat::I16 => {
                 let writer = writer.clone();
                 let resampler = resampler.clone();
@@ -438,7 +438,7 @@ mod windows_impl {
                         err_fn,
                         None,
                     )
-                    .map_err(|e| MeetyError::StreamBuild(format!("WASAPI loopback i16: {e}")))?
+                    .map_err(|e| MeetyError::StreamBuild(format!("WASAPI loopback i16: {e}")))
             }
             SampleFormat::U16 => {
                 let writer = writer.clone();
@@ -458,7 +458,7 @@ mod windows_impl {
                         err_fn,
                         None,
                     )
-                    .map_err(|e| MeetyError::StreamBuild(format!("WASAPI loopback u16: {e}")))?
+                    .map_err(|e| MeetyError::StreamBuild(format!("WASAPI loopback u16: {e}")))
             }
             other => {
                 warn!(?other, "unsupported WASAPI loopback sample format");
@@ -501,7 +501,7 @@ mod windows_impl {
 
     impl SystemCapture {
         pub fn start(writer: Arc<AudioWavWriter>, target_sample_rate: u32) -> Result<Self> {
-            let host = cpal::host_from_id(cpal::HostId::WASAPI)
+            let host = cpal::host_from_id(cpal::HostId::Wasapi)
                 .map_err(|e| MeetyError::SystemAudio(format!("WASAPI host unavailable: {e}")))?;
 
             let device = host.default_output_device().ok_or_else(|| {
@@ -582,6 +582,9 @@ mod windows_impl {
 mod linux_impl {
     use super::*;
     use std::thread;
+    use pulse::sample::{Format, Spec};
+    use pulse::stream::Direction;
+    use psimple::Simple;
 
     pub struct SystemCapture {
         writer: Arc<AudioWavWriter>,
@@ -598,15 +601,11 @@ mod linux_impl {
             let handle = thread::Builder::new()
                 .name("meety-pulse".into())
                 .spawn(move || {
-                    let spec = pulse::sample::Spec::new(
-                        pulse::sample::Format::F32LE,
-                        1,
-                        target_sample_rate,
-                    );
-                    let mut pulse = match pulse::simple::Simple::new(
+                    let spec = Spec::new(Format::F32LE, 1, target_sample_rate);
+                    let mut pulse = match Simple::new(
                         None,
                         "Meety",
-                        pulse::stream::Direction::Record,
+                        Direction::Record,
                         Some("@DEFAULT_MONITOR@"),
                         "meety-system-capture",
                         &spec,
@@ -621,21 +620,16 @@ mod linux_impl {
                     };
 
                     info!("pulseaudio monitor source capture started");
+                    let mut buf = vec![0u8; 8192];
                     loop {
                         if s.load(Ordering::Relaxed) {
                             break;
                         }
-                        let data = match pulse.read() {
-                            Ok(d) => d,
-                            Err(e) => {
-                                error!(error = %e, "pulseaudio: read failed");
-                                break;
-                            }
-                        };
-                        if data.is_empty() {
-                            continue;
+                        if let Err(e) = pulse.read(&mut buf) {
+                            error!(error = %e, "pulseaudio: read failed");
+                            break;
                         }
-                        let floats: Vec<f32> = data
+                        let floats: Vec<f32> = buf
                             .chunks_exact(4)
                             .map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]]))
                             .collect();

@@ -102,8 +102,7 @@ whisper-rs = { workspace = true, features = ["vulkan"] }
 # (@DEFAULT_MONITOR@). Works on both native PulseAudio and PipeWire
 # (via pipewire-pulse). Zero-config: no ALSA loopback module needed.
 pulse = { workspace = true }
-libpulse-binding = { workspace = true }
-libpulse-simple-binding = { workspace = true }
+psimple = { workspace = true }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 # Windows: CPU-only whisper (no Vulkan SDK on CI, no Metal available).

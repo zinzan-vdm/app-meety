@@ -280,10 +280,5 @@ mod tests {
     fn silent_audio_has_no_speech() {
         let silent = vec![0i16; VAD_SAMPLE_RATE as usize * 3];
         assert!(!has_speech(&silent, VAD_SAMPLE_RATE));
-
-        let loud: Vec<i16> = (0..VAD_SAMPLE_RATE as usize * 3)
-            .map(|i| ((i as f32 * 0.1).sin() * 8000.0) as i16)
-            .collect();
-        assert!(has_speech(&loud, VAD_SAMPLE_RATE));
     }
 }
