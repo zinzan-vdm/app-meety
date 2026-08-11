@@ -1,7 +1,7 @@
 # Meety remote transcription server
 
 A self-hostable, GPU-accelerated transcription backend for
-[Meety](https://folio.chele.bi). Meety uploads a recording, this server
+[Meety](https://github.com/zinzan-vdm/app-meety). Meety uploads a recording, this server
 transcribes it (faster-whisper / CTranslate2 on the GPU), and the transcript
 syncs back to the desktop app — so your Mac can sleep while the GPU does the work.
 

@@ -2,7 +2,7 @@
 
 Source-cited guidance for the `src-tauri` shell and the IPC boundary with the React frontend. Targets Tauri 2.x. Updated 2026-05-24.
 
-The guiding philosophy: **thin shell, fat domain.** `src-tauri` is glue between the WebView and the pure-Rust `folio-core`. All audio, transcription, and pipeline logic lives in `folio-core`, untainted by `tauri::*` types so it stays testable, swappable, and reusable from CLIs or future plugins.
+The guiding philosophy: **thin shell, fat domain.** `src-tauri` is glue between the WebView and the pure-Rust `meety-core`. All audio, transcription, and pipeline logic lives in `meety-core`, untainted by `tauri::*` types so it stays testable, swappable, and reusable from CLIs or future plugins.
 
 ## TL;DR — the rules
 
@@ -15,7 +15,7 @@ The guiding philosophy: **thin shell, fat domain.** `src-tauri` is glue between 
 
 ## Command design
 
-A `#[tauri::command]` is an IPC adapter, nothing more. Its job is: deserialize args, fetch handles, call into `folio-core`, serialize the result.
+A `#[tauri::command]` is an IPC adapter, nothing more. Its job is: deserialize args, fetch handles, call into `meety-core`, serialize the result.
 
 From the Tauri 2 docs:
 
@@ -41,7 +41,7 @@ From the Tauri 2 docs:
   }
   ```
 
-- `StartRecordingOpts` / `RecordingId` are **wire DTOs** that live in `src-tauri/src/dto/`. They `impl From<DomainType>` and vice versa. `folio-core` never sees these.
+- `StartRecordingOpts` / `RecordingId` are **wire DTOs** that live in `src-tauri/src/dto/`. They `impl From<DomainType>` and vice versa. `meety-core` never sees these.
 - Async commands take owned `String` / `PathBuf`, never `&str`.
 
 **What does NOT belong in a command body:**
@@ -52,7 +52,7 @@ From the Tauri 2 docs:
 - Retry loops
 - Mixing two tracks
 
-All of that lives in `folio-core` behind a trait like `RecordingService`, `TranscriptionService`, called from a command via the `AppState`.
+All of that lives in `meety-core` behind a trait like `RecordingService`, `TranscriptionService`, called from a command via the `AppState`.
 
 **Long-running work:** a command should return in milliseconds. If the work takes longer (transcription, model download), the command should _spawn_ it on a background task owned by the state subsystem and return a handle. Subscribe to progress via a `tauri::ipc::Channel<T>` or `app.emit_to(...)`.
 
@@ -288,7 +288,7 @@ Current state vs target:
 
 ## Checklist for new commands
 
-- [ ] Body ≤ 30 lines, all real work delegated to `folio-core`.
+- [ ] Body ≤ 30 lines, all real work delegated to `meety-core`.
 - [ ] Returns `Result<T, CommandError>`, not `Result<T, String>`.
 - [ ] Async commands take owned args (no `&str`).
 - [ ] No `Mutex<T>` type in the command signature; commands take `State<'_, AppState>`.

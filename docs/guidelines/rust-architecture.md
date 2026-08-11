@@ -1,6 +1,6 @@
 # Rust workspace & module architecture — Meety guidelines
 
-Source-cited synthesis for organising the Meety workspace, drawing module boundaries, and shaping public APIs. Targets the multi-crate workspace (`folio-core`, `folio-cli`, `folio-app`) and is intended to be re-read whenever a new module, crate, or public type is added.
+Source-cited synthesis for organising the Meety workspace, drawing module boundaries, and shaping public APIs. Targets the multi-crate workspace (`meety-core`, `meety-cli`, `folio-app`) and is intended to be re-read whenever a new module, crate, or public type is added.
 
 ## TL;DR — the rules
 
@@ -17,11 +17,11 @@ Source-cited synthesis for organising the Meety workspace, drawing module bounda
 Current Meety layout (good):
 
 ```
-folio/
+meety/
   Cargo.toml                # virtual manifest: [workspace] + [workspace.dependencies] + [workspace.package]
   crates/
-    folio-core/            # framework-agnostic library
-    folio-cli/             # CLI test harness, depends on folio-core
+    meety-core/            # framework-agnostic library
+    meety-cli/             # CLI test harness, depends on meety-core
   src-tauri/                # Tauri shell, package name "folio-app"
   src/                      # React frontend
 ```
@@ -74,14 +74,14 @@ From [Effective Rust Item 22](https://effective-rust.com/visibility.html):
 
 > "Visibility changes can be hard to undo. Once a crate item is public, it can't be made private again without breaking any code that uses the crate."
 
-Practical Meety rule: Tauri command modules in `src-tauri/src/commands/` must be `pub` (Tauri's `generate_handler!` requires it); the `folio-core` helpers they call should be `pub(crate)` _unless_ `folio-cli` also needs them. Re-export the chosen API from `lib.rs`.
+Practical Meety rule: Tauri command modules in `src-tauri/src/commands/` must be `pub` (Tauri's `generate_handler!` requires it); the `meety-core` helpers they call should be `pub(crate)` _unless_ `meety-cli` also needs them. Re-export the chosen API from `lib.rs`.
 
 ### `pub use` facade pattern
 
 Hide implementation paths behind re-exports from the crate root:
 
 ```rust
-// crates/folio-core/src/lib.rs
+// crates/meety-core/src/lib.rs
 pub mod audio;          // public surface declared inline below
 pub mod transcription;
 pub mod storage;
@@ -168,7 +168,7 @@ impl Transcriber for OpenAiWhisper { /* … */ }
 
 The `Send + Sync + 'static` bounds aren't optional — they're what makes the trait usable from `tokio::spawn` and `tauri::State`.
 
-**Wrap external libraries, never let them leak.** If `whisper_rs::WhisperContext` appears in a `pub fn` signature in `folio-core`, you've lost. The whole point of the adapter is to absorb upstream churn.
+**Wrap external libraries, never let them leak.** If `whisper_rs::WhisperContext` appears in a `pub fn` signature in `meety-core`, you've lost. The whole point of the adapter is to absorb upstream churn.
 
 **Domain entities ≠ request DTOs.** `CreateTranscriptRequest` (what Tauri commands take), `Transcript` (the domain value), `TranscriptRow` (the SQLite/JSON shape) should be three distinct types, even if they currently have the same fields. Coupling them all into one struct is the single biggest source of churn in Rust apps at scale.
 
@@ -235,12 +235,12 @@ For items that must be technically public (macro-generated impls, cross-crate wo
 ## Meety-specific recommendations (priority order)
 
 1. **Adopt the `<name>.rs + <name>/` pattern** for all modules. Current code already does this except where files are short enough to live inline.
-2. **Mark public enums `#[non_exhaustive]`.** Top candidate: `MeetyError` in `crates/folio-core/src/error.rs`.
-3. **Tighten visibility** — sweep `folio-core` for `pub` items that only one other module uses, demote to `pub(crate)`. Each demotion frees you to refactor.
-4. **Split `folio-cli/src/main.rs` (600 lines) into per-subcommand modules** under `crates/folio-cli/src/commands/`. The main fn becomes the dispatch table.
+2. **Mark public enums `#[non_exhaustive]`.** Top candidate: `MeetyError` in `crates/meety-core/src/error.rs`.
+3. **Tighten visibility** — sweep `meety-core` for `pub` items that only one other module uses, demote to `pub(crate)`. Each demotion frees you to refactor.
+4. **Split `meety-cli/src/main.rs` (600 lines) into per-subcommand modules** under `crates/meety-cli/src/commands/`. The main fn becomes the dispatch table.
 5. **Split `voice_processing_capture.rs` (470 lines)** — the smoke-test type used only by the `vpio-smoke` CLI subcommand and the production `VoiceProcessingMicCapture` are two different concerns sharing a file. Move them into a `voice_processing_capture/` directory.
 6. **Consider hexagonal layering** (`domain/inbound/outbound`) as the next big refactor. Current layout (`audio/transcription/storage/llm`) is responsibility-based but mixes ports with adapters. Splitting trait definitions from concrete implementations is a 1-week project, not a single-PR change.
-7. **Run the API Guidelines checklist** against `folio-core`'s public surface once before tagging a release. Track gaps as issues.
+7. **Run the API Guidelines checklist** against `meety-core`'s public surface once before tagging a release. Track gaps as issues.
 
 ## Sources
 

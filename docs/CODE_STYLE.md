@@ -141,7 +141,7 @@ Tauri command and event names are exported constants from `src/shared/ipc/`, nev
 ### 3.1 Rust
 
 - Every error type derives from `thiserror` and lives next to its module.
-- The crate-level `MeetyError` enum in `crates/folio-core/src/error.rs` is the public surface that exits the library boundary. Module-local errors implement `From<…> for MeetyError`.
+- The crate-level `MeetyError` enum in `crates/meety-core/src/error.rs` is the public surface that exits the library boundary. Module-local errors implement `From<…> for MeetyError`.
 - No `unwrap` outside `#[cfg(test)]`. `expect("<reason>")` is permitted for invariants that genuinely cannot fail; the reason text must explain the invariant.
 - Errors that cross IPC into Tauri commands convert to `String` at the boundary, not earlier.
 - `Result<T>` aliases the crate's `Result<T, MeetyError>`; module-local results may use `Result<T, MyError>` directly.
@@ -176,7 +176,7 @@ Tauri command and event names are exported constants from `src/shared/ipc/`, nev
 
 ### 5.1 What needs tests
 
-- **Every public function in `folio-core` that has logic.** Pure helpers (`atomic_write`, `locate_span`, `enforce_cap`, `judge`, `decide`) are non-negotiable.
+- **Every public function in `meety-core` that has logic.** Pure helpers (`atomic_write`, `locate_span`, `enforce_cap`, `judge`, `decide`) are non-negotiable.
 - **Every Tauri command that does work the React side could not.** Validate path traversal guards, atomic writes, IPC contract.
 - **Behaviour, not implementation.** Tests that read like the spec survive refactors; tests that assert internal call orders die on the next refactor.
 
@@ -237,7 +237,7 @@ Every Tauri command follows this shape:
 pub async fn do_thing(state: State<'_, AppState>, input: Input) -> Result<Output, String> {
     let cloned = state.settings.lock().some_field.clone();
     tauri::async_runtime::spawn_blocking(move || -> Result<Output, MeetyError> {
-        folio_core::module::do_thing(cloned, input)
+        meety_core::module::do_thing(cloned, input)
     })
     .await
     .map_err(|e| format!("task panicked: {e}"))?
@@ -249,7 +249,7 @@ The contract:
 
 1. Parse IPC args; nothing else happens before the validation step.
 2. Clone every `State` field needed for the blocking work, then drop the `State` guard before any `.await`.
-3. Delegate to `folio-core` — the command body does not contain domain logic.
+3. Delegate to `meety-core` — the command body does not contain domain logic.
 4. Map errors at the boundary (`MeetyError → String`); the conversion happens once, here, not deeper.
 5. Emit events for long-running work (`window.emit("transcribe:progress", …)`) instead of returning a giant payload.
 
@@ -332,7 +332,7 @@ PRs that plausibly affect any of these (audio capture, model load, route splitti
 
 ### 8.6 Deep links + remote content
 
-- The `folio://` deep-link handler parses each URL against an explicit allowlist of routes and parameters before navigating. Anything outside the allowlist is logged and dropped.
+- The `meety://` deep-link handler parses each URL against an explicit allowlist of routes and parameters before navigating. Anything outside the allowlist is logged and dropped.
 - No remote content loads into privileged windows. CSP stays strict; embedded preview iframes are sandboxed.
 - LLM markdown/HTML output runs through a sanitiser (`src/shared/ui/markdown.tsx`) before render. `dangerouslySetInnerHTML` on untrusted input is a release-blocking bug.
 
@@ -342,11 +342,11 @@ PRs that plausibly affect any of these (audio capture, model load, route splitti
 
 ### 9.1 Crate boundaries (layer dependency rule)
 
-- `folio-core` MUST NOT import Tauri, browser APIs, or anything UI-framework-flavoured. The same code compiles for the CLI and the desktop app.
+- `meety-core` MUST NOT import Tauri, browser APIs, or anything UI-framework-flavoured. The same code compiles for the CLI and the desktop app.
 - `src-tauri` (the Tauri shell) MUST NOT import React internals, CSS, or route logic. It exposes commands and events; the React layer consumes them.
-- `src/` (the React layer) MUST NOT perform direct filesystem access via the browser. Anything that needs disk goes through a Tauri command. The React layer also MUST NOT contain Rust-domain logic equivalents (re-implementing what `folio-core` already does).
-- `folio-cli` and `src-tauri` both consume `folio-core` and do not call each other.
-- Public types that will cross the UniFFI boundary live in `crates/folio-core/src/ffi/`.
+- `src/` (the React layer) MUST NOT perform direct filesystem access via the browser. Anything that needs disk goes through a Tauri command. The React layer also MUST NOT contain Rust-domain logic equivalents (re-implementing what `meety-core` already does).
+- `folio-cli` and `src-tauri` both consume `meety-core` and do not call each other.
+- Public types that will cross the UniFFI boundary live in `crates/meety-core/src/ffi/`.
 - macOS-specific Rust code lives behind `#[cfg(target_os = "macos")]` and is documented in the module doc-comment. Cross-platform code is the default.
 
 ### 9.2 Frontend boundaries
@@ -355,7 +355,7 @@ PRs that plausibly affect any of these (audio capture, model load, route splitti
 - `src/shared/` is the cross-feature surface: `ui/` (design system), `lib/` (helpers + IPC), `hooks/`, `stores/`, `types/`. The `types/` folder is auto-generated from Rust via `ts-rs`; NEVER hand-edit a file in there.
 - `src/chrome/` is the app shell: sidebar, drag strip, deep-link handler, dialogs that cross features.
 - Promotion to `src/shared/` requires reuse by two or more features. A "shared" module used by exactly one feature belongs in that feature directory.
-- Zustand stores hold UI state and cached query results only — never authoritative domain state. The Rust `folio-core::storage::*` modules own the durable truth; React stores are a mirror.
+- Zustand stores hold UI state and cached query results only — never authoritative domain state. The Rust `meety-core::storage::*` modules own the durable truth; React stores are a mirror.
 - Effects that subscribe to Tauri events MUST return a cleanup function:
   ```ts
   React.useEffect(() => {
@@ -447,10 +447,10 @@ Before merging anything that touches the public README, license, install instruc
 - [ ] No inline `//` body comments (Section 1).
 - [ ] No hardcoded user paths (`/Users/<name>/…`) outside tests.
 - [ ] No API keys, JWTs, signing secrets in the diff. Run `git diff main --name-only | xargs grep -l 'sk-\|sk_\|Bearer '` and verify the matches.
-- [ ] Every new dependency has a license compatible with Apache-2.0.
+- [ ] Every new dependency has a license compatible with MIT.
 - [ ] Every new public Rust type has a doc-comment.
 - [ ] Every new React component has a JSDoc above the export.
-- [ ] Layer dependency rule (§9.1) holds: `folio-core` imports no Tauri/browser, `src-tauri` imports no React, `src` imports no Rust-equivalent logic.
+- [ ] Layer dependency rule (§9.1) holds: `meety-core` imports no Tauri/browser, `src-tauri` imports no React, `src` imports no Rust-equivalent logic.
 - [ ] No direct `@tauri-apps/api/core` import outside `src/shared/ipc/` / `src/shared/lib/ipc.ts` (§9.4).
 - [ ] Every new Tauri command that takes a path canonicalises it (§8.1) and has a path-traversal test (§5.5).
 - [ ] `ts-rs` regeneration produces a zero-diff result against the committed `src/shared/types/`.

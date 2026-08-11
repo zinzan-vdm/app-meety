@@ -30,14 +30,14 @@ Run this once per major rotation. The private key stays in GitHub Secrets; the p
 
 ```sh
 # 1. Generate the keypair (writes to ~/.tauri/<name>.key and .key.pub)
-bunx @tauri-apps/cli signer generate -w ~/.tauri/folio-updater
+bunx @tauri-apps/cli signer generate -w ~/.tauri/meety-updater
 
 # 2. Copy the public key into tauri.conf.json
-cat ~/.tauri/folio-updater.pub
+cat ~/.tauri/meety-updater.pub
 # → replace the "pubkey" value under plugins.updater in src-tauri/tauri.conf.json
 
 # 3. Copy the private key into GitHub Secrets as TAURI_SIGNING_PRIVATE_KEY
-cat ~/.tauri/folio-updater
+cat ~/.tauri/meety-updater
 # → paste into the secret, including the password used during generate
 
 # 4. Commit the pubkey change in src-tauri/tauri.conf.json. Push.

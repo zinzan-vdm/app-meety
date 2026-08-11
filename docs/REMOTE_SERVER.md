@@ -46,7 +46,7 @@ or multiple workers scale this out later without changing the contract.
 
 The server must return transcripts that deserialize, unchanged, into the Rust
 `SessionTranscript` written to disk by the client
-(`crates/folio-core/src/transcription/mod.rs`):
+(`crates/meety-core/src/transcription/mod.rs`):
 
 ```jsonc
 {
@@ -105,7 +105,7 @@ interrupted upload (Mac sleep, flaky link) resumes rather than restarts:
 - response — `{ "offset": <new size>, "complete": <bool> }`.
 
 This mirrors the client's existing chunk state machine in
-`crates/folio-core/src/transcription/upload_state.rs`.
+`crates/meety-core/src/transcription/upload_state.rs`.
 
 ## Sync lifecycle (client side)
 
@@ -186,5 +186,5 @@ The full flow was exercised against a live server with the real faster-whisper
 engine (CPU, `tiny`): register → resumable two-chunk upload of a WAV → worker
 job `succeeded` → transcript fetched in the exact `SessionTranscript` shape,
 e.g. `{"channels":[{"channel":"mic","language":"en","segments":[{"start_seconds":0.0,
-"end_seconds":4.64,"text":"Hello, this is a folio remote transcription test …"}]}]}`.
+"end_seconds":4.64,"text":"Hello, this is a meety remote transcription test …"}]}]}`.
 Reproduce with `server/scripts/smoke_e2e.py`.

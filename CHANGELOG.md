@@ -38,7 +38,7 @@ All notable changes to Meety are documented here. The format follows
   - **Short claim.** The exposure that is now closed.
 
   Then add a link reference at the bottom of the file:
-  [X.Y.Z]: https://github.com/woosal1337/folio/releases/tag/vX.Y.Z
+  [X.Y.Z]: https://github.com/zinzan-vdm/app-meety/releases/tag/vX.Y.Z
   ───────────────────────────────────────────────────────────────────────────
 -->
 

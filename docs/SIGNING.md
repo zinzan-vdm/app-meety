@@ -104,7 +104,7 @@ codesign --force --options runtime --timestamp \
 
 ## Permissions on first launch
 
-Because the app is signed with a stable identity (`dev.folio.app`) and ships the
+Because the app is signed with a stable identity (`dev.meety.app`) and ships the
 `NS*UsageDescription` strings plus `CFBundleDisplayName = "Meety"`, the first-run
 TCC prompts show **"Meety"** with the app icon, and the grants persist across
 updates (TCC binds permissions to the code signature). Unsigned local builds get

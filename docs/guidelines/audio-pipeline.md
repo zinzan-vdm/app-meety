@@ -118,7 +118,7 @@ let resampler = FftFixedIn::<f32>::new(
 )?;
 ```
 
-This is exactly the pattern Meety's `VoiceProcessingMicCapture` uses — see `crates/folio-core/src/audio/voice_processing_capture.rs`. CPAL takes the same philosophy: `SupportedStreamConfig` returns what the device can actually do, never what you wished it could do.
+This is exactly the pattern Meety's `VoiceProcessingMicCapture` uses — see `crates/meety-core/src/audio/voice_processing_capture.rs`. CPAL takes the same philosophy: `SupportedStreamConfig` returns what the device can actually do, never what you wished it could do.
 
 **Channel handling.** VPIO is typically mono-in. ScreenCaptureKit is stereo by default. Downmix stereo → mono on the consumer thread with `(L + R) * 0.5` — Whisper does not benefit from sophisticated downmixing.
 
@@ -157,7 +157,7 @@ You cannot CI-test a real microphone. Decouple early.
 
 1. **Pure DSP units take slices, return slices.** Resampling, downmix, RMS, gain. Trivially testable: feed a known sine, assert the output spectrum or RMS within tolerance.
 2. **Callback shim takes a trait.** Define `trait AudioSink { fn write(&mut self, samples: &[f32]); }`. The real callback owns a `RingbufProducerSink`; tests own a `Vec<f32>`-backed sink. The callback function is generic over the sink and never references a real device.
-3. **Fixture WAVs.** Check in short (~5 s) WAV files under `crates/folio-core/tests/fixtures/` covering:
+3. **Fixture WAVs.** Check in short (~5 s) WAV files under `crates/meety-core/tests/fixtures/` covering:
    - Silence
    - 1 kHz sine
    - Pink noise
@@ -190,7 +190,7 @@ You cannot CI-test a real microphone. Decouple early.
 3. **Adopt `assert_no_alloc` in debug builds** on the audio callback path. Catches the "I added a `format!` to a log line" regression immediately.
 4. **Swap `Arc<Mutex<AudioWavWriter>>` for an mpsc-channel-owned writer** in a future refactor. Today's shape works but doesn't follow §5's "two safe shapes."
 5. **Define `trait AudioSink` and `RingbufProducerSink`** so the cpal mic capture, the VPIO mic capture, and the system capture all funnel through the same testable interface.
-6. **Add fixture WAVs** for the silence, 1 kHz sine, and pink noise tests under `crates/folio-core/tests/fixtures/`.
+6. **Add fixture WAVs** for the silence, 1 kHz sine, and pink noise tests under `crates/meety-core/tests/fixtures/`.
 
 ## Sources
 

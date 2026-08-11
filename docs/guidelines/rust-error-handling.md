@@ -1,6 +1,6 @@
 # Rust error handling — Meety guidelines
 
-Source-cited synthesis for the Meety codebase. Targets `folio-core`, `folio-cli`, and the `src-tauri` shell. Use this doc when adding new error variants, designing fallible APIs, or wiring an error across the Tauri IPC boundary.
+Source-cited synthesis for the Meety codebase. Targets `meety-core`, `folio-cli`, and the `src-tauri` shell. Use this doc when adding new error variants, designing fallible APIs, or wiring an error across the Tauri IPC boundary.
 
 ## TL;DR — the rules
 
@@ -16,8 +16,8 @@ Source-cited synthesis for the Meety codebase. Targets `folio-core`, `folio-cli`
 
 > "Do you expect the caller to behave differently based on the failure mode? Use an error enumeration. Do you expect the caller to just give up? Use an opaque error." — [Luca Palmieri](https://www.lpalmieri.com/posts/error-handling-rust/)
 
-- **`thiserror` in `folio-core`**: every public function's `Err` variant is a thing a caller might match on. `LocalWhisperTranscriber::transcribe` returning `Err(TranscriptionError::ModelMissing { path })` lets the frontend show a "download the model" CTA.
-- **`anyhow` in `folio-cli` and `src-tauri`**: these crates do glue work. They take a Result from `folio-core`, add context with `.with_context(||...)`, and either log-and-exit (`main`) or convert to the IPC error shape (Tauri commands).
+- **`thiserror` in `meety-core`**: every public function's `Err` variant is a thing a caller might match on. `LocalWhisperTranscriber::transcribe` returning `Err(TranscriptionError::ModelMissing { path })` lets the frontend show a "download the model" CTA.
+- **`anyhow` in `folio-cli` and `src-tauri`**: these crates do glue work. They take a Result from `meety-core`, add context with `.with_context(||...)`, and either log-and-exit (`main`) or convert to the IPC error shape (Tauri commands).
 
 ```rust
 // folio-cli/src/commands/transcribe.rs
@@ -181,7 +181,7 @@ tracing::warn!(error = %err, file = ?path, "transcription failed");
 
 ## Practical migration notes for Meety
 
-Current state: single `MeetyError` enum at `crates/folio-core/src/error.rs`, ~15 variants.
+Current state: single `MeetyError` enum at `crates/meety-core/src/error.rs`, ~15 variants.
 
 Recommended changes (priority order):
 

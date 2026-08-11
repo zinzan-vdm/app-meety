@@ -1,6 +1,6 @@
 # Rust async & concurrency — Meety guidelines
 
-Source-cited guidance for writing async code in Meety's Tauri 2 shell and the underlying `folio-core` library. Covers Tokio patterns, `Send`/`Sync` boundaries for FFI handles, the audio realtime callback rules, and cancellation safety.
+Source-cited guidance for writing async code in Meety's Tauri 2 shell and the underlying `meety-core` library. Covers Tokio patterns, `Send`/`Sync` boundaries for FFI handles, the audio realtime callback rules, and cancellation safety.
 
 ## TL;DR — the rules
 
@@ -208,8 +208,8 @@ pub async fn start_transcription(
 ## Meety-specific async pitfalls observed
 
 - The CLI `folio-cli` currently uses `std::thread::sleep(Duration::from_secs(args.seconds))` from sync `main` — fine for a CLI test harness, but don't copy this pattern into the Tauri shell.
-- `CaptureSession` uses `unsafe impl Send` (in `crates/folio-core/src/audio/capture.rs`) with a `// SAFETY:` justification noting that the cpal `Stream` is Send-via-Mutex-discipline. This is acceptable; the alternative would be a major restructure to keep the stream pinned to one owner thread (per the [Send/Sync](#send--sync-for-ffi-handles) guidance above). Revisit in a future refactor.
-- Tauri command bodies in `src-tauri/src/commands/` are appropriately thin — most are <50 lines and delegate to `folio-core`. Keep it that way; resist adding business logic to commands.
+- `CaptureSession` uses `unsafe impl Send` (in `crates/meety-core/src/audio/capture.rs`) with a `// SAFETY:` justification noting that the cpal `Stream` is Send-via-Mutex-discipline. This is acceptable; the alternative would be a major restructure to keep the stream pinned to one owner thread (per the [Send/Sync](#send--sync-for-ffi-handles) guidance above). Revisit in a future refactor.
+- Tauri command bodies in `src-tauri/src/commands/` are appropriately thin — most are <50 lines and delegate to `meety-core`. Keep it that way; resist adding business logic to commands.
 
 ## Sources
 
