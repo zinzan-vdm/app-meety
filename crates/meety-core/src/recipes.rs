@@ -2,7 +2,7 @@ use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
-const RECIPES_DIR: &str = ".folio/recipes";
+const RECIPES_DIR: &str = ".meety/recipes";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserRecipe {
@@ -56,7 +56,7 @@ mod tests {
     #[test]
     fn load_parses_minimal_recipe() {
         let dir = tempfile::tempdir().unwrap();
-        let recipes_dir = dir.path().join(".folio/recipes");
+        let recipes_dir = dir.path().join(".meety/recipes");
         std::fs::create_dir_all(&recipes_dir).unwrap();
         std::fs::write(
             recipes_dir.join("standup.toml"),
@@ -73,7 +73,7 @@ mod tests {
     #[test]
     fn load_skips_non_toml_and_malformed_files() {
         let dir = tempfile::tempdir().unwrap();
-        let recipes_dir = dir.path().join(".folio/recipes");
+        let recipes_dir = dir.path().join(".meety/recipes");
         std::fs::create_dir_all(&recipes_dir).unwrap();
         std::fs::write(
             recipes_dir.join("good.toml"),
@@ -90,7 +90,7 @@ mod tests {
     #[test]
     fn load_parses_icon_field() {
         let dir = tempfile::tempdir().unwrap();
-        let recipes_dir = dir.path().join(".folio/recipes");
+        let recipes_dir = dir.path().join(".meety/recipes");
         std::fs::create_dir_all(&recipes_dir).unwrap();
         std::fs::write(
             recipes_dir.join("r.toml"),

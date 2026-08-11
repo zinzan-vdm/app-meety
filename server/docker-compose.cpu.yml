@@ -5,12 +5,12 @@ services:
       dockerfile: Dockerfile
     env_file: .env
     environment:
-      FOLIO_DATABASE_URL: sqlite+aiosqlite:////data/folio.db
+      MEETY_DATABASE_URL: sqlite+aiosqlite:////data/meety.db
       FOLIO_STORAGE_DIR: /data/blobs
     ports:
       - "8080:8080"
     volumes:
-      - folio-data:/data
+      - meety-data:/data
     restart: unless-stopped
 
   worker:
@@ -19,15 +19,15 @@ services:
       dockerfile: Dockerfile.worker.cpu
     env_file: .env
     environment:
-      FOLIO_DATABASE_URL: sqlite+aiosqlite:////data/folio.db
+      MEETY_DATABASE_URL: sqlite+aiosqlite:////data/meety.db
       FOLIO_STORAGE_DIR: /data/blobs
-      FOLIO_WHISPER_DEVICE: cpu
-      FOLIO_WHISPER_COMPUTE_TYPE: int8
+      MEETY_WHISPER_DEVICE: cpu
+      MEETY_WHISPER_COMPUTE_TYPE: int8
     volumes:
-      - folio-data:/data
+      - meety-data:/data
     depends_on:
       - api
     restart: unless-stopped
 
 volumes:
-  folio-data:
+  meety-data:

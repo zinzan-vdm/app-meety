@@ -11,7 +11,7 @@ def test_production_refuses_default_jwt_secret():
     enforce_production_config(ok)
 
     bad = Settings(environment="production", jwt_secret=DEFAULT_JWT_SECRET)
-    with pytest.raises(RuntimeError, match="FOLIO_JWT_SECRET"):
+    with pytest.raises(RuntimeError, match="MEETY_JWT_SECRET"):
         enforce_production_config(bad)
 
 

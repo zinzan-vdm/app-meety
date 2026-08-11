@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("Personal referral link renders in monospace", async ({ page }) => {
-  await expect(page.getByText(/join\.folio\.app\/t\//i).first()).toBeVisible();
+  await expect(page.getByText(/join\.meety\.app\/t\//i).first()).toBeVisible();
 });
 
 test("Copy button writes the link to the clipboard", async ({ page, context }) => {
@@ -20,20 +20,20 @@ test("Copy button writes the link to the clipboard", async ({ page, context }) =
     .first()
     .click();
   const text = await page.evaluate(() => navigator.clipboard.readText());
-  expect(text).toMatch(/join\.folio\.app\/t\//i);
+  expect(text).toMatch(/join\.meety\.app\/t\//i);
 });
 
 test("Email button generates a mailto: link with the share URL embedded", async ({
   page,
 }) => {
   const emailLink = page.getByRole("link", { name: /^email$/i });
-  await expect(emailLink).toHaveAttribute("href", /^mailto:.*join\.folio\.app/i);
+  await expect(emailLink).toHaveAttribute("href", /^mailto:.*join\.meety\.app/i);
 });
 
 test("Three rules + three-step explainer render", async ({ page }) => {
   await expect(page.getByText(/^share your link/i)).toBeVisible();
   await expect(page.getByText(/work email/i).first()).toBeVisible();
-  await expect(page.getByText(/already have an folio workspace/i)).toBeVisible();
+  await expect(page.getByText(/already have a meety workspace/i)).toBeVisible();
 });
 
 test("Referrals tab does NOT trigger an unauthorized backend call on first open", async ({

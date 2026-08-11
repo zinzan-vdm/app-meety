@@ -49,8 +49,8 @@ pub fn run(args: EnhanceCompareArgs) -> Result<()> {
     println!("atten cap    {:.1} dB", cfg.atten_lim_db);
     println!();
     println!("Compare transcripts (raw vs enhanced) to judge the WER impact:");
-    println!("  folio-cli transcribe {} --library", input.display());
-    println!("  folio-cli transcribe {} --library", out.display());
+    println!("  meety-cli transcribe {} --library", input.display());
+    println!("  meety-cli transcribe {} --library", out.display());
 
     Ok(())
 }

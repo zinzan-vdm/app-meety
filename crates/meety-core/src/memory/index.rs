@@ -598,11 +598,11 @@ mod tests {
         let m = make(
             &Uuid::now_v7().to_string(),
             MemoryKind::Claim,
-            Some("project.folio"),
+            Some("project.meety"),
             "shipping memory layer v1",
         );
         idx.upsert(&m, None).unwrap();
-        let hits = idx.search("folio", None, &[], 5, false).unwrap();
+        let hits = idx.search("meety", None, &[], 5, false).unwrap();
         assert_eq!(hits.len(), 1);
         let hits = idx.search("memory", None, &[], 5, false).unwrap();
         assert_eq!(hits.len(), 1);

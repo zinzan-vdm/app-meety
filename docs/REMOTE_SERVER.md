@@ -173,7 +173,7 @@ default: the worker reserves an NVIDIA device and runs faster-whisper on CUDA.
 - `server/docker-compose.cpu.yml` + `Dockerfile.worker.cpu` — a CPU-only stack
   for boxes without a GPU (`./deploy.sh cpu`).
 - Persistence defaults to SQLite on a Docker volume (WAL mode, shared by api +
-  worker); set `FOLIO_DATABASE_URL` to a Postgres DSN for heavier / multi-worker
+  worker); set `MEETY_DATABASE_URL` to a Postgres DSN for heavier / multi-worker
   use.
 - TLS is terminated by Coolify's proxy in front of the API; the app points at
   `https://your-domain`.

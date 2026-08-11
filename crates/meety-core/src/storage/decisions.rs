@@ -8,7 +8,7 @@ use uuid::Uuid;
 
 use crate::error::{MeetyError, Result};
 
-const DECISIONS_DIR: &str = ".folio/decisions";
+const DECISIONS_DIR: &str = ".meety/decisions";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, TS)]
 #[ts(export, export_to = "../../../src/shared/types/")]

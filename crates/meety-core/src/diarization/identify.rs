@@ -128,12 +128,12 @@ pub fn recording_uuid(session_dir: &Path) -> Uuid {
         .file_name()
         .and_then(|s| s.to_str())
         .unwrap_or("session");
-    stable_uuid(format!("folio-recording:{name}").as_bytes())
+    stable_uuid(format!("meety-recording:{name}").as_bytes())
 }
 
 pub fn local_device_uuid() -> Uuid {
-    let home = std::env::var("HOME").unwrap_or_else(|_| "folio-local-device".to_string());
-    stable_uuid(format!("folio-device:{home}").as_bytes())
+    let home = std::env::var("HOME").unwrap_or_else(|_| "meety-local-device".to_string());
+    stable_uuid(format!("meety-device:{home}").as_bytes())
 }
 
 pub fn now_ms() -> i64 {

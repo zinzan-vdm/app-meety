@@ -26,7 +26,7 @@ test("Remote server — selectable, shows the server summary and auto-upload", a
   await tile.click();
   await expect(tile).toHaveAttribute("aria-pressed", "true");
 
-  await expect(page.getByText(/folio server/i).first()).toBeVisible();
+  await expect(page.getByText(/meety server/i).first()).toBeVisible();
   await expect(page.getByText(/no endpoint configured/i)).toBeVisible();
   await expect(page.getByText(/not signed in/i)).toBeVisible();
   await expect(page.getByRole("switch", { name: /auto-upload/i })).toBeVisible();

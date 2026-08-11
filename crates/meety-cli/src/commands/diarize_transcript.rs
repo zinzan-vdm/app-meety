@@ -43,7 +43,7 @@ pub fn run(args: DiarizeTranscriptArgs) -> Result<()> {
         outcome.num_labeled, outcome.num_segments, outcome.num_speakers
     );
     println!("updated {}", transcript_path.display());
-    println!("re-open the note in folio to see Speaker 1/2/3…");
+    println!("re-open the note in meety to see Speaker 1/2/3…");
     Ok(())
 }
 

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { classifyDeepLink } from "./deep-link-allowlist";
 
 describe("classifyDeepLink", () => {
-  it("classifies an allowed folio:// route", () => {
+  it("classifies an allowed meety:// route", () => {
     const verdict = classifyDeepLink("meety://library");
     expect(verdict.kind).toBe("allowed-meety-route");
     if (verdict.kind === "allowed-meety-route") {
@@ -51,7 +51,7 @@ describe("classifyDeepLink", () => {
     }
   });
 
-  it("rejects non-folio schemes that are not audio files", () => {
+  it("rejects non-meety schemes that are not audio files", () => {
     const verdict = classifyDeepLink("javascript:alert(1)");
     expect(verdict.kind).toBe("rejected");
     if (verdict.kind === "rejected") {
@@ -67,7 +67,7 @@ describe("classifyDeepLink", () => {
     }
   });
 
-  it("rejects an empty folio:// (no route)", () => {
+  it("rejects an empty meety:// (no route)", () => {
     const verdict = classifyDeepLink("meety://");
     expect(verdict.kind).toBe("rejected");
     if (verdict.kind === "rejected") {

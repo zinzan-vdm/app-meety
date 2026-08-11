@@ -18,7 +18,7 @@ fn default_app_support_dir() -> PathBuf {
     }
     #[cfg(not(target_os = "macos"))]
     {
-        home.join(".local").join("share").join("folio")
+        home.join(".local").join("share").join("meety")
     }
 }
 

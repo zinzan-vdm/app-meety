@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use clap::{Parser, Subcommand};
 
 #[derive(Parser, Debug)]
-#[command(name = "folio-cli")]
+#[command(name = "meety-cli")]
 #[command(version)]
 #[command(about = "Meety CLI test harness", long_about = None)]
 pub struct Cli {

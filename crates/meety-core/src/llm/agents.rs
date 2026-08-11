@@ -188,7 +188,7 @@ agent reading it cold understands what's true.\n\
 \n\
 Use the kinds like this:\n\
   - `claim` for facts about the user or their projects (`user.company`, \
-`user.role`, `project.folio.status`, `project.folio.next-deadline`).\n\
+`user.role`, `project.meety.status`, `project.meety.next-deadline`).\n\
   - `pref` for stated preferences (`ui.theme`, `comms.style`, \
 `meetings.format`).\n\
   - `person` for someone the user works with — key is the canonical handle \

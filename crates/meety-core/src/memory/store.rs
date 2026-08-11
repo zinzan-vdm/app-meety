@@ -351,7 +351,7 @@ mod tests {
             .unwrap();
         s.create(nm(
             MemoryKind::Claim,
-            Some("project.folio"),
+            Some("project.meety"),
             "shipping memory v1",
         ))
         .unwrap();

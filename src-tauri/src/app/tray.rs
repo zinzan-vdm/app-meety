@@ -3,11 +3,11 @@ use tauri::menu::{Menu, MenuItem, PredefinedMenuItem};
 use tauri::tray::TrayIconBuilder;
 use tauri::{AppHandle, Emitter, Manager, Runtime};
 
-const TRAY_ID: &str = "folio-menubar";
+const TRAY_ID: &str = "meety-menubar";
 const MENU_START: &str = "start_recording";
 const MENU_STOP: &str = "stop_recording";
-const MENU_OPEN: &str = "open_folio";
-const MENU_QUIT: &str = "quit_folio";
+const MENU_OPEN: &str = "open_meety";
+const MENU_QUIT: &str = "quit_meety";
 
 const ICON_SIZE: u32 = 22;
 

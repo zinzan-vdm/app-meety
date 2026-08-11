@@ -17,7 +17,7 @@ test("sign out from Settings → Profile routes back to signup", async ({ page }
     .first()
     .click();
 
-  await expect(page.getByRole("heading", { name: /welcome to folio/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /welcome to meety/i })).toBeVisible();
   await expect(page.getByRole("navigation")).toHaveCount(0);
 
   const calls = await ipcCalls(page, "auth_logout");
@@ -37,7 +37,7 @@ test("re-sign-in after sign out lands directly on main app (no workspace setup)"
     .first()
     .click();
 
-  await expect(page.getByRole("heading", { name: /welcome to folio/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /welcome to meety/i })).toBeVisible();
   await page.getByPlaceholder(/you@company\.com/i).fill("ege@clinora.ai");
   await page
     .getByRole("button", { name: /^continue$/i })

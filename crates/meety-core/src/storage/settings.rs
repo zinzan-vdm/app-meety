@@ -161,7 +161,7 @@ fn default_memory_dir() -> PathBuf {
         .join("obsidian.md")
         .join("me");
     if vault_root.is_dir() {
-        vault_root.join("meetings").join(".folio").join("memory")
+        vault_root.join("meetings").join(".meety").join("memory")
     } else {
         home.join("Documents").join("Meety").join("Memory")
     }
@@ -169,12 +169,12 @@ fn default_memory_dir() -> PathBuf {
 
 impl Default for Settings {
     fn default() -> Self {
-        let folio = default_home_dir();
+        let meety_dir = default_home_dir();
         Self {
             mic_device: None,
             system_audio_enabled: true,
-            output_dir: folio.join("Recordings"),
-            tasks_path: folio.join("Tasks").join("tasks.json"),
+            output_dir: meety_dir.join("Recordings"),
+            tasks_path: meety_dir.join("Tasks").join("tasks.json"),
             theme: default_theme(),
             transcriber: default_provider(),
             transcription_language: default_language(),
@@ -291,7 +291,7 @@ fn default_settings_path() -> PathBuf {
     }
     #[cfg(not(target_os = "macos"))]
     {
-        home.join(".config").join("folio").join("settings.json")
+        home.join(".config").join("meety").join("settings.json")
     }
 }
 

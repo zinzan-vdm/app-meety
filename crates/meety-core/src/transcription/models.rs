@@ -230,7 +230,7 @@ fn default_models_dir() -> PathBuf {
     {
         home.join(".local")
             .join("share")
-            .join("folio")
+            .join("meety")
             .join("models")
     }
 }

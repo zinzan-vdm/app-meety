@@ -1,5 +1,5 @@
 [project]
-name = "folio-server"
+name = "meety-server"
 version = "0.1.0"
 description = "Self-hostable GPU transcription backend for Meety"
 requires-python = ">=3.11"

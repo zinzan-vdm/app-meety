@@ -42,7 +42,7 @@ voice_activity_detector = "0.2"
 # the sherpa-onnx C library (Apache-2.0). Runs the
 # segmentation + speaker-embedding + clustering pipeline locally with no
 # Python sidecar. Models live under
-# ~/Library/Application Support/folio/models/diarization/ and are
+# ~/Library/Application Support/meety/models/diarization/ and are
 # downloaded on first use. Plan:
 sherpa-onnx = "1.13"
 
@@ -142,7 +142,7 @@ serde_json = "1.0"
 serde_norway = "0.9"
 
 # TOML parser/serializer for user-editable agent + template files
-# under <vault>/.folio/agents/ and .folio/templates/. v2 finding
+# under <vault>/.meety/agents/ and .meety/templates/. v2 finding
 # 022 / GET-35.
 toml = "0.8"
 
@@ -162,13 +162,13 @@ psimple = { package = "libpulse-simple-binding", version = "2" }
 urlencoding = "2"
 
 # TypeScript binding generation for the Tauri IPC surface. Types in
-# folio-core that cross the IPC boundary derive `TS` and the bindings
+# meety-core that cross the IPC boundary derive `TS` and the bindings
 # are emitted into `src/lib/generated/` during `cargo test`.
 ts-rs = { version = "12", features = ["serde-compat", "chrono-impl"] }
 
 # Local Whisper inference via whisper.cpp. Builds whisper.cpp from
 # source the first time — first cargo build picks up a noticeable
-# extra few minutes. Metal acceleration is enabled in folio-core's
+# extra few minutes. Metal acceleration is enabled in meety-core's
 # Cargo.toml on macOS.
 whisper-rs = { version = "0.13", default-features = false }
 
@@ -182,7 +182,7 @@ tauri-build = { version = "2", features = [] }
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-opener = "2"
-# Deep-link plugin: registers the folio:// URL scheme and forwards
+# Deep-link plugin: registers the meety:// URL scheme and forwards
 # OS file-open events (drag-drop on the dock icon, double-click in
 # Finder) to the running app. v2 finding 081 / GET-103.
 tauri-plugin-deep-link = "2"

@@ -15,12 +15,12 @@ test.describe("Onboarding — fresh signup", () => {
     await page.goto("/");
 
     await expect(
-      page.getByRole("heading", { name: /allow folio to transcribe/i })
+      page.getByRole("heading", { name: /allow meety to transcribe/i })
     ).toBeVisible();
     await page.getByRole("button", { name: /^continue$/i }).click();
 
     await expect(
-      page.getByRole("heading", { name: /welcome to folio/i })
+      page.getByRole("heading", { name: /welcome to meety/i })
     ).toBeVisible();
     await page.getByPlaceholder(/you@company\.com/i).fill("ege@clinora.ai");
     await page
@@ -52,7 +52,7 @@ test.describe("Onboarding — fresh signup", () => {
     await page.getByRole("button", { name: /^continue$/i }).click();
 
     await expect(
-      page.getByRole("heading", { name: /welcome to folio/i })
+      page.getByRole("heading", { name: /welcome to meety/i })
     ).toBeVisible();
     await page.getByRole("button", { name: /i.?m ready/i }).click();
 
@@ -76,7 +76,7 @@ test.describe("Onboarding — fresh signup", () => {
     });
     await page.goto("/");
     await expect(
-      page.getByRole("heading", { name: /allow folio to transcribe/i })
+      page.getByRole("heading", { name: /allow meety to transcribe/i })
     ).toBeVisible();
     await expect(page.getByRole("navigation")).toHaveCount(0);
   });
@@ -93,7 +93,7 @@ test.describe("Onboarding — returning user", () => {
     await page.goto("/");
 
     await expect(
-      page.getByRole("heading", { name: /welcome to folio/i })
+      page.getByRole("heading", { name: /welcome to meety/i })
     ).toBeVisible();
     await page.getByPlaceholder(/you@company\.com/i).fill("ege@clinora.ai");
     await page

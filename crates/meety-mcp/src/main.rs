@@ -293,7 +293,7 @@ fn main() -> Result<()> {
                 json!({
                     "protocolVersion": "2024-11-05",
                     "capabilities": { "tools": {} },
-                    "serverInfo": { "name": "folio", "version": env!("CARGO_PKG_VERSION") },
+                    "serverInfo": { "name": "meety", "version": env!("CARGO_PKG_VERSION") },
                 }),
             )),
             "tools/list" => Some(ok(id, json!({ "tools": tools_list() }))),

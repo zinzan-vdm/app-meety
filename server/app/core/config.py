@@ -7,7 +7,7 @@ DEFAULT_JWT_SECRET = "change-me-in-production"
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_prefix="FOLIO_", env_file=".env", extra="ignore"
+        env_prefix="MEETY_", env_file=".env", extra="ignore"
     )
 
     app_name: str = "Meety Server"
@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     refresh_token_ttl_days: int = 30
     allow_registration: bool = True
 
-    database_url: str = "sqlite+aiosqlite:///./data/folio.db"
+    database_url: str = "sqlite+aiosqlite:///./data/meety.db"
 
     storage_backend: str = "local"
     storage_dir: str = "./data/blobs"
@@ -49,7 +49,7 @@ class Settings(BaseSettings):
 def enforce_production_config(settings: Settings) -> None:
     if settings.is_production and settings.jwt_secret == DEFAULT_JWT_SECRET:
         raise RuntimeError(
-            "FOLIO_JWT_SECRET is still the default value — set a strong secret "
+            "MEETY_JWT_SECRET is still the default value — set a strong secret "
             "before running in production"
         )
 

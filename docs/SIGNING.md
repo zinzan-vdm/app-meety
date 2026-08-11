@@ -19,7 +19,7 @@ its microphone / screen-recording permissions across updates.
 The ONNX Runtime used by diarization (`sherpa-onnx`) and VAD (`ort`) is
 **statically linked**, so there is no `libonnxruntime.dylib` to sign and no
 `disable-library-validation` entitlement is needed. The only nested binary is
-the `folio-mcp` sidecar (`bundle.externalBin`).
+the `meety-mcp` sidecar (`bundle.externalBin`).
 
 ## Entitlements (`src-tauri/Entitlements.plist`)
 
@@ -74,7 +74,7 @@ codesign --display --verbose=4 "$APP" 2>&1 | grep -E 'Authority|TeamIdentifier|f
 #   Authority=Developer ID Application: <Name> (TEAMID)
 #   flags=0x10000(runtime)
 
-codesign --display --verbose=2 "$APP/Contents/MacOS/folio-mcp" 2>&1 | grep flags
+codesign --display --verbose=2 "$APP/Contents/MacOS/meety-mcp" 2>&1 | grep flags
 #   flags=0x10000(runtime)   <-- sidecar must carry hardened runtime
 
 spctl --assess --type execute --verbose=2 "$APP"              # accepted
@@ -91,15 +91,15 @@ The two phrases that prove success are **`accepted`** and
 
 Tauri issue [#11992](https://github.com/tauri-apps/tauri/issues/11992) reports
 notarization occasionally failing when an `externalBin` sidecar is not signed
-with `--options runtime`. Meety ships one sidecar (`folio-mcp`). After the first
-release, confirm it with the `folio-mcp` verification line above. If it lacks
-the runtime flag, pre-sign it in `release.yml` after the "Build folio-mcp
+with `--options runtime`. Meety ships one sidecar (`meety-mcp`). After the first
+release, confirm it with the `meety-mcp` verification line above. If it lacks
+the runtime flag, pre-sign it in `release.yml` after the "Build meety-mcp
 sidecar" step (requires importing the cert into the runner keychain first):
 
 ```sh
 codesign --force --options runtime --timestamp \
   --sign "$APPLE_SIGNING_IDENTITY" \
-  "src-tauri/binaries/folio-mcp-<target-triple>"
+  "src-tauri/binaries/meety-mcp-<target-triple>"
 ```
 
 ## Permissions on first launch

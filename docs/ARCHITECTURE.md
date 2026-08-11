@@ -11,8 +11,8 @@ crate members and a React frontend:
 
 - `crates/meety-core/` — the framework-agnostic library. Audio capture,
   transcription, diarization, storage, and LLM plumbing.
-- `crates/meety-cli/` — CLI test harness (package name: `folio-cli`).
-- `crates/meety-mcp/` — local MCP stdio server (package name: `folio-mcp`).
+- `crates/meety-cli/` — CLI test harness (package name: `meety-cli`).
+- `crates/meety-mcp/` — local MCP stdio server (package name: `meety-mcp`).
 - `src-tauri/` — Tauri 2 desktop binary (package name: `meety-app`).
 - `src/` — React + TypeScript + Tailwind frontend.
 - `docs/` — architecture and engineering guidelines.

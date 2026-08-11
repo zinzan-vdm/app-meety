@@ -1,12 +1,12 @@
 import os
 import tempfile
 
-_tmp = tempfile.mkdtemp(prefix="folio-test-")
-os.environ.setdefault("FOLIO_JWT_SECRET", "test-secret-do-not-use")
-os.environ["FOLIO_WHISPER_ENGINE"] = "stub"
-os.environ["FOLIO_DATABASE_URL"] = f"sqlite+aiosqlite:///{_tmp}/test.db"
-os.environ["FOLIO_STORAGE_DIR"] = f"{_tmp}/blobs"
-os.environ["FOLIO_ALLOW_REGISTRATION"] = "true"
+_tmp = tempfile.mkdtemp(prefix="meety-test-")
+os.environ.setdefault("MEETY_JWT_SECRET", "test-secret-do-not-use")
+os.environ["MEETY_WHISPER_ENGINE"] = "stub"
+os.environ["MEETY_DATABASE_URL"] = f"sqlite+aiosqlite:///{_tmp}/test.db"
+os.environ["MEETY_STORAGE_DIR"] = f"{_tmp}/blobs"
+os.environ["MEETY_ALLOW_REGISTRATION"] = "true"
 
 import pytest_asyncio  # noqa: E402
 from httpx import ASGITransport, AsyncClient  # noqa: E402

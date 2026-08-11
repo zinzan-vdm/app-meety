@@ -2,7 +2,7 @@ use keyring::Entry;
 
 use crate::error::{MeetyError, Result};
 
-const KEYCHAIN_SERVICE: &str = "com.folio.app.server-token";
+const KEYCHAIN_SERVICE: &str = "com.meety.app.server-token";
 const ACCESS: &str = "access";
 const REFRESH: &str = "refresh";
 

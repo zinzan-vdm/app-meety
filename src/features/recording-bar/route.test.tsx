@@ -24,7 +24,7 @@ const status = (over: Partial<Awaited<ReturnType<typeof recordingStatus>>> = {})
   recording: true,
   elapsed_secs: 12n,
   channels: ["mic"],
-  session_dir: "/tmp/folio/note",
+  session_dir: "/tmp/meety/note",
   paused: false,
   mic_silent: false,
   needs_segment: false,

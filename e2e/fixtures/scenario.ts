@@ -113,7 +113,7 @@ export async function setupScenario(page: Page, options: ScenarioOptions = {}) {
       w.__FOLIO_PROVIDERS__ = JSON.parse(providers as string);
       w.__FOLIO_REFERRAL_STATS__ = {
         token: "stub-token-aaa",
-        share_url: "https://join.folio.app/t/stub-token-aaa",
+        share_url: "https://join.meety.app/t/stub-token-aaa",
         qualified_count: 0,
         pending_count: 0,
         free_months_earned: 0,
@@ -245,7 +245,7 @@ export async function setupScenario(page: Page, options: ScenarioOptions = {}) {
 
       referrals_generate: () => ({
         token: "stub-token-aaa",
-        share_url: "https://join.folio.app/t/stub-token-aaa",
+        share_url: "https://join.meety.app/t/stub-token-aaa",
       }),
       referrals_me: () => {
         return (window as unknown as Record<string, unknown>).__FOLIO_REFERRAL_STATS__;

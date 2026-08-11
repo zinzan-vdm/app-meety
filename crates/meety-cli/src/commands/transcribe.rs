@@ -248,7 +248,7 @@ fn decode_wav_to_16k_mono(path: &Path) -> Result<Vec<f32>> {
         .duration_since(SystemTime::UNIX_EPOCH)
         .map(|d| d.as_nanos())
         .unwrap_or_default();
-    let tmp = std::env::temp_dir().join(format!("folio-cli-{}.wav", nanos));
+    let tmp = std::env::temp_dir().join(format!("meety-cli-{}.wav", nanos));
     let status = Command::new("ffmpeg")
         .args([
             "-y",

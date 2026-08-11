@@ -160,7 +160,7 @@ Tauri command and event names are exported constants from `src/shared/ipc/`, nev
 
 ### 4.1 Rust
 
-- All logging is `tracing` macros. `println!` and `eprintln!` are forbidden outside of `folio-cli` user-facing output.
+- All logging is `tracing` macros. `println!` and `eprintln!` are forbidden outside of `meety-cli` user-facing output.
 - Use `tracing::info!` for state changes the user could plausibly want to read; `debug!` for everything else; `warn!` for recoverable failures; `error!` for ones the program cannot recover from.
 - Always include the relevant identifier as a structured field: `info!(session_dir = %dir.display, "started recording")`.
 
@@ -169,7 +169,7 @@ Tauri command and event names are exported constants from `src/shared/ipc/`, nev
 - `console.log` only in development scaffolding; remove before merge.
 - `console.error` is acceptable for IPC failures and unexpected exceptions; pair with a user-visible `toast.error`.
 - Never log secrets, API keys, or transcript contents — neither in Rust `tracing` calls nor in browser `console.*`.
-- Forbidden in committed Rust code: `println!`, `eprintln!`, `dbg!`. `folio-cli` is the single exception — user-facing CLI output writes to stdout directly.
+- Forbidden in committed Rust code: `println!`, `eprintln!`, `dbg!`. `meety-cli` is the single exception — user-facing CLI output writes to stdout directly.
 
 ---
 
@@ -346,7 +346,7 @@ PRs that plausibly affect any of these (audio capture, model load, route splitti
 - `meety-core` MUST NOT import Tauri, browser APIs, or anything UI-framework-flavoured. The same code compiles for the CLI and the desktop app.
 - `src-tauri` (the Tauri shell) MUST NOT import React internals, CSS, or route logic. It exposes commands and events; the React layer consumes them.
 - `src/` (the React layer) MUST NOT perform direct filesystem access via the browser. Anything that needs disk goes through a Tauri command. The React layer also MUST NOT contain Rust-domain logic equivalents (re-implementing what `meety-core` already does).
-- `folio-cli` and `src-tauri` both consume `meety-core` and do not call each other.
+- `meety-cli` and `src-tauri` both consume `meety-core` and do not call each other.
 - Public types that will cross the UniFFI boundary live in `crates/meety-core/src/ffi/`.
 - macOS-specific Rust code lives behind `#[cfg(target_os = "macos")]` and is documented in the module doc-comment. Cross-platform code is the default.
 

@@ -2,7 +2,7 @@ use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
-const PROFILE_PATH: &str = ".folio/profile.toml";
+const PROFILE_PATH: &str = ".meety/profile.toml";
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct UserProfile {
@@ -121,10 +121,10 @@ mod tests {
     #[test]
     fn load_parses_role_and_focus_areas() {
         let dir = tempfile::tempdir().unwrap();
-        let folio_dir = dir.path().join(".folio");
-        std::fs::create_dir_all(&folio_dir).unwrap();
-        std::fs::write(
-            folio_dir.join("profile.toml"),
+        let meety_dir = dir.path().join(".meety");
+        std::fs::create_dir_all(&meety_dir).unwrap();
+        let profile_path = meety_dir.join("profile.toml");
+            meety_dir.join("profile.toml"),
             "role = \"PM\"\nfocus_areas = [\"retention\", \"growth\"]\n",
         )
         .unwrap();

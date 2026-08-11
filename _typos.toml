@@ -2,9 +2,9 @@
 
 [default]
 extend-ignore-identifiers-re = [
-  "folio",
+  "meety",
   "Meety",
-  "FOLIO",
+  "MEETY",
   "Spectral",
   "JetBrains",
   "rustfmt",

@@ -163,7 +163,7 @@ export function SectionAi({ settings, onChange }: SectionAiProps) {
         per-recording <em>Summarize</em> button arrive in subsequent updates. The full
         plan is tracked at{" "}
         <code className="rounded bg-muted px-1 py-0.5 text-2xs">
-          projects/folio/plan/ai-chat-multi-provider.md
+          projects/meety/plan/ai-chat-multi-provider.md
         </code>{" "}
         in your vault.
       </p>

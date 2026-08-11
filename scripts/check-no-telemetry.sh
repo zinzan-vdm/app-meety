@@ -78,7 +78,7 @@ for pkg in "${FORBIDDEN[@]}"; do
       || grep -F -q "name = \"${pkg}\"" "$lock" 2>/dev/null; then
       echo "FAIL: '${pkg}' appears in ${lock}"
       echo "  Meety is local-first: no telemetry / analytics / crash reporters."
-      echo "  See projects/folio/plan/v2-roadmap-multi-agent-consensus.md (finding R11)."
+      echo "  See projects/meety/plan/v2-roadmap-multi-agent-consensus.md (finding R11)."
       EXIT=1
     fi
   done

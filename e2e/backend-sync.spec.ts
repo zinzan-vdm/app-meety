@@ -47,7 +47,7 @@ test("auth_logout clears identity + flips the gate back to signup", async ({
 
   const logoutCalls = await ipcCalls(page, "auth_logout");
   expect(logoutCalls).toHaveLength(1);
-  await expect(page.getByRole("heading", { name: /welcome to folio/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /welcome to meety/i })).toBeVisible();
 });
 
 test("the IPC trail contains the boot-time probes (auth_status, get_settings)", async ({

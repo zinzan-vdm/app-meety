@@ -153,7 +153,7 @@ pub(crate) fn read_first_line(session_dir: &Path, filename: &str) -> Option<Stri
 }
 
 pub fn allocate_draft_name(output_dir: &Path) -> String {
-    let path = output_dir.join(".folio").join("draft_counter");
+    let path = output_dir.join(".meety").join("draft_counter");
     let last = std::fs::read_to_string(&path)
         .ok()
         .and_then(|s| s.trim().parse::<u64>().ok())

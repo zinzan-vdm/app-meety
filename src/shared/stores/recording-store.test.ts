@@ -62,7 +62,7 @@ describe("recording-store: start", () => {
       mic_silent: false,
       needs_segment: false,
       channels: ["mic", "system"],
-      session_dir: "/tmp/folio/2026-05-28-10-00-00",
+      session_dir: "/tmp/meety/2026-05-28-10-00-00",
       paused: false,
     });
     const { result } = renderHook(() => useRecording());
@@ -74,7 +74,7 @@ describe("recording-store: start", () => {
     expect(useRecording.getState().error).toBeNull();
     expect(useRecording.getState().busy).toBe(false);
     expect(useRecording.getState().liveSessionDir).toBe(
-      "/tmp/folio/2026-05-28-10-00-00"
+      "/tmp/meety/2026-05-28-10-00-00"
     );
   });
 
@@ -143,7 +143,7 @@ describe("recording-store: syncFromBackend", () => {
       mic_silent: false,
       needs_segment: false,
       channels: ["mic", "system"],
-      session_dir: "/tmp/folio/2026-05-28-10-00-00",
+      session_dir: "/tmp/meety/2026-05-28-10-00-00",
       paused: false,
     });
     const { result } = renderHook(() => useRecording());
@@ -165,7 +165,7 @@ describe("recording-store: pause/resume", () => {
       mic_silent: false,
       needs_segment: false,
       channels: [],
-      session_dir: "/tmp/folio/note",
+      session_dir: "/tmp/meety/note",
     });
     useRecording.setState({
       recording: true,
@@ -182,7 +182,7 @@ describe("recording-store: pause/resume", () => {
     expect(s.recording).toBe(false);
     expect(s.paused).toBe(true);
     expect(s.elapsed).toBe(30);
-    expect(s.liveSessionDir).toBe("/tmp/folio/note");
+    expect(s.liveSessionDir).toBe("/tmp/meety/note");
   });
 
   it("resume continues recording with continuous elapsed", async () => {
@@ -193,7 +193,7 @@ describe("recording-store: pause/resume", () => {
       mic_silent: false,
       needs_segment: false,
       channels: ["mic", "system"],
-      session_dir: "/tmp/folio/note",
+      session_dir: "/tmp/meety/note",
     });
 
     useRecording.setState({ recording: false, paused: true, elapsed: 30 });
@@ -244,7 +244,7 @@ describe("recording-store: pause/resume/stop guards (re-entrancy + state)", () =
       mic_silent: false,
       needs_segment: false,
       channels: [],
-      session_dir: "/tmp/folio/note",
+      session_dir: "/tmp/meety/note",
       paused: true,
     });
     const { result } = renderHook(() => useRecording());
@@ -263,11 +263,11 @@ describe("recording-store: floating bar lifecycle", () => {
       mic_silent: false,
       needs_segment: false,
       channels: ["mic"],
-      session_dir: "/tmp/folio/note",
+      session_dir: "/tmp/meety/note",
       paused: false,
     });
     mockedStop.mockResolvedValueOnce({
-      artifacts: { session_dir: "/tmp/folio/note" },
+      artifacts: { session_dir: "/tmp/meety/note" },
     } as never);
     const { result } = renderHook(() => useRecording());
     await act(async () => {
@@ -288,7 +288,7 @@ describe("recording-store: floating bar lifecycle", () => {
       mic_silent: false,
       needs_segment: false,
       channels: ["mic"],
-      session_dir: "/tmp/folio/note",
+      session_dir: "/tmp/meety/note",
       paused: false,
     });
     const { result } = renderHook(() => useRecording());
@@ -315,9 +315,9 @@ describe("recording-store: floating bar lifecycle", () => {
     expect(mockedHideBar).toHaveBeenCalledTimes(1);
 
     await act(async () => {
-      resolveStop({ artifacts: { session_dir: "/tmp/folio/note" } });
+      resolveStop({ artifacts: { session_dir: "/tmp/meety/note" } });
       await stopPromise;
     });
-    expect(useRecording.getState().lastSavedDir).toBe("/tmp/folio/note");
+    expect(useRecording.getState().lastSavedDir).toBe("/tmp/meety/note");
   });
 });

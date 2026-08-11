@@ -1,5 +1,5 @@
 [package]
-name = "folio-cli"
+name = "meety-cli"
 description = "Meety CLI for testing the core library"
 version.workspace = true
 edition.workspace = true
@@ -10,7 +10,7 @@ authors.workspace = true
 publish = false
 
 [[bin]]
-name = "folio-cli"
+name = "meety-cli"
 path = "src/main.rs"
 
 [lints]

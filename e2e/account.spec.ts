@@ -10,7 +10,7 @@ test("Account tab in the sidebar opens the Account page", async ({ page }) => {
   await page.getByRole("link", { name: /^account$/i }).click();
   await expect(page).toHaveURL(/#\/account/);
   await expect(page.getByRole("heading", { name: /^account$/i })).toBeVisible();
-  await expect(page.getByText(/your folio server/i)).toBeVisible();
+  await expect(page.getByText(/your meety server/i)).toBeVisible();
 });
 
 test("endpoint saves on blur and Test reports engine, model, and GPU", async ({
@@ -19,15 +19,15 @@ test("endpoint saves on blur and Test reports engine, model, and GPU", async ({
   await setupScenario(page, { startSignedIn: true });
   await page.goto("/#/account");
 
-  const endpoint = page.getByPlaceholder("https://folio-api.example.com");
-  await endpoint.fill("https://folio-api.example.com");
+  const endpoint = page.getByPlaceholder("https://meety-api.example.com");
+  await endpoint.fill("https://meety-api.example.com");
   await endpoint.blur();
   await expect
     .poll(async () => (await readSettings(page)).remote_endpoint)
-    .toBe("https://folio-api.example.com");
+    .toBe("https://meety-api.example.com");
 
   await page.getByRole("button", { name: /^test$/i }).click();
-  await expect(page.getByText(/connected to folio server/i)).toBeVisible();
+  await expect(page.getByText(/connected to meety server/i)).toBeVisible();
   await expect(page.getByText(/large-v3/i)).toBeVisible();
   await expect(page.getByText(/^GPU$/)).toBeVisible();
 });
@@ -35,7 +35,7 @@ test("endpoint saves on blur and Test reports engine, model, and GPU", async ({
 test("creating an account flips to the signed-in state and back", async ({ page }) => {
   await setupScenario(page, {
     startSignedIn: true,
-    initialSettings: { remote_endpoint: "https://folio-api.example.com" },
+    initialSettings: { remote_endpoint: "https://meety-api.example.com" },
   });
   await page.goto("/#/account");
 
@@ -56,7 +56,7 @@ test("sync preferences — auto-upload toggle and Make default persist", async (
 }) => {
   await setupScenario(page, {
     startSignedIn: true,
-    initialSettings: { remote_endpoint: "https://folio-api.example.com" },
+    initialSettings: { remote_endpoint: "https://meety-api.example.com" },
   });
   await page.goto("/#/account");
 
@@ -75,7 +75,7 @@ test("sync preferences — auto-upload toggle and Make default persist", async (
 test("signed-in account shows in the sidebar with a status dot", async ({ page }) => {
   await setupScenario(page, {
     startSignedIn: true,
-    initialSettings: { remote_endpoint: "https://folio-api.example.com" },
+    initialSettings: { remote_endpoint: "https://meety-api.example.com" },
   });
   await page.goto("/#/account");
 

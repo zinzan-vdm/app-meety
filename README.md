@@ -20,7 +20,7 @@ by Ege Celebi.
 - Labels speakers on-device with pyannote segmentation and a
   speaker-embedding model. Your microphone is always labelled **You**.
 - Writes a markdown note per meeting to your vault.
-- Runs a local MCP server (`folio-mcp`). Tools like Claude Desktop and
+- Runs a local MCP server (`meety-mcp`). Tools like Claude Desktop and
   Cursor can read your transcripts, tasks, and memories over stdio.
 - Audio never leaves your machine on the default path. Privacy Mode
   blocks all outbound HTTP except localhost.
@@ -73,13 +73,13 @@ The first build compiles the Rust workspace. This takes about
 
 ```sh
 # List audio input devices
-cargo run -p folio-cli --release -- devices
+cargo run -p meety-cli --release -- devices
 
 # Record from the default device for 60 seconds
-cargo run -p folio-cli --release -- record --seconds 60
+cargo run -p meety-cli --release -- record --seconds 60
 
 # Record from a specific device
-cargo run -p folio-cli --release -- record --seconds 60 --mic-device "Microphone Name"
+cargo run -p meety-cli --release -- record --seconds 60 --mic-device "Microphone Name"
 ```
 
 Output: `./recordings/<timestamp>/mic.wav` (mono 16-bit PCM at the
@@ -110,8 +110,8 @@ meety/
 ├── Cargo.toml                # workspace root
 ├── crates/
 │   ├── meety-core/          # audio capture, storage, transcription, diarization
-│   ├── meety-cli/           # CLI test harness (binary: folio-cli)
-│   └── meety-mcp/           # local MCP stdio server (binary: folio-mcp)
+│   ├── meety-cli/           # CLI test harness (binary: meety-cli)
+│   └── meety-mcp/           # local MCP stdio server (binary: meety-mcp)
 ├── src-tauri/                # Tauri 2 desktop binary
 ├── src/                      # React + TypeScript + Tailwind frontend
 ├── docs/                     # design docs (see ARCHITECTURE.md)
@@ -136,7 +136,7 @@ Add this to your MCP client configuration:
 {
   "mcpServers": {
     "meety": {
-      "command": "folio-mcp"
+      "command": "meety-mcp"
     }
   }
 }

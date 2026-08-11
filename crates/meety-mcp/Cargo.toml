@@ -1,5 +1,5 @@
 [package]
-name = "folio-mcp"
+name = "meety-mcp"
 description = "Meety local MCP server (stdio) — read-only access to notes, tasks, and memories"
 version.workspace = true
 edition.workspace = true
@@ -10,7 +10,7 @@ authors.workspace = true
 publish = false
 
 [[bin]]
-name = "folio-mcp"
+name = "meety-mcp"
 path = "src/main.rs"
 
 [lints]

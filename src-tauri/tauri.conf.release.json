@@ -6,6 +6,6 @@
     }
   },
   "bundle": {
-    "externalBin": ["binaries/folio-mcp"]
+    "externalBin": ["binaries/meety-mcp"]
   }
 }

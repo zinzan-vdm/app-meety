@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 static AIRGAP: AtomicBool = AtomicBool::new(false);
 static POLICY: Mutex<Option<EgressPolicy>> = Mutex::new(None);
 
-const EGRESS_PATH: &str = ".folio/egress-policy.toml";
+const EGRESS_PATH: &str = ".meety/egress-policy.toml";
 
 const ALWAYS_ALLOWED: &[&str] = &["localhost", "127.0.0.1", "::1", "0.0.0.0"];
 

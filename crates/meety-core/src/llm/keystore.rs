@@ -4,7 +4,7 @@ use tracing::debug;
 use crate::error::{MeetyError, Result};
 use crate::llm::ProviderId;
 
-const KEYCHAIN_SERVICE: &str = "com.folio.app.provider-key";
+const KEYCHAIN_SERVICE: &str = "com.meety.app.provider-key";
 
 pub struct KeyStore;
 

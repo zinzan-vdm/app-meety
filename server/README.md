@@ -82,7 +82,7 @@ Everything is driven by `FOLIO_*` environment variables — see
 | Var                        | Default                               | Notes                                       |
 | -------------------------- | ------------------------------------- | ------------------------------------------- |
 | `FOLIO_JWT_SECRET`         | `change-me-in-production`             | Coolify generates this; set it otherwise    |
-| `FOLIO_DATABASE_URL`       | `sqlite+aiosqlite:///./data/folio.db` | Postgres: `postgresql+asyncpg://…`          |
+| `MEETY_DATABASE_URL`       | `sqlite+aiosqlite:///./data/meety.db` | Postgres: `postgresql+asyncpg://…`          |
 | `FOLIO_STORAGE_DIR`        | `./data/blobs`                        | uploaded audio + transcripts                |
 | `FOLIO_WHISPER_MODEL`      | `base`                                | `tiny`…`large-v3`                           |
 | `FOLIO_WHISPER_DEVICE`     | `auto`                                | compose sets `cuda` on the GPU worker       |

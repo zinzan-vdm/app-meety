@@ -18,7 +18,7 @@ const WINDOW_SILENCE_LOOKBACK_SECONDS: f64 = 2.0;
 
 const LANG_CARRY_MAX_GAP_SECONDS: f64 = 30.0;
 
-const FOLIO_INITIAL_PROMPT: &str =
+const MEETY_INITIAL_PROMPT: &str =
     "Meety meeting glossary: Tahir, Yusuf, İbrahim, Ege, Vusal, Azerbaycan, \
      Chrome extension, Claude, Gemini, MIS, veri tabanı, sistemleri, \
      multidisipliner, agent, startup.";
@@ -328,7 +328,7 @@ fn build_params(lang: Option<&str>, threads: i32) -> FullParams<'_, '_> {
     params.set_token_timestamps(true);
     params.set_split_on_word(true);
     params.set_max_len(120);
-    params.set_initial_prompt(FOLIO_INITIAL_PROMPT);
+    params.set_initial_prompt(MEETY_INITIAL_PROMPT);
     params.set_language(lang);
     params
 }

@@ -5,15 +5,15 @@ services:
       dockerfile: Dockerfile
     environment:
       - SERVICE_FQDN_API_8080
-      - FOLIO_JWT_SECRET=${SERVICE_BASE64_64_JWT}
-      - FOLIO_DATABASE_URL=sqlite+aiosqlite:////data/folio.db
-      - FOLIO_STORAGE_DIR=/data/blobs
-      - FOLIO_ENVIRONMENT=production
-      - FOLIO_ALLOW_REGISTRATION=${FOLIO_ALLOW_REGISTRATION:-true}
-      - FOLIO_WHISPER_MODEL=${FOLIO_WHISPER_MODEL:-base}
-      - FOLIO_MAX_UPLOAD_BYTES=${FOLIO_MAX_UPLOAD_BYTES:-2147483648}
+      - MEETY_JWT_SECRET=${SERVICE_BASE64_64_JWT}
+      - MEETY_DATABASE_URL=sqlite+aiosqlite:////data/meety.db
+      - MEETY_STORAGE_DIR=/data/blobs
+      - MEETY_ENVIRONMENT=production
+      - MEETY_ALLOW_REGISTRATION=${MEETY_ALLOW_REGISTRATION:-true}
+      - MEETY_WHISPER_MODEL=${MEETY_WHISPER_MODEL:-base}
+      - MEETY_MAX_UPLOAD_BYTES=${MEETY_MAX_UPLOAD_BYTES:-2147483648}
     volumes:
-      - folio-data:/data
+      - meety-data:/data
     healthcheck:
       test:
         - CMD
@@ -31,14 +31,14 @@ services:
       context: .
       dockerfile: Dockerfile.worker
     environment:
-      - FOLIO_JWT_SECRET=${SERVICE_BASE64_64_JWT}
-      - FOLIO_DATABASE_URL=sqlite+aiosqlite:////data/folio.db
-      - FOLIO_STORAGE_DIR=/data/blobs
-      - FOLIO_WHISPER_DEVICE=cuda
-      - FOLIO_WHISPER_COMPUTE_TYPE=${FOLIO_WHISPER_COMPUTE_TYPE:-float16}
-      - FOLIO_WHISPER_MODEL=${FOLIO_WHISPER_MODEL:-base}
+      - MEETY_JWT_SECRET=${SERVICE_BASE64_64_JWT}
+      - MEETY_DATABASE_URL=sqlite+aiosqlite:////data/meety.db
+      - MEETY_STORAGE_DIR=/data/blobs
+      - MEETY_WHISPER_DEVICE=cuda
+      - MEETY_WHISPER_COMPUTE_TYPE=${MEETY_WHISPER_COMPUTE_TYPE:-float16}
+      - MEETY_WHISPER_MODEL=${MEETY_WHISPER_MODEL:-base}
     volumes:
-      - folio-data:/data
+      - meety-data:/data
     depends_on:
       - api
     deploy:
@@ -51,4 +51,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  folio-data:
+  meety-data:

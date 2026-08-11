@@ -60,7 +60,7 @@ pub fn sync(vault_dir: &Path) -> GitSyncSummary {
     if !staged.status_ok {
         let commit = run(
             vault_dir,
-            &["commit", "-m", "folio sync", "--no-verify", "--no-gpg-sign"],
+            &["commit", "-m", "meety sync", "--no-verify", "--no-gpg-sign"],
         );
         if !commit.status_ok {
             out.pull_log.push_str("\n[git commit failed]\n");

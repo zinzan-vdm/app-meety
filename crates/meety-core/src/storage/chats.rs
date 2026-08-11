@@ -6,7 +6,7 @@ use ts_rs::TS;
 use crate::error::{MeetyError, Result};
 use crate::storage::atomic_write::atomic_write;
 
-const CHATS_DIR: &str = ".folio/chats";
+const CHATS_DIR: &str = ".meety/chats";
 
 #[derive(Clone, Debug, Serialize, Deserialize, TS, PartialEq, Eq)]
 #[ts(export, export_to = "../../../src/shared/types/")]
