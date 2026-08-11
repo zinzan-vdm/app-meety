@@ -28,6 +28,7 @@ pub use error::{MeetyError, Result};
 // _exit(0) so the crash doesn't kill CI. The handler is only armed during
 // process teardown, so genuine crashes during test execution still abort.
 #[cfg(target_os = "linux")]
+#[allow(dead_code)]
 mod exit {
     use std::sync::Once;
 
