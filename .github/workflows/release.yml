@@ -54,12 +54,12 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
-      - name: Set MSVC linker via RUSTFLAGS (Windows)
+      - name: Prepend MSVC bin dir to PATH (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $linker = Join-Path $env:VCToolsInstallDir "bin\HostX64\x64\link.exe"
-          echo 'RUSTFLAGS=-C linker="'"$linker"'"' | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
+          $msvcBin = Join-Path $env:VCToolsInstallDir "bin\HostX64\x64"
+          echo $msvcBin | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding ASCII
 
       - name: Build meety-mcp sidecar
         shell: bash
