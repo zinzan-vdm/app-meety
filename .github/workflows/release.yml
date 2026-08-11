@@ -38,6 +38,12 @@ jobs:
             libjavascriptcoregtk-4.1-dev libglib2.0-dev libasound2-dev \
             libvulkan-dev glslc
 
+      - name: Force static CRT for MSVC compilations on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          echo "_CL_=/MT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
+
       - name: Set up MSVC dev command prompt (Windows)
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
