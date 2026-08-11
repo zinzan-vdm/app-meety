@@ -58,12 +58,6 @@ jobs:
           sudo apt-get install -y -qq libgtk-3-dev libwebkit2gtk-4.1-dev \
             libjavascriptcoregtk-4.1-dev libglib2.0-dev libasound2-dev \
             libvulkan-dev glslc
-      - name: Install system ONNX Runtime
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          wget -q https://github.com/microsoft/onnxruntime/releases/download/v1.22.0/onnxruntime-linux-x64-1.22.0.tgz
-          tar -xzf onnxruntime-linux-x64-1.22.0.tgz
-          echo "PKG_CONFIG_PATH=$(pwd)/onnxruntime-linux-x64-1.22.0/lib/pkgconfig" >> "$GITHUB_ENV"
       - uses: Swatinem/rust-cache@v2
       - run: cargo build --workspace --all-targets
       - run: cargo test --workspace --lib --bins
