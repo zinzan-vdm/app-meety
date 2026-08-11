@@ -30,7 +30,15 @@ jobs:
         with:
           targets: ${{ matrix.platform.target }}
 
-      - uses: Swatinem/rust-cache@v2
+      - name: Set up cargo cache (macOS)
+        if: runner.os == 'macOS'
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: release-macos-2026-08-11
+
+      - name: Set up cargo cache (other)
+        if: runner.os != 'macOS'
+        uses: Swatinem/rust-cache@v2
 
       - name: Install Tauri Linux system deps
         if: runner.os == 'Linux'
@@ -67,6 +75,7 @@ jobs:
       - run: bun install --frozen-lockfile
 
       - name: Clean cached native dependencies
+        shell: bash
         run: |
           rm -rf target/release/build/sherpa-onnx-sys-*
           rm -rf target/release/build/whisper-rs-sys-*
