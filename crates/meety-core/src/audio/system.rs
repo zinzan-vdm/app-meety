@@ -581,10 +581,10 @@ mod windows_impl {
 #[cfg(target_os = "linux")]
 mod linux_impl {
     use super::*;
-    use std::thread;
+    use psimple::Simple;
     use pulse::sample::{Format, Spec};
     use pulse::stream::Direction;
-    use psimple::Simple;
+    use std::thread;
 
     pub struct SystemCapture {
         writer: Arc<AudioWavWriter>,
@@ -601,7 +601,7 @@ mod linux_impl {
             let handle = thread::Builder::new()
                 .name("meety-pulse".into())
                 .spawn(move || {
-                    let spec = Spec::new(Format::F32LE, 1, target_sample_rate);
+                    let spec = Spec { format: Format::F32le, channels: 1, rate: target_sample_rate };
                     let mut pulse = match Simple::new(
                         None,
                         "Meety",
