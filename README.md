@@ -1,14 +1,3 @@
-<p align="center">
-  <img src="docs/assets/banner.png" alt="Meety — local-first meeting notes" width="100%">
-</p>
-
-<p align="center">
-  <a href="https://github.com/zinzan-vdm/app-meety"><img src="https://img.shields.io/badge/status-alpha-orange.svg" alt="Status"></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
-  <a href="#development"><img src="https://img.shields.io/badge/platform-macOS%20|%20Windows%20|%20Linux-lightgrey.svg" alt="Platform"></a>
-  <a href="https://tauri.app"><img src="https://img.shields.io/badge/built%20with-Tauri%202-24C8DB.svg" alt="Built with Tauri"></a>
-</p>
-
 # Meety
 
 **Local-first meeting transcription for macOS, Windows, and Linux.**
@@ -63,7 +52,7 @@ downloads the model weights from Hugging Face. This is a few hundred MB.
 ## Build from source
 
 ```sh
-git clone git@github.com:zinzan-vdm/app-meety.git
+git clone https://github.com/zinzan-vdm/app-meety.git
 cd meety
 bun install
 pre-commit install
@@ -155,6 +144,10 @@ Add this to your MCP client configuration:
 
 The server provides tools to search transcripts, find decisions, list
 tasks, and query meeting notes. No network access is needed.
+
+## Contributors
+
+- [zinzan-vdm](https://github.com/zinzan-vdm) — maintainer and primary contributor
 
 ## License
 
