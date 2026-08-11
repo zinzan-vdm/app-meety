@@ -27,6 +27,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Write release version
+        run: echo "${{ github.ref_name }}" > VERSION
+
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.platform.target }}
