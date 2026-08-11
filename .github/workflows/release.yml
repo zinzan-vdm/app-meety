@@ -30,16 +30,6 @@ jobs:
         with:
           targets: ${{ matrix.platform.target }}
 
-      - name: Set up cargo cache (macOS)
-        if: runner.os == 'macOS'
-        uses: Swatinem/rust-cache@v2
-        with:
-          shared-key: release-macos-2026-08-11
-
-      - name: Set up cargo cache (other)
-        if: runner.os != 'macOS'
-        uses: Swatinem/rust-cache@v2
-
       - name: Install Tauri Linux system deps
         if: runner.os == 'Linux'
         run: |
@@ -62,23 +52,7 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Cache bun dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            ~/.bun/install/cache
-          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-          restore-keys: |
-            bun-${{ runner.os }}-
-
       - run: bun install --frozen-lockfile
-
-      - name: Clean cached native dependencies
-        shell: bash
-        run: |
-          rm -rf target/release/build/sherpa-onnx-sys-*
-          rm -rf target/release/build/whisper-rs-sys-*
 
       - name: Strip Git usr/bin from PATH (Windows)
         if: runner.os == 'Windows'

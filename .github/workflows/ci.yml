@@ -38,7 +38,6 @@ jobs:
           sudo apt-get install -y -qq libgtk-3-dev libwebkit2gtk-4.1-dev \
             libjavascriptcoregtk-4.1-dev libglib2.0-dev libasound2-dev \
             libvulkan-dev glslc
-      - uses: Swatinem/rust-cache@v2
       - run: cargo clippy --workspace --all-targets -- -D warnings
 
   rust-test:
@@ -69,9 +68,6 @@ jobs:
           # all other MSVC-compiled C/C++ code to use static CRT (/MT),
           # matching sherpa-onnx-sys's prebuilt binaries.
           echo "_CL_=/MT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
-      - uses: Swatinem/rust-cache@v2
-        with:
-          key: ${{ matrix.os == 'windows-latest' && 'static-crt-v3' || '' }}
       - run: cargo build --workspace --all-targets
       - run: cargo test --workspace --lib --bins
 
@@ -91,15 +87,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - name: Cache bun dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            ~/.bun/install/cache
-          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-          restore-keys: |
-            bun-${{ runner.os }}-
       - run: bun install --frozen-lockfile
       - run: bun run typecheck
       - run: bun run lint
