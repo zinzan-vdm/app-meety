@@ -406,6 +406,7 @@ mod windows_impl {
     /// is thread-safe: streams are created and consumed on the same
     /// thread spawned by `start()`. This wrapper restores `Send`.
     struct SendStream(Option<cpal::Stream>);
+
     unsafe impl Send for SendStream {}
 
     fn build_loopback_stream(
@@ -555,8 +556,10 @@ mod windows_impl {
                 stopped.clone(),
             )?;
 
-            let s = stream.0.as_ref().unwrap();
-            s
+            stream
+                .0
+                .as_ref()
+                .ok_or_else(|| MeetyError::SystemAudio("WASAPI stream is None".into()))?
                 .play()
                 .map_err(|e| MeetyError::StreamPlay(format!("WASAPI loopback play: {e}")))?;
 
