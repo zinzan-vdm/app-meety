@@ -81,9 +81,9 @@ mod tests {
         let p = ProviderId::OpenAi;
         let _ = KeyStore::delete(p);
         assert!(matches!(KeyStore::get(p), Ok(None)));
-        KeyStore::set(p, "sk-test-folio-keystore-1234567890").unwrap();
+        KeyStore::set(p, "sk-test-meety-keystore-1234567890").unwrap();
         let got = KeyStore::get(p).unwrap();
-        assert_eq!(got.as_deref(), Some("sk-test-folio-keystore-1234567890"));
+        assert_eq!(got.as_deref(), Some("sk-test-meety-keystore-1234567890"));
         assert_eq!(KeyStore::redacted_suffix(p).unwrap(), "…7890");
         assert!(KeyStore::has(p));
         KeyStore::delete(p).unwrap();

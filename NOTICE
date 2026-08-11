@@ -154,6 +154,6 @@ Reporting an attribution miss
 -----------------------------
 
 If you ship Meety source or binaries and notice an attribution gap, file
-an issue at https://github.com/woosal1337/folio/issues with the
+an issue at https://github.com/zinzan-vdm/app-meety/issues with the
 dependency name and license text. We update this file alongside the
 dependency change.
