@@ -69,9 +69,9 @@ jobs:
       - name: Build meety-mcp sidecar
         shell: bash
         run: |
-          cargo build --release -p folio-mcp --target ${{ matrix.platform.target }}
+          cargo build --release -p meety-mcp --target ${{ matrix.platform.target }}
           mkdir -p src-tauri/binaries
-          cp "target/${{ matrix.platform.target }}/release/folio-mcp" \
+          cp "target/${{ matrix.platform.target }}/release/meety-mcp" \
              "src-tauri/binaries/meety-mcp-${{ matrix.platform.target }}" || true
 
       - name: Build Tauri app (macOS)
