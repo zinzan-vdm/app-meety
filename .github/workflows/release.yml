@@ -70,20 +70,12 @@ jobs:
             Rename-Item -Path $gitLink -NewName "link.exe.bak" -Force
           }
 
-      - name: Set CC/CXX to MSVC compiler for CMake (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          $cl = Join-Path $env:VCToolsInstallDir "bin\HostX64\x64\cl.exe"
-          echo "CC=$cl" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
-          echo "CXX=$cl" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
-
       - name: Build meety-mcp sidecar
         shell: bash
         run: |
-          cargo build --release -p meety-mcp --target ${{ matrix.platform.target }}
+          cargo build --release -p meety-mcp
           mkdir -p src-tauri/binaries
-          cp "target/${{ matrix.platform.target }}/release/meety-mcp" \
+          cp "target/release/meety-mcp" \
              "src-tauri/binaries/meety-mcp-${{ matrix.platform.target }}" || true
 
       - name: Build Tauri app (macOS)
