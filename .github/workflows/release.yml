@@ -125,7 +125,7 @@ jobs:
           for /f "usebackq tokens=*" %%i in (`vswhere -latest -property installationPath`) do set vs=%%i
           for /f %%i in ('dir /b "%vs%\VC\Tools\MSVC"') do set msvcver=%%i
           set VCToolsInstallDir=%vs%\VC\Tools\MSVC\%msvcver%\
-          for /f %%i in ('dir /b "C:\Program Files (x86)\Windows Kits\10\Lib"') do set sdkver=%%i
+          for /f %%i in ('dir /b /ad "C:\Program Files (x86)\Windows Kits\10\Lib\10.*"') do set sdkver=%%i
           echo _CL_=/MT>>%GITHUB_ENV%
           echo VCINSTALLDIR=%vs%\VC>>%GITHUB_ENV%
           echo VCToolsInstallDir=%VCToolsInstallDir%>>%GITHUB_ENV%
