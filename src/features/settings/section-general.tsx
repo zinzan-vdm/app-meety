@@ -120,7 +120,7 @@ export function SectionGeneral({ settings, devices, onChange }: Props) {
 function AppVersion() {
   const [version, setVersion] = useState("…");
   useEffect(() => {
-    invoke("app_version").then(setVersion).catch(() => setVersion("?"));
+    invoke<string>("app_version").then(setVersion).catch(() => setVersion("?"));
   }, []);
   return <>{version}</>;
 }
