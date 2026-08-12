@@ -122,8 +122,8 @@ jobs:
       - name: Force static CRT for MSVC compilations
         shell: pwsh
         run: |
-          echo "CFLAGS=/MT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
-          echo "CXXFLAGS=/MT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
+          echo "CFLAGS=/MT" >> $env:GITHUB_ENV
+          echo "CXXFLAGS=/MT" >> $env:GITHUB_ENV
       - name: Set up MSVC dev environment
         uses: ilammy/msvc-dev-cmd@v1
       - name: Use Ninja generator for CMake
