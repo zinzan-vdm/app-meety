@@ -1,4 +1,5 @@
 import { Volume2 } from "lucide-react";
+import { useState, useEffect } from "react";
 
 import { Button } from "@/shared/ui/button";
 import { Label } from "@/shared/ui/label";
@@ -8,6 +9,7 @@ import { playFeedback } from "@/shared/lib/feedback";
 import type { DeviceInfo } from "@/shared/types/DeviceInfo";
 import type { Settings } from "@/shared/types/Settings";
 import { isMac } from "@/shared/lib/platform";
+import { invoke } from "@tauri-apps/api/core";
 
 interface Props {
   settings: Settings;
@@ -103,6 +105,22 @@ export function SectionGeneral({ settings, devices, onChange }: Props) {
           </div>
         ) : null}
       </section>
+
+      <Separator />
+
+      <section className="space-y-1">
+        <p className="text-xs text-muted-foreground">
+          Meety <AppVersion />
+        </p>
+      </section>
     </div>
   );
+}
+
+function AppVersion() {
+  const [version, setVersion] = useState("…");
+  useEffect(() => {
+    invoke("app_version").then(setVersion).catch(() => setVersion("?"));
+  }, []);
+  return <>{version}</>;
 }

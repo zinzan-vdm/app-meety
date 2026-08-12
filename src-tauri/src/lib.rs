@@ -56,6 +56,7 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             commands::health::ping,
+            commands::health::app_version,
             commands::devices::list_input_devices,
             commands::devices::start_mic_monitor,
             commands::devices::stop_mic_monitor,
