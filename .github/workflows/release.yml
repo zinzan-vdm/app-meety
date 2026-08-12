@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   build:
-    if: false
     name: Build (${{ matrix.platform.name }})
     strategy:
       fail-fast: false
@@ -39,15 +38,24 @@ jobs:
             libjavascriptcoregtk-4.1-dev libglib2.0-dev libasound2-dev \
             libvulkan-dev glslc
 
-      - name: Force static CRT for MSVC compilations on Windows
+      - name: Set up MSVC environment (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          echo "_CL_=/MT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
-
-      - name: Set up MSVC dev command prompt (Windows)
+          $vs = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+          $msvc = Get-ChildItem "$vs\VC\Tools\MSVC" | Select-Object -Last 1 -ExpandProperty Name
+          $sdk = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\Lib\10.*" | Select-Object -Last 1 -ExpandProperty Name
+          $vctools = "$vs\VC\Tools\MSVC\$msvc"
+          echo "VCToolsInstallDir=$vctools\" >> $env:GITHUB_ENV
+          echo "PATH=$vctools\bin\Hostx64\x64;$env:PATH" >> $env:GITHUB_ENV
+          echo "LIB=$vctools\lib\x64;C:\Program Files (x86)\Windows Kits\10\Lib\$sdk\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\Lib\$sdk\um\x64" >> $env:GITHUB_ENV
+          echo "INCLUDE=$vctools\include;C:\Program Files (x86)\Windows Kits\10\Include\$sdk\ucrt;C:\Program Files (x86)\Windows Kits\10\Include\$sdk\um;C:\Program Files (x86)\Windows Kits\10\Include\$sdk\shared" >> $env:GITHUB_ENV
+          echo "CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=$vctools\bin\Hostx64\x64\link.exe" >> $env:GITHUB_ENV
+      - name: Force static CRT via Rust target feature (Windows)
         if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
+        shell: pwsh
+        run: |
+          echo "RUSTFLAGS=-Ctarget-feature=+crt-static" >> $env:GITHUB_ENV
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -55,29 +63,18 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
-      - name: Rename Git link.exe to prevent MSVC linker conflict (Windows)
-        # The Git for Windows installation has a link.exe file in its usr/bin
-        # directory. This file is the GNU coreutils link command. It creates
-        # hard links. The MSVC linker, also named link.exe, is part of Visual
-        # Studio. When the Rust compiler searches for a linker, it can find the
-        # Git file before the MSVC file. This causes the build to fail.
-        # Rename the Git file to remove it from the search path. The MSVC
-        # linker is the only link.exe available after this change.
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          $gitLink = "C:\Program Files\Git\usr\bin\link.exe"
-          if (Test-Path $gitLink) {
-            Rename-Item -Path $gitLink -NewName "link.exe.bak" -Force
-          }
-
       - name: Build meety-mcp sidecar
         shell: bash
         run: |
           cargo build --release -p meety-mcp
           mkdir -p src-tauri/binaries
-          cp "target/release/meety-mcp" \
-             "src-tauri/binaries/meety-mcp-${{ matrix.platform.target }}" || true
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cp "target/release/meety-mcp.exe" \
+               "src-tauri/binaries/meety-mcp-${{ matrix.platform.target }}"
+          else
+            cp "target/release/meety-mcp" \
+               "src-tauri/binaries/meety-mcp-${{ matrix.platform.target }}"
+          fi
 
       - name: Build Tauri app (macOS)
         if: runner.os == 'macOS'
@@ -106,65 +103,3 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: --target ${{ matrix.platform.target }}
-
-  windows-v2:
-    name: Build (windows-x64-2)
-    runs-on: windows-2022
-    timeout-minutes: 120
-    steps:
-      - uses: actions/checkout@v4
-      - name: Write VERSION from tag
-        shell: bash
-        run: echo "${{ github.ref_name }}" > VERSION
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: x86_64-pc-windows-msvc
-      - name: Set up MSVC environment
-        # Find VS via vswhere, then set PATH/LIB/INCLUDE/VCToolsInstallDir
-        # so cmake's VS generator and the cc crate can find the MSVC tools.
-        # This replaces ilammy/msvc-dev-cmd which has a fragile interaction
-        # with the PWsh rename step (breaks cmake compiler detection).
-        # Also pins the linker path to avoid conflict with Git's link.exe.
-        shell: pwsh
-        run: |
-          $vs = & "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
-          $msvc = Get-ChildItem "$vs\VC\Tools\MSVC" | Select-Object -Last 1 -ExpandProperty Name
-          $sdk = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\Lib\10.*" | Select-Object -Last 1 -ExpandProperty Name
-          $vctools = "$vs\VC\Tools\MSVC\$msvc"
-          echo "VCToolsInstallDir=$vctools\" >> $env:GITHUB_ENV
-          echo "PATH=$vctools\bin\Hostx64\x64;$env:PATH" >> $env:GITHUB_ENV
-          echo "LIB=$vctools\lib\x64;C:\Program Files (x86)\Windows Kits\10\Lib\$sdk\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\Lib\$sdk\um\x64" >> $env:GITHUB_ENV
-          echo "INCLUDE=$vctools\include;C:\Program Files (x86)\Windows Kits\10\Include\$sdk\ucrt;C:\Program Files (x86)\Windows Kits\10\Include\$sdk\um;C:\Program Files (x86)\Windows Kits\10\Include\$sdk\shared" >> $env:GITHUB_ENV
-          echo "CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=$vctools\bin\Hostx64\x64\link.exe" >> $env:GITHUB_ENV
-      - name: Force static CRT via Rust target feature
-        # +crt-static tells the Rust compiler to link against the static CRT
-        # library (libcmt.lib) instead of the dynamic one (msvcrt.dll). This
-        # produces a self-contained binary with no MSVC redistributable
-        # dependency. The C/C++ dependencies (ring, whisper-rs-sys) compile
-        # with their default CRT (dynamic), but the linker resolves all CRT
-        # symbols from the static library. This avoids the _CL_=/MT issue
-        # (which breaks ring's cc crate invocations) and the CFLAGS/CXXFLAGS
-        # issue (which corrupts cmake's VS generator flags).
-        shell: pwsh
-        run: |
-          echo "RUSTFLAGS=-Ctarget-feature=+crt-static" >> $env:GITHUB_ENV
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-      - run: bun install --frozen-lockfile
-      - name: Build meety-mcp sidecar
-        shell: bash
-        run: |
-          cargo build --release -p meety-mcp --target x86_64-pc-windows-msvc
-          mkdir -p src-tauri/binaries
-          cp target/x86_64-pc-windows-msvc/release/meety-mcp.exe \
-             src-tauri/binaries/meety-mcp-x86_64-pc-windows-msvc.exe
-      - name: Build Tauri app
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tagName: ${{ github.ref_name }}
-          releaseName: ${{ github.ref_name }}
-          releaseDraft: true
-          args: --target x86_64-pc-windows-msvc
