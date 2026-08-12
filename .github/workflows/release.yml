@@ -119,18 +119,16 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: x86_64-pc-windows-msvc
-      - name: Force static CRT for MSVC
-        shell: pwsh
-        run: |
-          echo "_CL_=/MT" >> $env:GITHUB_ENV
-      - name: Set up MSVC dev environment
-        uses: ilammy/msvc-dev-cmd@v1
-      - name: Remove Git link.exe to prevent MSVC linker conflict
+      - name: Set up MSVC environment
         shell: cmd
         run: |
-          if exist "C:\Program Files\Git\usr\bin\link.exe" (
-            rename "C:\Program Files\Git\usr\bin\link.exe" link.exe.bak
-          )
+          for /f "usebackq tokens=*" %%i in (`vswhere -latest -property installationPath`) do set vs=%%i
+          for /f %%i in ('dir /b "%vs%\VC\Tools\MSVC"') do set msvcver=%%i
+          set VCToolsInstallDir=%vs%\VC\Tools\MSVC\%msvcver%\
+          echo _CL_=/MT>>%GITHUB_ENV%
+          echo VCINSTALLDIR=%vs%\VC>>%GITHUB_ENV%
+          echo VCToolsInstallDir=%VCToolsInstallDir%>>%GITHUB_ENV%
+          echo CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=%VCToolsInstallDir%bin\Hostx64\x64\link.exe>>%GITHUB_ENV%
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
