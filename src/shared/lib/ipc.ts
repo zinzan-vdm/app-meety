@@ -1,4 +1,5 @@
 import { convertFileSrc, invoke, type InvokeArgs } from "@tauri-apps/api/core";
+export { invoke };
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
