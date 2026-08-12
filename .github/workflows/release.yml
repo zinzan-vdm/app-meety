@@ -119,28 +119,35 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: x86_64-pc-windows-msvc
-      - name: Set up MSVC environment
-        shell: cmd
+      - name: Force static CRT for MSVC
+        # _CL_ is an environment variable read by Microsoft's cl.exe. Its value
+        # is prepended to the compiler's argument list. Setting /MT forces the
+        # static CRT linkage for all cl.exe invocations, including those made
+        # by the cmake VS generator (via msbuild) and those made by the cc
+        # crate (via direct invocation). This is the only mechanism that works
+        # for both paths — CFLAGS/CXXFLAGS corrupt cmake's VS generator flags.
+        shell: pwsh
         run: |
-          for /f "usebackq tokens=*" %%i in (`vswhere -latest -property installationPath`) do set vs=%%i
-          for /f %%i in ('dir /b "%vs%\VC\Tools\MSVC"') do set msvcver=%%i
-          set VCToolsInstallDir=%vs%\VC\Tools\MSVC\%msvcver%\
-          for /f %%i in ('dir /b /ad "C:\Program Files (x86)\Windows Kits\10\Lib\10.*"') do set sdkver=%%i
-          echo VCINSTALLDIR=%vs%\VC>>%GITHUB_ENV%
-          echo VCToolsInstallDir=%VCToolsInstallDir%>>%GITHUB_ENV%
-          echo PATH=%VCToolsInstallDir%bin\Hostx64\x64;%PATH%>>%GITHUB_ENV%
-          echo LIB=%VCToolsInstallDir%lib\x64;C:\Program Files (x86)\Windows Kits\10\Lib\%sdkver%\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\Lib\%sdkver%\um\x64>>%GITHUB_ENV%
-          echo INCLUDE=%VCToolsInstallDir%include;C:\Program Files (x86)\Windows Kits\10\Include\%sdkver%\ucrt;C:\Program Files (x86)\Windows Kits\10\Include\%sdkver%\um;C:\Program Files (x86)\Windows Kits\10\Include\%sdkver%\shared>>%GITHUB_ENV%
-          echo CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=%VCToolsInstallDir%bin\Hostx64\x64\link.exe>>%GITHUB_ENV%
+          echo "_CL_=/MT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
+      - uses: ilammy/msvc-dev-cmd@v1
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       - run: bun install --frozen-lockfile
+      - name: Rename Git link.exe to prevent MSVC linker conflict
+        # Git for Windows ships a GNU coreutils link.exe in usr/bin. The MSVC
+        # linker is also named link.exe. When rustc searches PATH for a linker,
+        # it can find the Git file before the MSVC file. Renaming it removes
+        # the competitor from the search path — the MSVC linker is the only
+        # link.exe left after this step.
+        shell: pwsh
+        run: |
+          $gitLink = "C:\Program Files\Git\usr\bin\link.exe"
+          if (Test-Path $gitLink) {
+            Rename-Item -Path $gitLink -NewName "link.exe.bak" -Force
+          }
       - name: Build meety-mcp sidecar
         shell: bash
-        env:
-          CFLAGS: /MT
-          CXXFLAGS: /MT
         run: |
           cargo build --release -p meety-mcp --target x86_64-pc-windows-msvc
           mkdir -p src-tauri/binaries
@@ -149,8 +156,6 @@ jobs:
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0
         env:
-          CFLAGS: /MT
-          CXXFLAGS: /MT
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
