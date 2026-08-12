@@ -9,7 +9,7 @@ import { playFeedback } from "@/shared/lib/feedback";
 import type { DeviceInfo } from "@/shared/types/DeviceInfo";
 import type { Settings } from "@/shared/types/Settings";
 import { isMac } from "@/shared/lib/platform";
-import { invoke } from "@tauri-apps/api/core";
+import { invoke } from "@/shared/lib/ipc";
 
 interface Props {
   settings: Settings;
