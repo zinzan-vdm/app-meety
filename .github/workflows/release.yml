@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   build:
-    if: false
     name: Build (${{ matrix.platform.name }})
     strategy:
       fail-fast: false
