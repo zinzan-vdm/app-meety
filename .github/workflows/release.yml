@@ -105,3 +105,41 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: --target ${{ matrix.platform.target }}
+
+  windows-v2:
+    name: Build (windows-x64-2)
+    runs-on: windows-latest
+    needs: build
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write VERSION from tag
+        shell: bash
+        run: echo "${{ github.ref_name }}" > VERSION
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+      - name: Force static CRT for MSVC
+        shell: pwsh
+        run: |
+          echo "_CL_=/MT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Build meety-mcp sidecar
+        shell: bash
+        run: |
+          cargo build --release -p meety-mcp --target x86_64-pc-windows-msvc
+          mkdir -p src-tauri/binaries
+          cp target/x86_64-pc-windows-msvc/release/meety-mcp.exe \
+             src-tauri/binaries/meety-mcp-x86_64-pc-windows-msvc.exe
+      - name: Build Tauri app
+        run: cargo tauri build --target x86_64-pc-windows-msvc
+      - name: Upload .msi to release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          MSI=$(ls src-tauri/target/release/bundle/msi/*.msi)
+          gh release upload "${{ github.ref_name }}" "$MSI" --clobber
