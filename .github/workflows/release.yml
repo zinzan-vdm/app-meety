@@ -128,6 +128,7 @@ jobs:
           echo _CL_=/MT>>%GITHUB_ENV%
           echo VCINSTALLDIR=%vs%\VC>>%GITHUB_ENV%
           echo VCToolsInstallDir=%VCToolsInstallDir%>>%GITHUB_ENV%
+          echo PATH=%VCToolsInstallDir%bin\Hostx64\x64;%PATH%>>%GITHUB_ENV%
           echo CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=%VCToolsInstallDir%bin\Hostx64\x64\link.exe>>%GITHUB_ENV%
       - uses: oven-sh/setup-bun@v2
         with:
