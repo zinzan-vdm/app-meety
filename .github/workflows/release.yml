@@ -126,12 +126,11 @@ jobs:
       - name: Set up MSVC dev environment
         uses: ilammy/msvc-dev-cmd@v1
       - name: Remove Git link.exe to prevent MSVC linker conflict
-        shell: pwsh
+        shell: cmd
         run: |
-          $gitLink = "C:\Program Files\Git\usr\bin\link.exe"
-          if (Test-Path $gitLink) {
-            Rename-Item -Path $gitLink -NewName "link.exe.bak" -Force
-          }
+          if exist "C:\Program Files\Git\usr\bin\link.exe" (
+            rename "C:\Program Files\Git\usr\bin\link.exe" link.exe.bak
+          )
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
