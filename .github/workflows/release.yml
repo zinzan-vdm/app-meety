@@ -123,6 +123,8 @@ jobs:
         shell: pwsh
         run: |
           echo "_CL_=/MT" >> $env:GITHUB_ENV
+      - name: Set up MSVC dev environment
+        uses: ilammy/msvc-dev-cmd@v1
       - name: Remove Git link.exe to prevent MSVC linker conflict
         shell: pwsh
         run: |
