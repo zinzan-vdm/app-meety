@@ -119,10 +119,11 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: x86_64-pc-windows-msvc
-      - name: Force static CRT for MSVC
+      - name: Force static CRT for MSVC compilations
         shell: pwsh
         run: |
-          echo "_CL_=/MT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
+          echo "CFLAGS=/MT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
+          echo "CXXFLAGS=/MT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
       - name: Set up MSVC dev environment
         uses: ilammy/msvc-dev-cmd@v1
       - name: Use Ninja generator for CMake
