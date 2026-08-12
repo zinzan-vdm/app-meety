@@ -134,14 +134,11 @@ jobs:
           cp target/x86_64-pc-windows-msvc/release/meety-mcp.exe \
              src-tauri/binaries/meety-mcp-x86_64-pc-windows-msvc.exe
       - name: Build Tauri app
-        run: cargo tauri build --target x86_64-pc-windows-msvc
-      - name: Upload .msi to release
-        shell: bash
+        uses: tauri-apps/tauri-action@v0
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          MSI=$(ls src-tauri/target/release/bundle/msi/*.msi)
-          gh release create "${{ github.ref_name }}" "$MSI" \
-            --title "${{ github.ref_name }}" \
-            --draft --notes "" --latest=false 2>/dev/null || \
-          gh release upload "${{ github.ref_name }}" "$MSI" --clobber
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: ${{ github.ref_name }}
+          releaseDraft: true
+          args: --target x86_64-pc-windows-msvc
