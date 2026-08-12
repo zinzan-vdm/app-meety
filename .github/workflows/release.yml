@@ -126,8 +126,6 @@ jobs:
           for /f %%i in ('dir /b "%vs%\VC\Tools\MSVC"') do set msvcver=%%i
           set VCToolsInstallDir=%vs%\VC\Tools\MSVC\%msvcver%\
           for /f %%i in ('dir /b /ad "C:\Program Files (x86)\Windows Kits\10\Lib\10.*"') do set sdkver=%%i
-          echo CFLAGS=/MT>>%GITHUB_ENV%
-          echo CXXFLAGS=/MT>>%GITHUB_ENV%
           echo VCINSTALLDIR=%vs%\VC>>%GITHUB_ENV%
           echo VCToolsInstallDir=%VCToolsInstallDir%>>%GITHUB_ENV%
           echo PATH=%VCToolsInstallDir%bin\Hostx64\x64;%PATH%>>%GITHUB_ENV%
@@ -140,6 +138,9 @@ jobs:
       - run: bun install --frozen-lockfile
       - name: Build meety-mcp sidecar
         shell: bash
+        env:
+          CFLAGS: /MT
+          CXXFLAGS: /MT
         run: |
           cargo build --release -p meety-mcp --target x86_64-pc-windows-msvc
           mkdir -p src-tauri/binaries
