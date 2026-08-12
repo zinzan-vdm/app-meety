@@ -109,7 +109,6 @@ jobs:
   windows-v2:
     name: Build (windows-x64-2)
     runs-on: windows-latest
-    needs: build
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
@@ -142,4 +141,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           MSI=$(ls src-tauri/target/release/bundle/msi/*.msi)
+          gh release create "${{ github.ref_name }}" "$MSI" \
+            --title "${{ github.ref_name }}" \
+            --draft --notes "" --latest=false 2>/dev/null || \
           gh release upload "${{ github.ref_name }}" "$MSI" --clobber
