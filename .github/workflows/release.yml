@@ -133,7 +133,7 @@ jobs:
         shell: pwsh
         run: |
           $linker = "$env:VCToolsInstallDir\bin\Hostx64\x64\link.exe"
-          echo "RUSTFLAGS=-C linker=$linker" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
+          echo "CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=$linker" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
