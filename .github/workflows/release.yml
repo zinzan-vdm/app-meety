@@ -123,13 +123,13 @@ jobs:
         shell: pwsh
         run: |
           echo "_CL_=/MT" >> $env:GITHUB_ENV
-      - name: Set up MSVC dev environment
-        uses: ilammy/msvc-dev-cmd@v1
-      - name: Pin MSVC linker for rustc
+      - name: Remove Git link.exe to prevent MSVC linker conflict
         shell: pwsh
         run: |
-          $linker = "$env:VCToolsInstallDir\bin\Hostx64\x64\link.exe"
-          echo "CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=$linker" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
+          $gitLink = "C:\Program Files\Git\usr\bin\link.exe"
+          if (Test-Path $gitLink) {
+            Rename-Item -Path $gitLink -NewName "link.exe.bak" -Force
+          }
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
