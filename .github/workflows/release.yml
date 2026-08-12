@@ -122,6 +122,8 @@ jobs:
         shell: pwsh
         run: |
           echo "_CL_=/MT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding ASCII
+      - name: Set up MSVC dev environment
+        uses: ilammy/msvc-dev-cmd@v1
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
