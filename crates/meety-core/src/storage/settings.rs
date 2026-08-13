@@ -152,9 +152,7 @@ fn default_feedback_sounds_enabled() -> bool {
     false
 }
 fn default_memory_dir() -> PathBuf {
-    let home = std::env::var_os("HOME")
-        .map(PathBuf::from)
-        .unwrap_or_else(|| PathBuf::from("."));
+    let home = crate::paths::home_dir();
     let vault_root = home
         .join("Documents")
         .join("GitHub")
@@ -203,9 +201,7 @@ impl Default for Settings {
 }
 
 fn default_home_dir() -> PathBuf {
-    let home = std::env::var_os("HOME")
-        .map(PathBuf::from)
-        .unwrap_or_else(|| PathBuf::from("."));
+    let home = crate::paths::home_dir();
     home.join("Documents").join("Meety")
 }
 
@@ -278,9 +274,7 @@ impl SettingsStore {
 }
 
 fn default_settings_path() -> PathBuf {
-    let home = std::env::var_os("HOME")
-        .map(PathBuf::from)
-        .unwrap_or_else(|| PathBuf::from("."));
+    let home = crate::paths::home_dir();
 
     #[cfg(target_os = "macos")]
     {

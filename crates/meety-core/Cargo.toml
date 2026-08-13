@@ -36,6 +36,8 @@ ts-rs = { workspace = true }
 aes-gcm = { workspace = true }
 argon2 = { workspace = true }
 uuid = { workspace = true }
+# Cross-platform home directory for model / settings / storage paths.
+dirs = { workspace = true }
 
 # Memory layer.
 rusqlite = { workspace = true }

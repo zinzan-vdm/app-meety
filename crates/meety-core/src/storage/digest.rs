@@ -147,9 +147,7 @@ fn plural(n: usize) -> &'static str {
 }
 
 pub fn default_digests_dir() -> PathBuf {
-    let home = std::env::var_os("HOME")
-        .map(PathBuf::from)
-        .unwrap_or_else(|| PathBuf::from("."));
+    let home = crate::paths::home_dir();
     home.join("Documents").join("Meety").join("Digests")
 }
 

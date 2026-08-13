@@ -6,9 +6,7 @@ use crate::error::{MeetyError, Result};
 const REGISTRY_FILENAME: &str = "speaker-registry.json";
 
 fn default_app_support_dir() -> PathBuf {
-    let home = std::env::var_os("HOME")
-        .map(PathBuf::from)
-        .unwrap_or_else(|| PathBuf::from("."));
+    let home = crate::paths::home_dir();
 
     #[cfg(target_os = "macos")]
     {
