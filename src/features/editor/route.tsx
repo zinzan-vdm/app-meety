@@ -30,6 +30,7 @@ import { Button } from "@/shared/ui/button";
 import { Separator } from "@/shared/ui/separator";
 import { copyToClipboard } from "@/shared/lib/share";
 import { humanizeError } from "@/shared/lib/errors";
+import { revealNoun } from "@/shared/lib/platform";
 import { formatBytes, formatDuration } from "@/shared/lib/utils";
 import {
   clearRecordingArtifacts,
@@ -387,7 +388,7 @@ export default function Editor() {
     if (!recording) return;
     revealInFinder(recording.session_dir).catch((e) => {
       console.error("reveal_in_finder:", e);
-      toast.error("Could not open Finder", { description: humanizeError(e) });
+      toast.error(`Could not open ${revealNoun()}`, { description: humanizeError(e) });
     });
   };
 
@@ -1124,7 +1125,7 @@ function NoteMenu({
               </MenuItem>
             ) : null}
             <MenuItem icon={FileText} onClick={run(onReveal)}>
-              Reveal in Finder
+              Reveal in {revealNoun()}
             </MenuItem>
             <MenuItem icon={Trash2} onClick={run(onDelete)} destructive>
               Delete note

@@ -27,14 +27,24 @@ export function audioInputSettingsPath(): string {
   return "your system audio settings";
 }
 
-/**
- * Human-readable name for the system credential store.
+/** Human-readable name for the system credential store.
  * Returns values that fit grammatically after "in the ".
  */
 export function keychainName(): string {
   if (isMac()) return "macOS Keychain";
   if (isWindows()) return "Windows Credential Manager";
   return "system keyring";
+}
+
+/**
+ * Human-readable name for the platform file manager.
+ * "Reveal in Finder" on macOS, "Show in File Explorer" on Windows,
+ * "Show in file manager" on Linux.
+ */
+export function revealNoun(): string {
+  if (isMac()) return "Finder";
+  if (isWindows()) return "File Explorer";
+  return "file manager";
 }
 
 /**
