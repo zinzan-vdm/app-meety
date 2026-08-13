@@ -77,30 +77,71 @@ jobs:
                "src-tauri/binaries/meety-mcp-${{ matrix.platform.target }}"
           fi
 
-      - name: Build Tauri app (macOS)
-        if: runner.os == 'macOS'
-        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tagName: ${{ github.ref_name }}
-          releaseName: ${{ github.ref_name }}
-          releaseBody: |
-            See CHANGELOG.md for the entries that landed in this release.
-          releaseDraft: true
-          prerelease: false
-          args: --target ${{ matrix.platform.target }}
+      - name: Patch version and build Tauri app
+        shell: bash
+        run: |
+          TAG="${{ github.ref_name }}"
+          TARGET="${{ matrix.platform.target }}"
 
-      - name: Build Tauri app (Linux + Windows)
-        if: runner.os != 'macOS'
-        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5
+          # Override version in tauri.conf.json so the built app binary and
+          # package metadata (deb version, dmg plist, msi version) reflect the
+          # release tag rather than the crate default.
+          jq --arg v "$TAG" '.version = $v' src-tauri/tauri.conf.json \
+            > src-tauri/tauri.conf.json.tmp
+          mv src-tauri/tauri.conf.json.tmp src-tauri/tauri.conf.json
+
+          # Build the Tauri app (includes bundling into dmg/deb/rpm/msi)
+          cargo tauri build --target "$TARGET"
+
+      - name: Rename bundles with tag- and platform-qualified names
+        shell: bash
+        run: |
+          TAG="${{ github.ref_name }}"
+          TARGET="${{ matrix.platform.target }}"
+
+          # Map Rust target triple → user-facing platform label
+          case "$TARGET" in
+            aarch64-apple-darwin)     PLAT="macos-arm64"  ;;
+            x86_64-unknown-linux-gnu) PLAT="linux-x64"    ;;
+            x86_64-pc-windows-msvc)   PLAT="windows-x64"  ;;
+          esac
+
+          BUNDLE_DIR="src-tauri/target/${TARGET}/release/bundle"
+          echo "=== Bundle directory contents (before rename) ==="
+          find "$BUNDLE_DIR" -type f
+
+          for dir in "$BUNDLE_DIR"/*/; do
+            for f in "$dir"*; do
+              [ -f "$f" ] || continue
+              ext="${f##*.}"
+              new_name="Meety-${TAG}-${PLAT}.${ext}"
+              if [ "$f" != "${dir}${new_name}" ]; then
+                mv "$f" "${dir}${new_name}"
+                echo "::notice title=Artifact::Meety-${TAG}-${PLAT}.${ext}"
+              fi
+            done
+          done
+
+          echo "=== Bundle directory contents (after rename) ==="
+          find "$BUNDLE_DIR" -type f
+
+      - name: Upload to GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tagName: ${{ github.ref_name }}
-          releaseName: ${{ github.ref_name }}
-          releaseBody: |
-            See CHANGELOG.md for the entries that landed in this release.
-          releaseDraft: true
-          prerelease: false
-          args: --target ${{ matrix.platform.target }}
+        shell: bash
+        run: |
+          TAG="${{ github.ref_name }}"
+          TARGET="${{ matrix.platform.target }}"
+          BUNDLE_DIR="src-tauri/target/${TARGET}/release/bundle"
+
+          # Create a draft release if this is the first job to get here.
+          # --clobber on upload makes subsequent jobs overwrite safely.
+          gh release create "$TAG" \
+            --draft \
+            --title "$TAG" \
+            --notes "See CHANGELOG.md for the entries that landed in this release." \
+            || true
+
+          # Upload every Meety-* bundle artifact from this platform.
+          find "$BUNDLE_DIR" -name "Meety-*" -type f -print0 | \
+            xargs -0 gh release upload "$TAG" --clobber
