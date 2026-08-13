@@ -4,6 +4,7 @@ import { FileText, FolderOpen, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { humanizeError } from "@/shared/lib/errors";
+import { revealNoun } from "@/shared/lib/platform";
 import {
   clearRecordingArtifacts,
   deleteRecording,
@@ -64,12 +65,14 @@ export function useNoteContextMenu(onChanged?: () => void) {
           : []),
         {
           id: "reveal",
-          label: "Reveal in Finder",
+          label: `Reveal in ${revealNoun()}`,
           icon: FolderOpen,
           onSelect: () =>
             revealInFinder(item.session_dir).catch((err) => {
               console.error("reveal_in_finder:", err);
-              toast.error("Could not open Finder", { description: humanizeError(err) });
+              toast.error(`Could not open ${revealNoun()}`, {
+                description: humanizeError(err),
+              });
             }),
         },
         {
