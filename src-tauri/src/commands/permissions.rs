@@ -22,45 +22,62 @@ const REMINDERS_RATIONALE: &str =
 const NOTIFICATIONS_RATIONALE: &str =
     "Used only for 'recording started' / 'summary ready' alerts. Disabled features stay disabled.";
 
+const MIC_RATIONALE_NON_MACOS: &str =
+    "We record what you say. Grant microphone access in your system settings. Without it, your half of every meeting is silent.";
+
+const SCREEN_RATIONALE_NON_MACOS: &str =
+    "Meety captures system audio through your operating system's loopback device. No screen recording permission is needed on this platform.";
+
 #[tauri::command]
 pub fn list_permissions() -> Vec<PermissionRow> {
-    let (audio_rationale, audio_url) = (SCREEN_RATIONALE, SCREEN_URL);
-
     #[cfg(target_os = "macos")]
-    let (mic, screen, reminders) = (mac::mic_status(), mac::screen_status(), reminders_status());
+    {
+        let (mic, screen, reminders) =
+            (mac::mic_status(), mac::screen_status(), reminders_status());
+        vec![
+            PermissionRow {
+                permission: Permission::Microphone,
+                status: mic,
+                rationale: MIC_RATIONALE.to_string(),
+                settings_url: MIC_URL.to_string(),
+            },
+            PermissionRow {
+                permission: Permission::ScreenRecording,
+                status: screen,
+                rationale: SCREEN_RATIONALE.to_string(),
+                settings_url: SCREEN_URL.to_string(),
+            },
+            PermissionRow {
+                permission: Permission::Reminders,
+                status: reminders,
+                rationale: REMINDERS_RATIONALE.to_string(),
+                settings_url: REMINDERS_URL.to_string(),
+            },
+            PermissionRow {
+                permission: Permission::Notifications,
+                status: PermissionStatus::Unknown,
+                rationale: NOTIFICATIONS_RATIONALE.to_string(),
+                settings_url: NOTIFICATIONS_URL.to_string(),
+            },
+        ]
+    }
     #[cfg(not(target_os = "macos"))]
-    let (mic, screen, reminders) = (
-        PermissionStatus::Unknown,
-        PermissionStatus::Unknown,
-        PermissionStatus::Unknown,
-    );
-
-    vec![
-        PermissionRow {
-            permission: Permission::Microphone,
-            status: mic,
-            rationale: MIC_RATIONALE.to_string(),
-            settings_url: MIC_URL.to_string(),
-        },
-        PermissionRow {
-            permission: Permission::ScreenRecording,
-            status: screen,
-            rationale: audio_rationale.to_string(),
-            settings_url: audio_url.to_string(),
-        },
-        PermissionRow {
-            permission: Permission::Reminders,
-            status: reminders,
-            rationale: REMINDERS_RATIONALE.to_string(),
-            settings_url: REMINDERS_URL.to_string(),
-        },
-        PermissionRow {
-            permission: Permission::Notifications,
-            status: PermissionStatus::Unknown,
-            rationale: NOTIFICATIONS_RATIONALE.to_string(),
-            settings_url: NOTIFICATIONS_URL.to_string(),
-        },
-    ]
+    {
+        vec![
+            PermissionRow {
+                permission: Permission::Microphone,
+                status: PermissionStatus::Unknown,
+                rationale: MIC_RATIONALE_NON_MACOS.to_string(),
+                settings_url: String::new(),
+            },
+            PermissionRow {
+                permission: Permission::ScreenRecording,
+                status: PermissionStatus::Granted,
+                rationale: SCREEN_RATIONALE_NON_MACOS.to_string(),
+                settings_url: String::new(),
+            },
+        ]
+    }
 }
 
 #[tauri::command]
@@ -99,7 +116,11 @@ pub fn request_permission(app: tauri::AppHandle, permission: Permission) -> Resu
     #[cfg(not(target_os = "macos"))]
     {
         let _ = (&app, permission);
-        Err("requesting permissions is only supported on macOS".into())
+        // On non-macOS we cannot pre-flight OS permissions via Tauri IPC.
+        // Microphone access is handled by the OS at the cpal level when
+        // recording starts; screen recording is not a concept on these
+        // platforms. Silently succeed — the system will prompt if needed.
+        Ok(())
     }
 }
 
@@ -227,5 +248,7 @@ fn open_url(app: &tauri::AppHandle, url: &str) -> Result<(), String> {
 
 #[cfg(not(target_os = "macos"))]
 fn open_url(_app: &tauri::AppHandle, _url: &str) -> Result<(), String> {
-    Err("open_permission_settings is only supported on macOS".into())
+    // No equivalent deep-link scheme on non-macOS; the frontend already
+    // shows a generic "open your system settings" hint for these platforms.
+    Ok(())
 }
