@@ -15,6 +15,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("Audio → voice_processing_enabled persists when toggled off", async ({ page }) => {
+  test.skip(process.platform !== "darwin", "Voice processing is a macOS-only feature (VPIO AudioUnit)");
   await page.getByRole("button", { name: /^audio$/i }).click();
   await page.getByRole("switch", { name: /voice processing/i }).click();
   await page
