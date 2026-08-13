@@ -11,14 +11,18 @@ const REMINDERS_URL: &str =
     "x-apple.systempreferences:com.apple.preference.security?Privacy_Reminders";
 const NOTIFICATIONS_URL: &str = "x-apple.systempreferences:com.apple.preference.notifications";
 
+#[cfg(target_os = "macos")]
 const MIC_RATIONALE: &str =
     "We record what you say. Without microphone access, your half of every meeting is silent.";
 
+#[cfg(target_os = "macos")]
 const SCREEN_RATIONALE: &str =
     "We record what the other side says by capturing system audio. Screen Recording is the macOS API that allows it.";
 
+#[cfg(target_os = "macos")]
 const REMINDERS_RATIONALE: &str =
     "Syncs extracted action items into your Apple Reminders list, if you turn that on.";
+#[cfg(target_os = "macos")]
 const NOTIFICATIONS_RATIONALE: &str =
     "Used only for 'recording started' / 'summary ready' alerts. Disabled features stay disabled.";
 
