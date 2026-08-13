@@ -70,7 +70,9 @@ export function useNoteContextMenu(onChanged?: () => void) {
           onSelect: () =>
             revealInFinder(item.session_dir).catch((err) => {
               console.error("reveal_in_finder:", err);
-              toast.error(`Could not open ${revealNoun()}`, { description: humanizeError(err) });
+              toast.error(`Could not open ${revealNoun()}`, {
+                description: humanizeError(err),
+              });
             }),
         },
         {
