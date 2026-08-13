@@ -138,14 +138,16 @@ export function SectionAudio({ settings, onChange }: Props) {
                 <strong className="text-foreground">
                   Leave this off if your mic records nothing
                 </strong>{" "}
-                — on some Macs this path captures silence; plain capture is the
-                reliable default.
+                — on some Macs this path captures silence; plain capture is the reliable
+                default.
               </p>
             </div>
             <Switch
               id="voice-processing-toggle"
               checked={settings.voice_processing_enabled}
-              onCheckedChange={(checked) => onChange("voice_processing_enabled", checked)}
+              onCheckedChange={(checked) =>
+                onChange("voice_processing_enabled", checked)
+              }
               className="mt-1"
             />
           </div>
@@ -157,8 +159,8 @@ export function SectionAudio({ settings, onChange }: Props) {
             </div>
             Voice processing kicks in when audio is leaving the laptop speakers and the
             mic is picking it back up. With headphones plugged in there is no bleed to
-            cancel and the only effect is the bundled noise suppression and AGC, which are
-            still useful.
+            cancel and the only effect is the bundled noise suppression and AGC, which
+            are still useful.
           </div>
         </section>
       ) : null}
