@@ -15,7 +15,7 @@ import { cn } from "@/shared/lib/utils";
 import { humanizeError } from "@/shared/lib/errors";
 import { setProviderKey } from "@/shared/lib/ipc";
 import { useSettingsStore } from "@/shared/stores/settings-store";
-import { keychainName } from "@/shared/lib/platform";
+import { isMac, keychainName } from "@/shared/lib/platform";
 import { PermissionsScreen } from "./permissions-screen";
 
 type Transcriber = "local_whisper" | "openai";
@@ -54,7 +54,7 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
         onboarding_completed: true,
       });
       toast.success("You're set up", {
-        description: "Press Cmd-R any time to start recording.",
+        description: `Press ${isMac() ? "Cmd" : "Ctrl"}-R any time to start recording.`,
       });
       onFinish();
     } catch (e) {
@@ -132,7 +132,7 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
         <div className="flex items-center gap-2">
           <CheckCircle2 className="h-4 w-4 text-primary" />
           <p className="text-sm">
-            You can change everything later in Preferences (Cmd-,).
+            You can change everything later in Preferences ({isMac() ? "Cmd-" : "Ctrl-"},).
           </p>
         </div>
         <Button onClick={finish} disabled={savingKey} className="gap-2">
