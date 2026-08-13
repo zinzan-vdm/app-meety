@@ -90,8 +90,11 @@ jobs:
             > src-tauri/tauri.conf.json.tmp
           mv src-tauri/tauri.conf.json.tmp src-tauri/tauri.conf.json
 
-          # Build the Tauri app (includes bundling into dmg/deb/rpm/msi)
-          cargo tauri build --target "$TARGET"
+          # Build the Tauri app (includes bundling into dmg/deb/rpm/msi).
+          # Uses `bun run tauri` (which resolves @tauri-apps/cli in
+          # devDependencies) rather than `cargo tauri`, because the cargo
+          # subcommand requires installing tauri-cli separately.
+          bun run tauri build --target "$TARGET"
 
       - name: Rename bundles with tag- and platform-qualified names
         shell: bash
