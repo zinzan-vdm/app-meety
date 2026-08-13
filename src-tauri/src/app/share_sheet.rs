@@ -68,7 +68,45 @@ pub fn share_paths(paths: &[std::path::PathBuf]) -> Result<(), String> {
     }
 }
 
-#[cfg(not(target_os = "macos"))]
+#[cfg(target_os = "windows")]
+pub fn share_paths(paths: &[std::path::PathBuf]) -> Result<(), String> {
+    let Some(first) = paths.first() else {
+        return Err("share_paths: no paths".into());
+    };
+    if !first.exists() {
+        return Err(format!("share_paths: missing file {}", first.display()));
+    }
+    // Windows has no share sheet for arbitrary files; reveal in Explorer
+    // with the file selected — the closest native equivalent.
+    std::process::Command::new("explorer")
+        .arg("/select,")
+        .arg(first)
+        .spawn()
+        .map(|_| ())
+        .map_err(|e| e.to_string())
+}
+
+#[cfg(target_os = "linux")]
+pub fn share_paths(paths: &[std::path::PathBuf]) -> Result<(), String> {
+    let Some(first) = paths.first() else {
+        return Err("share_paths: no paths".into());
+    };
+    if !first.exists() {
+        return Err(format!("share_paths: missing file {}", first.display()));
+    }
+    // Linux has no share sheet; open the containing folder in the default
+    // file manager (xdg-open is the freedesktop standard).
+    let parent = first
+        .parent()
+        .ok_or_else(|| format!("share_paths: no parent for {}", first.display()))?;
+    std::process::Command::new("xdg-open")
+        .arg(parent)
+        .spawn()
+        .map(|_| ())
+        .map_err(|e| e.to_string())
+}
+
+#[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]
 pub fn share_paths(_paths: &[std::path::PathBuf]) -> Result<(), String> {
-    Err("share_paths: only supported on macOS".into())
+    Err("share_paths: unsupported platform".into())
 }

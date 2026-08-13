@@ -1,11 +1,12 @@
 import * as React from "react";
-import { Check, Loader2, Mic, Monitor, ShieldCheck } from "lucide-react";
+import { Check, Info, Loader2, Mic, Monitor, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/utils";
 import { humanizeError } from "@/shared/lib/errors";
+import { isMac } from "@/shared/lib/platform";
 import { listPermissions, requestPermission } from "@/shared/lib/ipc";
 import type { PermissionRow } from "@/shared/types/PermissionRow";
 
@@ -41,6 +42,7 @@ interface Props {
 }
 
 export function PermissionsScreen({ onContinue, onSkip }: Props) {
+  const isMacPlatform = isMac();
   const [rows, setRows] = React.useState<PermissionRow[]>([]);
   const [pending, setPending] = React.useState<Set<Slot>>(new Set());
 
@@ -66,7 +68,13 @@ export function PermissionsScreen({ onContinue, onSkip }: Props) {
     return map;
   }, [rows]);
 
-  const allGranted = SLOTS.every((s) => byPermission.get(s.slot)?.status === "granted");
+  // On non-macOS there is no pre-flight OS permission API: the system
+  // prompts at recording time. Show the screen as informational and let
+  // the user continue regardless of reported status.
+  const slots = isMacPlatform ? SLOTS : SLOTS.filter((s) => s.slot === "microphone");
+  const allGranted = isMacPlatform
+    ? slots.every((s) => byPermission.get(s.slot)?.status === "granted")
+    : true;
 
   const handleEnable = async (slot: Slot) => {
     setPending((s) => new Set(s).add(slot));
@@ -109,7 +117,7 @@ export function PermissionsScreen({ onContinue, onSkip }: Props) {
         aria-label="Required permissions"
         className="overflow-hidden rounded-xl border border-border bg-card"
       >
-        {SLOTS.map((cfg, idx) => {
+        {slots.map((cfg, idx) => {
           const row = byPermission.get(cfg.slot);
           const granted = row?.status === "granted";
           const isPending = pending.has(cfg.slot);
@@ -144,18 +152,20 @@ export function PermissionsScreen({ onContinue, onSkip }: Props) {
                       <Check className="h-3 w-3" />
                       Granted
                     </Badge>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-7 text-2xs text-muted-foreground"
-                      onClick={() => handleEnable(cfg.slot)}
-                      title="Re-open System Settings for this permission"
-                      aria-label={`Re-prompt ${cfg.title}`}
-                    >
-                      Re-prompt
-                    </Button>
+                    {isMacPlatform ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 text-2xs text-muted-foreground"
+                        onClick={() => handleEnable(cfg.slot)}
+                        title="Re-open System Settings for this permission"
+                        aria-label={`Re-prompt ${cfg.title}`}
+                      >
+                        Re-prompt
+                      </Button>
+                    ) : null}
                   </div>
-                ) : (
+                ) : isMacPlatform ? (
                   <Button
                     size="sm"
                     onClick={() => handleEnable(cfg.slot)}
@@ -172,6 +182,15 @@ export function PermissionsScreen({ onContinue, onSkip }: Props) {
                       <>Enable</>
                     )}
                   </Button>
+                ) : (
+                  <Badge
+                    variant="outline"
+                    className="gap-1.5 border-border bg-muted/40 text-muted-foreground"
+                    title="Meety will ask for access when you start recording"
+                  >
+                    <Info className="h-3 w-3" />
+                    Asked on first recording
+                  </Badge>
                 )}
               </div>
             </div>
@@ -180,7 +199,11 @@ export function PermissionsScreen({ onContinue, onSkip }: Props) {
       </div>
 
       <div className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>You can change this later in System Settings.</span>
+        <span>
+          {isMacPlatform
+            ? "You can change this later in System Settings."
+            : "You can change this later in your system settings."}
+        </span>
         <div className="flex items-center gap-2">
           {onSkip ? (
             <Button variant="ghost" size="sm" onClick={onSkip}>
