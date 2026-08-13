@@ -132,7 +132,8 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
         <div className="flex items-center gap-2">
           <CheckCircle2 className="h-4 w-4 text-primary" />
           <p className="text-sm">
-            You can change everything later in Preferences ({isMac() ? "Cmd-" : "Ctrl-"},).
+            You can change everything later in Preferences ({isMac() ? "Cmd-" : "Ctrl-"}
+            ,).
           </p>
         </div>
         <Button onClick={finish} disabled={savingKey} className="gap-2">
