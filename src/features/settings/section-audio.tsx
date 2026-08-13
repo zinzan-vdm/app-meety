@@ -114,63 +114,56 @@ export function SectionAudio({ settings, onChange }: Props) {
         ) : null}
       </section>
 
-      <section className="space-y-4">
-        <div className="flex items-start justify-between gap-6">
-          <div className="space-y-1">
-            <Label
-              htmlFor="voice-processing-toggle"
-              className="flex items-center gap-2 text-sm font-medium"
-            >
-              <Headphones className="h-4 w-4 text-muted-foreground" />
-              Voice processing
-            </Label>
-            <p className="max-w-md text-xs text-muted-foreground">
-              {isMac() ? (
-                <>
-                  Routes the mic through Apple&apos;s Voice Processing IO AudioUnit —
-                  acoustic echo cancellation, noise suppression, and automatic gain
-                  control. Stops the mic from picking up system audio when you are not
-                  wearing headphones. Same technology Zoom, FaceTime, and Discord use on
-                  macOS.{" "}
-                  <strong className="text-foreground">
-                    Leave this off if your mic records nothing
-                  </strong>{" "}
-                  — on some Macs this path captures silence; plain capture is the
-                  reliable default.
-                </>
-              ) : (
-                <>
-                  Routes the mic through the system acoustic echo cancellation (AEC) and
-                  noise suppression pipeline. Stops the mic from picking up system audio
-                  when you are not wearing headphones.{" "}
-                  <strong className="text-foreground">
-                    Leave this off if your mic records nothing
-                  </strong>{" "}
-                  — on some systems this path captures silence; plain capture is the
-                  reliable default.
-                </>
-              )}
-            </p>
+      {/* Voice processing is a macOS-only feature (Apple Voice
+          Processing IO AudioUnit). On Windows/Linux the setting is a
+          no-op — the mic capture always uses plain cpal — so the
+          toggle is hidden rather than shown as a broken control. */}
+      {isMac() ? (
+        <section className="space-y-4">
+          <div className="flex items-start justify-between gap-6">
+            <div className="space-y-1">
+              <Label
+                htmlFor="voice-processing-toggle"
+                className="flex items-center gap-2 text-sm font-medium"
+              >
+                <Headphones className="h-4 w-4 text-muted-foreground" />
+                Voice processing
+              </Label>
+              <p className="max-w-md text-xs text-muted-foreground">
+                Routes the mic through Apple&apos;s Voice Processing IO AudioUnit —
+                acoustic echo cancellation, noise suppression, and automatic gain
+                control. Stops the mic from picking up system audio when you are not
+                wearing headphones. Same technology Zoom, FaceTime, and Discord use on
+                macOS.{" "}
+                <strong className="text-foreground">
+                  Leave this off if your mic records nothing
+                </strong>{" "}
+                — on some Macs this path captures silence; plain capture is the reliable
+                default.
+              </p>
+            </div>
+            <Switch
+              id="voice-processing-toggle"
+              checked={settings.voice_processing_enabled}
+              onCheckedChange={(checked) =>
+                onChange("voice_processing_enabled", checked)
+              }
+              className="mt-1"
+            />
           </div>
-          <Switch
-            id="voice-processing-toggle"
-            checked={settings.voice_processing_enabled}
-            onCheckedChange={(checked) => onChange("voice_processing_enabled", checked)}
-            className="mt-1"
-          />
-        </div>
 
-        <div className="rounded-lg border border-border bg-muted/40 p-3 text-xs text-muted-foreground">
-          <div className="mb-1 flex items-center gap-2 text-foreground">
-            <Headphones className="h-3.5 w-3.5" />
-            <span className="font-medium">When does this matter?</span>
+          <div className="rounded-lg border border-border bg-muted/40 p-3 text-xs text-muted-foreground">
+            <div className="mb-1 flex items-center gap-2 text-foreground">
+              <Headphones className="h-3.5 w-3.5" />
+              <span className="font-medium">When does this matter?</span>
+            </div>
+            Voice processing kicks in when audio is leaving the laptop speakers and the
+            mic is picking it back up. With headphones plugged in there is no bleed to
+            cancel and the only effect is the bundled noise suppression and AGC, which
+            are still useful.
           </div>
-          Voice processing kicks in when audio is leaving the laptop speakers and the
-          mic is picking it back up. With headphones plugged in there is no bleed to
-          cancel and the only effect is the bundled noise suppression and AGC, which are
-          still useful.
-        </div>
-      </section>
+        </section>
+      ) : null}
     </div>
   );
 }

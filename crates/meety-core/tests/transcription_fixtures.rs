@@ -9,8 +9,10 @@ fn model_path() -> Option<PathBuf> {
         return pb.is_file().then_some(pb);
     }
 
-    let home = std::env::var_os("HOME")?;
-    let pb = PathBuf::from(home).join("Library/Application Support/Meety/models/ggml-large-v3.bin");
+    // Match the platform-specific default used by the app's model store
+    // (macOS: ~/Library/Application Support/Meety/models, others: ~/.local/share/meety/models).
+    let pb = meety_core::transcription::models::WhisperModelStore::default_location()
+        .path_for(meety_core::transcription::models::WhisperModel::LargeV3);
     pb.is_file().then_some(pb)
 }
 

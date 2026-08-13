@@ -166,6 +166,11 @@ urlencoding = "2"
 # are emitted into `src/lib/generated/` during `cargo test`.
 ts-rs = { version = "12", features = ["serde-compat", "chrono-impl"] }
 
+# Cross-platform home directory resolution. Used by every model,
+# settings, and storage path function in meety-core. Replaces
+# raw `std::env::var_os("HOME")` which is not set on Windows.
+dirs = "6"
+
 # Local Whisper inference via whisper.cpp. Builds whisper.cpp from
 # source the first time — first cargo build picks up a noticeable
 # extra few minutes. Metal acceleration is enabled in meety-core's

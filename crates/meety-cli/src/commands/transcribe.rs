@@ -280,9 +280,10 @@ fn decode_wav_to_16k_mono(path: &Path) -> Result<Vec<f32>> {
 }
 
 fn default_model_path() -> PathBuf {
-    let home = std::env::var("HOME").unwrap_or_else(|_| ".".into());
-    PathBuf::from(home)
-        .join("Library")
+    // macOS-style default for local whisper model; matches
+    // meety-core's `WhisperModelStore::default_location()`.
+    let home = meety_core::paths::home_dir();
+    home.join("Library")
         .join("Application Support")
         .join("Meety")
         .join("models")

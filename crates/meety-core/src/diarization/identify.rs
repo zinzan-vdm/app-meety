@@ -132,8 +132,9 @@ pub fn recording_uuid(session_dir: &Path) -> Uuid {
 }
 
 pub fn local_device_uuid() -> Uuid {
-    let home = std::env::var("HOME").unwrap_or_else(|_| "meety-local-device".to_string());
-    stable_uuid(format!("meety-device:{home}").as_bytes())
+    let home = crate::paths::home_dir();
+    let home_str = home.to_string_lossy();
+    stable_uuid(format!("meety-device:{home_str}").as_bytes())
 }
 
 pub fn now_ms() -> i64 {

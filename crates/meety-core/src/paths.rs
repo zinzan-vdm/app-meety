@@ -2,6 +2,16 @@ use std::path::{Path, PathBuf};
 
 use crate::error::{MeetyError, Result};
 
+/// Cross-platform home directory.
+///
+/// Uses the `dirs` crate instead of `std::env::var_os("HOME")` because
+/// `HOME` is not set on Windows (Windows uses `USERPROFILE`). Without
+/// this, every default path (models, settings, recordings) fell back to
+/// `.` on Windows — writing into the app's working directory.
+pub fn home_dir() -> PathBuf {
+    dirs::home_dir().unwrap_or_else(|| PathBuf::from("."))
+}
+
 pub fn canonicalize_under(root: &Path, candidate: &Path) -> Result<PathBuf> {
     let canon_root = std::fs::canonicalize(root).map_err(|e| {
         MeetyError::Storage(format!(

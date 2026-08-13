@@ -397,6 +397,7 @@ mod macos_impl {
 #[cfg(target_os = "windows")]
 mod windows_impl {
     use super::*;
+    use crate::audio::silence_gate::SilenceGate;
 
     use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
     use cpal::{Sample, SampleFormat, StreamConfig};
@@ -415,6 +416,7 @@ mod windows_impl {
         sample_format: SampleFormat,
         writer: Arc<AudioWavWriter>,
         resampler: Arc<Mutex<StreamingResampler>>,
+        silence_gate: Arc<SilenceGate>,
         stopped: Arc<AtomicBool>,
     ) -> Result<SendStream> {
         let err_fn = |err| error!(?err, "WASAPI loopback stream error");
@@ -426,7 +428,10 @@ mod windows_impl {
                         if stopped.load(Ordering::SeqCst) {
                             return;
                         }
-                        handle_loopback_samples(data, &writer, &resampler, &stopped);
+                        if silence_gate.should_skip(data) {
+                            return;
+                        }
+                        handle_loopback_samples(data, &writer, &resampler);
                     },
                     err_fn,
                     None,
@@ -435,6 +440,7 @@ mod windows_impl {
             SampleFormat::I16 => {
                 let writer = writer.clone();
                 let resampler = resampler.clone();
+                let silence_gate = silence_gate.clone();
                 let stopped = stopped.clone();
                 device
                     .build_input_stream(
@@ -445,7 +451,10 @@ mod windows_impl {
                             }
                             let floats: Vec<f32> =
                                 data.iter().map(|s| s.to_float_sample()).collect();
-                            handle_loopback_samples(&floats, &writer, &resampler, &stopped);
+                            if silence_gate.should_skip(&floats) {
+                                return;
+                            }
+                            handle_loopback_samples(&floats, &writer, &resampler);
                         },
                         err_fn,
                         None,
@@ -455,6 +464,7 @@ mod windows_impl {
             SampleFormat::U16 => {
                 let writer = writer.clone();
                 let resampler = resampler.clone();
+                let silence_gate = silence_gate.clone();
                 let stopped = stopped.clone();
                 device
                     .build_input_stream(
@@ -465,7 +475,10 @@ mod windows_impl {
                             }
                             let floats: Vec<f32> =
                                 data.iter().map(|s| s.to_float_sample()).collect();
-                            handle_loopback_samples(&floats, &writer, &resampler, &stopped);
+                            if silence_gate.should_skip(&floats) {
+                                return;
+                            }
+                            handle_loopback_samples(&floats, &writer, &resampler);
                         },
                         err_fn,
                         None,
@@ -486,11 +499,7 @@ mod windows_impl {
         data: &[f32],
         writer: &Arc<AudioWavWriter>,
         resampler: &Arc<Mutex<StreamingResampler>>,
-        stopped: &Arc<AtomicBool>,
     ) {
-        if stopped.load(Ordering::SeqCst) {
-            return;
-        }
         let resampled = {
             let mut guard = resampler.lock();
             match guard.process(data) {
@@ -546,6 +555,7 @@ mod windows_impl {
             )?));
 
             let stopped = Arc::new(AtomicBool::new(false));
+            let silence_gate = Arc::new(SilenceGate::new());
 
             let stream = build_loopback_stream(
                 &device,
@@ -553,6 +563,7 @@ mod windows_impl {
                 sample_format,
                 writer.clone(),
                 resampler,
+                silence_gate,
                 stopped.clone(),
             )?;
 
@@ -595,6 +606,7 @@ mod windows_impl {
 #[cfg(target_os = "linux")]
 mod linux_impl {
     use super::*;
+    use crate::audio::silence_gate::SilenceGate;
     use psimple::Simple;
     use pulse::sample::{Format, Spec};
     use pulse::stream::Direction;
@@ -611,6 +623,7 @@ mod linux_impl {
             let stopped = Arc::new(AtomicBool::new(false));
             let s = stopped.clone();
             let w = writer.clone();
+            let silence_gate = Arc::new(SilenceGate::new());
 
             let handle = thread::Builder::new()
                 .name("meety-pulse".into())
@@ -647,6 +660,9 @@ mod linux_impl {
                             .chunks_exact(4)
                             .map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]]))
                             .collect();
+                        if silence_gate.should_skip(&floats) {
+                            continue;
+                        }
                         if let Err(e) = w.append(&floats) {
                             error!(error = %e, "pulseaudio: wav append failed");
                             break;
