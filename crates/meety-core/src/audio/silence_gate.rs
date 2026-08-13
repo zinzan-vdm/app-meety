@@ -69,14 +69,12 @@ impl SilenceGate {
         } else {
             let last_active = self.last_active_ms.load(Ordering::Relaxed);
             let silent_for = now.saturating_sub(last_active);
-            if silent_for >= SILENCE_PAUSE_AFTER_MS {
-                if !self.paused.swap(true, Ordering::Relaxed) {
-                    tracing::info!(
-                        silent_for_ms = silent_for,
-                        threshold = SILENCE_RMS_THRESHOLD,
-                        "system audio paused after sustained silence — skipping WAV writes until audio returns"
-                    );
-                }
+            if silent_for >= SILENCE_PAUSE_AFTER_MS && !self.paused.swap(true, Ordering::Relaxed) {
+                tracing::info!(
+                    silent_for_ms = silent_for,
+                    threshold = SILENCE_RMS_THRESHOLD,
+                    "system audio paused after sustained silence — skipping WAV writes until audio returns"
+                );
             }
             self.paused.load(Ordering::Relaxed)
         }
