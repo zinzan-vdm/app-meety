@@ -77,23 +77,16 @@ jobs:
                "src-tauri/binaries/meety-mcp-${{ matrix.platform.target }}"
           fi
 
-      - name: Patch version and build Tauri app
+      - name: Build Tauri app
         shell: bash
         run: |
-          TAG="${{ github.ref_name }}"
           TARGET="${{ matrix.platform.target }}"
 
-          # Override version in tauri.conf.json so the built app binary and
-          # package metadata (deb version, dmg plist, msi version) reflect the
-          # release tag rather than the crate default.
-          jq --arg v "$TAG" '.version = $v' src-tauri/tauri.conf.json \
-            > src-tauri/tauri.conf.json.tmp
-          mv src-tauri/tauri.conf.json.tmp src-tauri/tauri.conf.json
-
-          # Build the Tauri app (includes bundling into dmg/deb/rpm/msi).
-          # Uses `bun run tauri` (which resolves @tauri-apps/cli in
-          # devDependencies) rather than `cargo tauri`, because the cargo
-          # subcommand requires installing tauri-cli separately.
+          # Build the Tauri app (bundles into dmg/deb/rpm/msi).
+          # Uses `bun run tauri` (resolves @tauri-apps/cli devDependency).
+          # The version in tauri.conf.json (0.1.0) is left as-is — Tauri
+          # requires it to be valid semver. Bundle files are renamed with
+          # the release tag in the next step.
           bun run tauri build --target "$TARGET"
 
       - name: Rename bundles with tag- and platform-qualified names
