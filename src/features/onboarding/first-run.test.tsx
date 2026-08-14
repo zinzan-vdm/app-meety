@@ -23,6 +23,9 @@ vi.mock("@/shared/lib/ipc", async () => {
     ]),
     openPermissionSettings: vi.fn(async () => {}),
     setProviderKey: vi.fn(async () => {}),
+    whisperModelStatus: vi.fn(async () => null),
+    onWhisperDownloadProgress: vi.fn(async () => vi.fn()),
+    ensureWhisperModel: vi.fn(async () => ({ bytes_on_disk: 0n })),
   };
 });
 
@@ -93,7 +96,7 @@ afterEach(() => {
 });
 
 describe("FirstRunConductor — local-only setup", () => {
-  it("permissions → transcriber → onFinish", async () => {
+  it("permissions → transcriber → features → onFinish", async () => {
     const user = userEvent.setup();
     const onFinish = vi.fn();
     render(<FirstRunConductor onFinish={onFinish} />);
@@ -103,6 +106,11 @@ describe("FirstRunConductor — local-only setup", () => {
     expect(
       await screen.findByRole("heading", { name: /welcome to meety/i })
     ).toBeTruthy();
+
+    await user.click(screen.getByRole("button", { name: /continue/i }));
+
+    expect(await screen.findByRole("heading", { name: /almost done/i })).toBeTruthy();
+
     await user.click(screen.getByRole("button", { name: /i.?m ready/i }));
 
     await waitFor(() => expect(onFinish).toHaveBeenCalled());
