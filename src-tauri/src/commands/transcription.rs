@@ -209,7 +209,12 @@ fn collect_audio_sources(session_dir: &Path) -> Vec<AudioSource> {
         }
         let speech = session_dir.join(format!("{channel}.speech.wav"));
         let sidecar = session_dir.join(format!("{channel}.vad.json"));
-        if speech.exists() && sidecar.exists() {
+        let has_content = speech
+            .metadata()
+            .ok()
+            .and_then(|m| m.len().checked_sub(44))
+            .is_some_and(|body| body > 0);
+        if speech.exists() && sidecar.exists() && has_content {
             out.push(AudioSource {
                 channel: (*channel).to_string(),
                 path: speech,
