@@ -95,8 +95,7 @@ pub fn apply_vad_to_wav_with_stem(
                     // particular audio (common on Windows with certain mic/speaker
                     // configs). Fall back to RMS gate to avoid producing an empty
                     // speech.wav that replaces the raw wav in collect_audio_sources.
-                    let sum_sq: f32 =
-                        mono16k.iter().map(|s| s * s).sum::<f32>();
+                    let sum_sq: f32 = mono16k.iter().map(|s| s * s).sum::<f32>();
                     let rms = (sum_sq / mono16k.len() as f32).sqrt();
                     if rms > RMS_FLOOR {
                         tracing::warn!(

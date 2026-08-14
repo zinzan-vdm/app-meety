@@ -1,6 +1,4 @@
-use tauri::{
-    window::Color, Emitter, Manager, WebviewUrl, WebviewWindowBuilder,
-};
+use tauri::{window::Color, Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
 
 pub const RECORDING_BAR_LABEL: &str = "recording-bar";
 
