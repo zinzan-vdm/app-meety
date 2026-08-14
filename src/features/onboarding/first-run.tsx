@@ -82,7 +82,15 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
       console.error("update settings on first-run finish:", e);
       toast.error("Could not save preferences", { description: humanizeError(e) });
     }
-  }, [openaiKey, settings, transcriber, autoTranscribe, stripSilence, saveSettings, onFinish]);
+  }, [
+    openaiKey,
+    settings,
+    transcriber,
+    autoTranscribe,
+    stripSilence,
+    saveSettings,
+    onFinish,
+  ]);
 
   // Check if the model is already downloaded
   React.useEffect(() => {
@@ -96,7 +104,9 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
         }
       } catch {}
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [transcriber]);
 
   // Listen for download progress
@@ -190,7 +200,8 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
             {transcriber === "openai" ? (
               <label className="flex flex-col gap-1.5 text-sm">
                 <span className="text-xs text-muted-foreground">
-                  OpenAI API key (stored in {keychainName()}, never on disk in plain text)
+                  OpenAI API key (stored in {keychainName()}, never on disk in plain
+                  text)
                 </span>
                 <input
                   type="password"
@@ -249,8 +260,8 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
                 </span>
               </div>
               <p className="max-w-md text-xs text-muted-foreground">
-                Transcribe automatically as soon as a recording stops. Turn this off
-                if you prefer to transcribe manually from the Library.
+                Transcribe automatically as soon as a recording stops. Turn this off if
+                you prefer to transcribe manually from the Library.
               </p>
             </div>
             <Switch
@@ -277,8 +288,8 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
               </div>
               <p className="max-w-md text-xs text-muted-foreground">
                 Removes silent stretches before sending to the transcriber. This
-                prevents the model from hallucinating over silence and cuts cloud
-                upload size on meetings with long pauses.
+                prevents the model from hallucinating over silence and cuts cloud upload
+                size on meetings with long pauses.
               </p>
             </div>
             <Switch
@@ -302,9 +313,9 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
                   Download Whisper model
                 </div>
                 <p className="max-w-md text-xs text-muted-foreground">
-                  Meety needs a local Whisper model to transcribe your recordings.
-                  Tiny (~75 MB) is the fastest; Small (~466 MB) is the best balance
-                  of quality and speed. You can change the model later in Settings.
+                  Meety needs a local Whisper model to transcribe your recordings. Tiny
+                  (~75 MB) is the fastest; Small (~466 MB) is the best balance of
+                  quality and speed. You can change the model later in Settings.
                 </p>
               </div>
               <Button
@@ -312,7 +323,7 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
                 size="sm"
                 onClick={handleDownload}
                 disabled={downloading}
-                className="h-8 gap-1.5 shrink-0"
+                className="h-8 shrink-0 gap-1.5"
               >
                 {downloading ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -323,7 +334,11 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
               </Button>
             </div>
             {downloading && progress ? (
-              <div className="mt-3 flex flex-col gap-1" role="status" aria-live="polite">
+              <div
+                className="mt-3 flex flex-col gap-1"
+                role="status"
+                aria-live="polite"
+              >
                 <span className="font-mono text-2xs text-muted-foreground">
                   {formatBytes(progress.downloaded)}
                   {progress.total ? ` / ${formatBytes(progress.total)}` : ""}
@@ -369,7 +384,10 @@ export function FirstRunConductor({ onFinish }: { onFinish: () => void }) {
         </div>
         <Button
           onClick={finish}
-          disabled={savingKey || (transcriber === "local_whisper" && !modelDownloaded && downloading)}
+          disabled={
+            savingKey ||
+            (transcriber === "local_whisper" && !modelDownloaded && downloading)
+          }
           className="gap-2"
         >
           <AudioLines className="h-4 w-4" />
