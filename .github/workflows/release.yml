@@ -32,6 +32,8 @@ jobs:
           targets: ${{ matrix.platform.target }}
 
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+        with:
+          cache-targets: ${{ runner.os != 'macOS' }}
 
       - name: Install Tauri Linux system deps
         if: runner.os == 'Linux'
