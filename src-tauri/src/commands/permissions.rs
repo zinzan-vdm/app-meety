@@ -26,9 +26,11 @@ const REMINDERS_RATIONALE: &str =
 const NOTIFICATIONS_RATIONALE: &str =
     "Used only for 'recording started' / 'summary ready' alerts. Disabled features stay disabled.";
 
+#[cfg(not(target_os = "macos"))]
 const MIC_RATIONALE_NON_MACOS: &str =
     "We record what you say. Grant microphone access in your system settings. Without it, your half of every meeting is silent.";
 
+#[cfg(not(target_os = "macos"))]
 const SCREEN_RATIONALE_NON_MACOS: &str =
     "Meety captures system audio through your operating system's loopback device. No screen recording permission is needed on this platform.";
 
