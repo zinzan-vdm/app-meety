@@ -1,4 +1,4 @@
-use tauri::{Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
+use tauri::{window::Color, Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
 
 pub const RECORDING_BAR_LABEL: &str = "recording-bar";
 
@@ -29,7 +29,7 @@ pub fn show_recording_bar(app: tauri::AppHandle) -> Result<(), String> {
     .inner_size(BAR_W, BAR_H)
     .resizable(false)
     .decorations(false)
-    .transparent(true)
+    .background_color(Color(10, 10, 10, 255))
     .always_on_top(true)
     .skip_taskbar(true)
     .focused(false)

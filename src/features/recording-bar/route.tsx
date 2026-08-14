@@ -125,7 +125,7 @@ export default function RecordingBar() {
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions -- frameless-window drag region, same pattern as the main shell.
     <div
       onMouseDown={onMouseDown}
-      className="fixed inset-0 flex select-none flex-col items-center justify-between overflow-hidden rounded-[20px] border border-white/10 bg-neutral-900/95 py-2.5 text-white shadow-2xl backdrop-blur"
+      className="fixed inset-0 flex select-none flex-col items-center justify-between overflow-hidden rounded-[20px] border border-white/10 bg-neutral-900/95 py-2.5 text-white shadow-2xl"
     >
       <GripHorizontal
         aria-hidden="true"
