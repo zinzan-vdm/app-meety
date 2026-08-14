@@ -37,8 +37,9 @@ export default function RecordingBar() {
   React.useEffect(() => {
     const els = [document.documentElement, document.body];
     const prev = els.map((el) => el.style.background);
+    const dark = "rgb(23, 23, 23)";
     els.forEach((el) => {
-      el.style.background = "transparent";
+      el.style.background = dark;
     });
     return () => {
       els.forEach((el, i) => {

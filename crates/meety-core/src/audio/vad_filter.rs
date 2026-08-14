@@ -87,25 +87,54 @@ pub fn apply_vad_to_wav_with_stem(
 
     let mono_len = mono16k.len();
     let ranges: Vec<ActiveRange> = match engine {
-        VadEngine::Silero => match silero::detect(&mono16k, silero::SileroParams::default()) {
-            Ok(segs) => segs
-                .into_iter()
-                .map(|s| ActiveRange {
-                    start: (s.start_seconds * VAD_SAMPLE_RATE as f64) as usize,
-                    end: ((s.end_seconds * VAD_SAMPLE_RATE as f64) as usize).min(mono_len),
-                })
-                .collect(),
-            Err(e) => {
-                tracing::warn!(error = %e, "silero detect failed; falling back to RMS gate");
-                active_ranges_with(
-                    &mono16k,
-                    VAD_SAMPLE_RATE,
-                    VAD_SAMPLE_RATE as usize * 30,
-                    RMS_FLOOR,
-                    MIN_GAP_SECS,
-                )
+        VadEngine::Silero => {
+            match silero::detect(&mono16k, silero::SileroParams::default()) {
+                Ok(segs) if segs.is_empty() => {
+                    // Silero returned 0 segments — check if the audio actually
+                    // has energy. If so, the VAD model may have failed on this
+                    // particular audio (common on Windows with certain mic/speaker
+                    // configs). Fall back to RMS gate to avoid producing an empty
+                    // speech.wav that replaces the raw wav in collect_audio_sources.
+                    let sum_sq: f32 =
+                        mono16k.iter().map(|s| s * s).sum::<f32>();
+                    let rms = (sum_sq / mono16k.len() as f32).sqrt();
+                    if rms > RMS_FLOOR {
+                        tracing::warn!(
+                            rms,
+                            threshold = RMS_FLOOR,
+                            "silero returned 0 segments on audible audio; \
+                             falling back to RMS gate"
+                        );
+                        active_ranges_with(
+                            &mono16k,
+                            VAD_SAMPLE_RATE,
+                            VAD_SAMPLE_RATE as usize * 30,
+                            RMS_FLOOR,
+                            MIN_GAP_SECS,
+                        )
+                    } else {
+                        Vec::new()
+                    }
+                }
+                Ok(segs) => segs
+                    .into_iter()
+                    .map(|s| ActiveRange {
+                        start: (s.start_seconds * VAD_SAMPLE_RATE as f64) as usize,
+                        end: ((s.end_seconds * VAD_SAMPLE_RATE as f64) as usize).min(mono_len),
+                    })
+                    .collect(),
+                Err(e) => {
+                    tracing::warn!(error = %e, "silero detect failed; falling back to RMS gate");
+                    active_ranges_with(
+                        &mono16k,
+                        VAD_SAMPLE_RATE,
+                        VAD_SAMPLE_RATE as usize * 30,
+                        RMS_FLOOR,
+                        MIN_GAP_SECS,
+                    )
+                }
             }
-        },
+        }
         VadEngine::Rms => active_ranges_with(
             &mono16k,
             VAD_SAMPLE_RATE,

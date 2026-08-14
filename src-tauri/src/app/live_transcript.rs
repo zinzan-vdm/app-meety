@@ -12,7 +12,7 @@ use tracing::debug;
 
 pub const LIVE_TRANSCRIPT_EVENT: &str = "live-transcript";
 
-const POLL_INTERVAL: Duration = Duration::from_secs(3);
+const POLL_INTERVAL: Duration = Duration::from_secs(12);
 
 const WINDOW_SECS: usize = 12;
 

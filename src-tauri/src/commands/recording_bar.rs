@@ -1,4 +1,6 @@
-use tauri::{window::Color, Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
+use tauri::{
+    window::Color, Emitter, Manager, WebviewUrl, WebviewWindowBuilder,
+};
 
 pub const RECORDING_BAR_LABEL: &str = "recording-bar";
 
@@ -29,7 +31,16 @@ pub fn show_recording_bar(app: tauri::AppHandle) -> Result<(), String> {
     .inner_size(BAR_W, BAR_H)
     .resizable(false)
     .decorations(false)
-    .background_color(Color(10, 10, 10, 255))
+    .transparent(cfg!(target_os = "macos"))
+    .background_color(if cfg!(target_os = "macos") {
+        // macOS uses transparent(true) for rounded corners; provide a
+        // fallback background in case transparency isn't available.
+        Color(0, 0, 0, 1)
+    } else {
+        // Windows/Linux: opaque window — solid background prevents the
+        // WebView2 white-flash and blank-rendering issues.
+        Color(10, 10, 10, 255)
+    })
     .always_on_top(true)
     .skip_taskbar(true)
     .focused(false)
