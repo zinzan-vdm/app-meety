@@ -97,4 +97,4 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
-      - uses: crate-ci/typos@5e38bf262baaf477ca9f241b3a7cd3d277fd7df8
+      - uses: crate-ci/typos@92ed824f4f7394e08eb031378ac49112ec496efd
